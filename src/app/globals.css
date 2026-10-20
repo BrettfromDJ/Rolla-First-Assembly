@@ -19,13 +19,13 @@
   --color-forest-500: #2b93ff;
   --color-forest-600: #1688ff;
   --color-forest-700: #0285ff;
-  --color-forest-800: #151515;
-  --color-forest-900: #101010;
+  --color-forest-800: #101010;
+  --color-forest-900: #0b0b0b;
   --color-forest-950: #070707;
 
   /* Ink: the page itself */
-  --color-ink: #0f0f0f;
-  --color-ink-2: #141414;
+  --color-ink: #080808;
+  --color-ink-2: #0e0e0e;
 
   /* Cream: primary type on dark (kept under the old "paper" name) */
   --color-paper: #dcd2c5;
@@ -33,7 +33,7 @@
   --color-sand: #1d1d1d;
 
   /* Neutral scale, inverted for a dark UI: 50 = darkest surface, 900 = cream */
-  --color-stone-50: #121212;
+  --color-stone-50: #0c0c0c;
   --color-stone-100: #1c1c1c;
   --color-stone-200: #2a2a2a;
   --color-stone-300: #3b3b3a;
@@ -44,7 +44,7 @@
   --color-stone-800: #d2c8bb;
   --color-stone-900: #dcd2c5;
 
-  --color-white: #171717;
+  --color-white: #121212;
   --color-black: #000000;
 
   /* Accents, tuned for dark */
@@ -161,7 +161,7 @@
   }
 }
 
-/* ---------- Animated film grain over everything ---------- */
+/* ---------- Animated film grain over everything (sits above all content, never blocks clicks) ---------- */
 .grain-wrap {
   pointer-events: none;
   position: fixed;
@@ -172,8 +172,8 @@
 .grain {
   position: absolute;
   inset: -50%;
-  opacity: 0.09;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1.4 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.22;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 7 -3.6'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   animation: grain 0.9s steps(6) infinite;
 }
 

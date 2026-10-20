@@ -78,7 +78,7 @@ const mori = "font-mori font-semibold";
 
 export function ChurchHome() {
   return (
-    <div className="overflow-x-hidden bg-[#0f0f0f] text-[#dcd2c5]">
+    <div className="overflow-x-hidden bg-ink text-[#dcd2c5]">
       <div className="mx-auto max-w-[1440px] px-5 md:px-[60px]">
         {/* Header */}
         <header className="flex items-center justify-between gap-6 pt-6 md:pt-[42px]">
@@ -160,7 +160,7 @@ export function ChurchHome() {
             <br />
             Sunday &amp; Wednesday
           </p>
-          <div className="grid border border-[rgba(220,210,197,0.24)] bg-[#0f0f0f] md:min-h-[177px] md:grid-cols-[381px_1px_1fr]">
+          <div className="grid border border-[rgba(220,210,197,0.24)] bg-ink md:min-h-[177px] md:grid-cols-[381px_1px_1fr]">
             <div className="px-6 pt-8 md:pl-[120px] md:pr-0 md:pt-[53px]">
               <p className={cn(mori, "text-[26px] leading-none tracking-[-0.03em]")}>Wednesday’s</p>
               <p className="mt-[8px] font-magda text-[14px] uppercase leading-none tracking-[-0.03em] opacity-60">(ADULT and Youth)</p>
