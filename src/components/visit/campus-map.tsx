@@ -12,10 +12,10 @@ import { cn } from "@/lib/utils";
 const stops = [
   { n: 1, icon: Car, title: "Park in any lot", body: "Lots north of the building (across 17th St), south of the building, and across Oak St are all yours.", x: 448, y: 598 },
   { n: 2, icon: DoorOpen, title: "Come in the main entrance", body: "On the west side of the building, facing Oak St. The welcome team will be right inside to say hi.", x: 328, y: 308 },
-  { n: 3, icon: Coffee, title: "Grab a coffee in the gym", body: "Head downstairs to the gym. Coffee, tea, and pastries are always free.", x: 520, y: 450 },
+  { n: 3, icon: Coffee, title: "Grab a coffee in the gym", body: "Head downstairs to the gym. Coffee, tea, and pastries are always free.", x: 548, y: 486 },
   { n: 4, icon: Sprout, title: "Check in the kids", body: "Kids meet downstairs, right below the auditorium. Look for the blue Kids Welcome desk.", x: 546, y: 332 },
   { n: 5, icon: Armchair, title: "Find a seat in the auditorium", body: "Doors open 10 minutes before. Sit anywhere. Really.", x: 546, y: 290 },
-  { n: 6, icon: Users, title: "Students, head upstairs", body: "The youth room is upstairs, right above the gym. 6th–12th graders meet there on Wednesday nights.", x: 548, y: 486 },
+  { n: 6, icon: Users, title: "Students, head upstairs", body: "The youth room is upstairs, right above the gym. 6th–12th graders meet there on Wednesday nights.", x: 520, y: 450 },
 ];
 
 const C = {
@@ -170,10 +170,10 @@ export function CampusMap() {
             titleSize={10}
             fill="#1a1a14"
             floors={[
-              { label: "GYM", level: "Downstairs", arrow: "" },
-              { label: "YOUTH", level: "Upstairs", arrow: "↑" },
+              { label: "YOUTH", level: "Upstairs", arrow: "" },
+              { label: "GYM", level: "Downstairs", arrow: "↓" },
             ]}
-            activeFloor={active === 3 ? 0 : active === 6 ? 1 : null}
+            activeFloor={active === 6 ? 0 : active === 3 ? 1 : null}
           />
           {/* Main doors on the Oak St side */}
           <rect x="336" y="291" width="8" height="34" rx="4" fill={C.blue} />
