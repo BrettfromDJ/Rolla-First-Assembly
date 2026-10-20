@@ -68,7 +68,7 @@ export function ChurchHome() {
     <div className="overflow-x-clip bg-ink text-[#dcd2c5]">
       <div className="mx-auto max-w-[1440px] px-5 md:px-[60px]">
         {/* Header */}
-        <Rise y={-16} className="relative z-20"><header className="flex items-center justify-between gap-6 pt-6 md:pt-[42px]">
+        <Rise load y={-16} className="relative z-20"><header className="flex items-center justify-between gap-6 pt-6 md:pt-[42px]">
           <div className="flex items-center gap-[59px]">
             <Link href="/" aria-label="Rolla First home" className="text-[#dcd2c5]">
               <Logo className="h-[16px] w-auto fill-[#dcd2c5]" />
@@ -95,19 +95,19 @@ export function ChurchHome() {
             <h1 className={cn(mori, "text-[clamp(48px,5.7vw,82px)] leading-none tracking-[-0.05em] text-[#0285ff]")}>
               <MaskLines
                 lines={[
-                  <>
+                  <span key="l1">
                     Where <Ed>faith</Ed>
-                  </>,
+                  </span>,
                   "feels like family",
                 ]}
               />
             </h1>
-            <Rise delay={0.45} y={16}>
+            <Rise load delay={0.45} y={16}>
               <p className={cn(mori, "mt-[28px] text-[16px] uppercase leading-[1.1] tracking-[-0.03em]")}>Belong. Believe. Become.</p>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={A("underline.svg")} alt="" width={202} height={11} className="mt-[14px]" />
             </Rise>
-            <Rise delay={0.6} y={16}>
+            <Rise load delay={0.6} y={16}>
             <Link
               href="#mission"
               className={cn(mori, "mt-[33px] flex h-[67px] w-[289px] items-center justify-center rounded-[80px] border-[3px] border-[#0285ff] text-[16px] leading-none tracking-[-0.05em] text-[#0285ff] transition hover:bg-[#0285ff] hover:text-black")}
@@ -123,7 +123,7 @@ export function ChurchHome() {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={A("r-mark.svg")} alt="" width={254} height={233} />
             </Drift>
-            <WipeIn onLoad delay={0.25}>
+            <WipeIn delay={0.25}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={A("hero-main.jpg")}
@@ -139,13 +139,13 @@ export function ChurchHome() {
           <div className="hidden lg:block" />
 
           <div className="flex flex-col lg:mt-[200px]">
-            <Rise delay={0.55} y={16}>
+            <Rise load delay={0.55} y={16}>
               <p className={cn(mori, "text-[42px] leading-none tracking-[-0.05em]")}>@2026</p>
               <p className={cn(mori, "mt-[12px] max-w-[256px] text-[15px] uppercase leading-none")}>
                 More than you ask, think or imagine According to His power working in us
               </p>
             </Rise>
-            <WipeIn onLoad delay={0.45} className="mt-8 w-full max-w-[287px] lg:mt-auto">
+            <WipeIn delay={0.45} className="mt-8 w-full max-w-[287px] lg:mt-auto">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={A("hero-side.png")}
@@ -198,7 +198,7 @@ export function ChurchHome() {
 
         {/* Give / Events / Sermons */}
         <Stagger className="mt-[71px] grid gap-[32px] md:grid-cols-[193px_1fr_1fr]">
-          <StaggerItem>
+          <StaggerItem index={0}>
           <a
             href={churchLinks.give}
             className="group flex h-full min-h-[200px] flex-col items-center justify-end gap-[28px] rounded-[280px] border-4 border-[#0285ff] bg-[#0285ff] pb-[38px] transition duration-500 ease-out hover:-translate-y-2 md:h-[439px]"
@@ -211,7 +211,7 @@ export function ChurchHome() {
             { label: "Events", href: "/explore?area=events" },
             { label: "Sermons", href: churchLinks.sermons },
           ].map((c) => (
-            <StaggerItem key={c.label}>
+            <StaggerItem key={c.label} index={c.label === "Events" ? 1 : 2}>
             <Link
               href={c.href}
               className="group relative flex h-full min-h-[220px] items-end justify-between overflow-hidden rounded-[60px] border-4 border-[#dcd2c5] pb-[38px] pl-[46px] pr-[34px] transition duration-500 ease-out hover:-translate-y-2 hover:border-[#0285ff] md:h-[439px]"
@@ -266,8 +266,8 @@ export function ChurchHome() {
       {/* Full-bleed, horizontally scrollable leadership strip */}
       <div className="mx-auto max-w-[1440px]">
         <Stagger as="ul" gap={0.07} className="no-scrollbar mt-[48px] flex overflow-x-auto overflow-y-hidden md:mt-[67px]">
-          {pastors.map((p) => (
-            <StaggerItem as="li" key={`${p.first}-${p.last}`} className="group w-[min(340px,78vw)] shrink-0 snap-start">
+          {pastors.map((p, i) => (
+            <StaggerItem as="li" index={i} key={`${p.first}-${p.last}`} className="group w-[min(340px,78vw)] shrink-0 snap-start">
               <div className="flex flex-col items-end text-right">
                 <p className={cn(mori, "text-[26px] uppercase leading-none tracking-[-0.03em]")}>
                   {p.first}
