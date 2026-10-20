@@ -33,14 +33,15 @@ const nav = [
  * `image` is a supplied, ready-to-use portrait (340×605 or 2×) in /public/home/team.
  * `photo` is the Figma export for that slot, shown through the design's mask.
  */
-const pastors: { first: string; last: string; role: string; image?: string; photo?: string }[] = [
-  { first: "Lance", last: "Langenberg", role: "Lead Pastor", image: "team/lance-langenberg.jpg" },
-  { first: "Garrett", last: "Smith", role: "Executive Pastor", image: "team/garrett-smith.jpg" },
-  { first: "Gannon", last: "Breig", role: "Youth / Worship Pastor", image: "team/gannon-breig.jpg" },
-  { first: "Micah", last: "Wells", role: "Children's Pastor", image: "team/micah-wells.jpg" },
-  { first: "Pam", last: "", role: "Children's Discipleship Pastor", image: "team/pam.jpg" },
-  { first: "Debbie", last: "Skyles", role: "", image: "team/debbie-skyles.jpg" },
-  { first: "Brice", last: "Adams", role: "", image: "team/brice-adams.jpg" },
+const pastors: { first: string; last: string; role: string; email: string; image?: string; photo?: string }[] = [
+  { first: "Lance", last: "Langenberg", role: "Lead Pastor", email: "pastorlance@rollafirst.church", image: "team/lance-langenberg.jpg" },
+  { first: "Garrett", last: "Smith", role: "Executive Pastor", email: "pastorgarrett@rollafirst.church", image: "team/garrett-smith.jpg" },
+  { first: "Gannon", last: "Breig", role: "Youth / Worship Pastor", email: "pastorgannon@rollafirst.church", image: "team/gannon-breig.jpg" },
+  { first: "Micah", last: "Wells", role: "Children's Pastor", email: "pastormicah@rollafirst.church", image: "team/micah-wells.jpg" },
+  { first: "Pam", last: "Bales", role: "Children's Discipleship Pastor", email: "pastorpam@rollafirst.church", image: "team/pam-bales.jpg" },
+  { first: "Amber", last: "Eckelkamp", role: "Administrative Assistant", email: "office@rollafirst.church", image: "team/amber-eckelkamp.jpg" },
+  { first: "Brice", last: "Adams", role: "Belle Campus Pastor", email: "pastorbrice@rollafirst.church", image: "team/brice-adams.jpg" },
+  { first: "Debbie", last: "Skyles", role: "Kid's First Director", email: "debbie@rollafirst.church", image: "team/debbie-skyles.jpg" },
 ];
 
 /* ---------- Building blocks ---------- */
@@ -277,18 +278,21 @@ export function ChurchHome() {
         <ul className="no-scrollbar mt-[48px] flex snap-x snap-mandatory overflow-x-auto md:mt-[67px]">
           {pastors.map((p) => (
             <li key={`${p.first}-${p.last}`} className="w-[min(340px,78vw)] shrink-0 snap-start">
-              <div className="flex min-h-[78px] flex-col justify-end text-right">
+              <div className="flex flex-col items-end text-right">
                 <p className={cn(mori, "text-[26px] uppercase leading-none tracking-[-0.03em]")}>
                   {p.first}
-                  {p.last && <br />}
+                  <br />
                   {p.last}
                 </p>
-                {p.role && <p className={cn(mori, "mt-[8px] text-[16px] uppercase leading-[1.1] tracking-[-0.03em] text-[#0285ff]")}>{p.role}</p>}
+                <p className={cn(mori, "mt-[8px] text-[16px] uppercase leading-[1.1] tracking-[-0.03em] text-[#0285ff]")}>{p.role}</p>
+                <a href={`mailto:${p.email}`} className={cn(mori, "mt-[10px] inline-block text-[16px] leading-none tracking-[-0.03em] opacity-80 transition hover:text-[#0285ff] hover:opacity-100")}>
+                  {p.email}
+                </a>
               </div>
               <div className="relative mt-[18px] aspect-[340/605] bg-[#d9d9d9]">
                 {p.image ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={A(p.image)} alt={`${p.first} ${p.last}`.trim()} width={340} height={605} loading="lazy" className="absolute inset-0 size-full object-cover" />
+                  <img src={A(p.image)} alt={`${p.first} ${p.last}, ${p.role}`} width={340} height={605} loading="lazy" className="absolute inset-0 size-full object-cover" />
                 ) : (
                   <Masked
                     mask="pastor-mask.svg"
