@@ -29,12 +29,16 @@ const nav = [
   { label: "Events", href: "/explore?area=events" },
 ];
 
-const pastors = [
-  { first: "Lance", last: "Langenberg", role: "Lead Pastor", photo: "pastor-1.png" },
+/**
+ * `image` is a supplied, ready-to-use 680×1210 portrait in /public/home/team.
+ * `photo` is the Figma export for that slot, shown through the design's mask.
+ */
+const pastors: { first: string; last: string; role: string; image?: string; photo?: string }[] = [
+  { first: "Lance", last: "Langenberg", role: "Lead Pastor", image: "team/lance-langenberg.jpg" },
   { first: "Garrett", last: "Smith", role: "Executive Pastor", photo: "pastor-2.png" },
   { first: "Gannon", last: "Breig", role: "Youth / Worship Pastor", photo: "pastor-3.png" },
   { first: "Micah", last: "Wells", role: "Children's Pastor", photo: "pastor-4.png" },
-  { first: "Lance", last: "Langenberg", role: "Lead Pastor", photo: "pastor-5.png" },
+  { first: "Pam", last: "", role: "Children's Discipleship Pastor", image: "team/pam.jpg" },
 ];
 
 /* ---------- Building blocks ---------- */
@@ -269,22 +273,27 @@ export function ChurchHome() {
       {/* Full-bleed, horizontally scrollable leadership strip */}
       <div className="mx-auto max-w-[1440px]">
         <ul className="no-scrollbar mt-[48px] flex snap-x snap-mandatory overflow-x-auto md:mt-[67px]">
-          {pastors.map((p, i) => (
-            <li key={i} className="w-[min(340px,78vw)] shrink-0 snap-start">
-              <div className="text-right">
+          {pastors.map((p) => (
+            <li key={`${p.first}-${p.role}`} className="w-[min(340px,78vw)] shrink-0 snap-start">
+              <div className="flex min-h-[78px] flex-col justify-end text-right">
                 <p className={cn(mori, "text-[26px] uppercase leading-none tracking-[-0.03em]")}>
                   {p.first}
-                  <br />
+                  {p.last && <br />}
                   {p.last}
                 </p>
                 <p className={cn(mori, "mt-[8px] text-[16px] uppercase leading-[1.1] tracking-[-0.03em] text-[#0285ff]")}>{p.role}</p>
               </div>
               <div className="relative mt-[18px] aspect-[340/605] bg-[#d9d9d9]">
-                <Masked
-                  mask="pastor-mask.svg"
-                  className="absolute inset-0"
-                  layers={[{ src: p.photo, left: "-23.53%", top: "-20.17%", width: "147.06%", height: "123.97%" }]}
-                />
+                {p.image ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={A(p.image)} alt={`${p.first} ${p.last}`.trim()} width={340} height={605} loading="lazy" className="absolute inset-0 size-full object-cover" />
+                ) : (
+                  <Masked
+                    mask="pastor-mask.svg"
+                    className="absolute inset-0"
+                    layers={[{ src: p.photo!, left: "-23.53%", top: "-20.17%", width: "147.06%", height: "123.97%" }]}
+                  />
+                )}
               </div>
             </li>
           ))}
