@@ -30,14 +30,14 @@ const nav = [
 ];
 
 /**
- * `image` is a supplied, ready-to-use 680×1210 portrait in /public/home/team.
+ * `image` is a supplied, ready-to-use portrait (340×605 or 2×) in /public/home/team.
  * `photo` is the Figma export for that slot, shown through the design's mask.
  */
 const pastors: { first: string; last: string; role: string; image?: string; photo?: string }[] = [
   { first: "Lance", last: "Langenberg", role: "Lead Pastor", image: "team/lance-langenberg.jpg" },
-  { first: "Garrett", last: "Smith", role: "Executive Pastor", photo: "pastor-2.png" },
-  { first: "Gannon", last: "Breig", role: "Youth / Worship Pastor", photo: "pastor-3.png" },
-  { first: "Micah", last: "Wells", role: "Children's Pastor", photo: "pastor-4.png" },
+  { first: "Garrett", last: "Smith", role: "Executive Pastor", image: "team/garrett-smith.jpg" },
+  { first: "Gannon", last: "Breig", role: "Youth / Worship Pastor", image: "team/gannon-breig.jpg" },
+  { first: "Micah", last: "Wells", role: "Children's Pastor", image: "team/micah-wells.jpg" },
   { first: "Pam", last: "", role: "Children's Discipleship Pastor", image: "team/pam.jpg" },
 ];
 
