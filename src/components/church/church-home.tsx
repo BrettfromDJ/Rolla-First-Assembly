@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Logo } from "@/components/ui/logo";
+import { ClosingScroll } from "./closing-scroll";
 import { cn } from "@/lib/utils";
 
 /**
@@ -307,23 +308,7 @@ export function ChurchHome() {
       </div>
 
       {/* Closing */}
-      <section aria-label="There's a place for you here" className="relative mx-auto mt-[60px] aspect-[1440/790] max-w-[1440px] @container">
-        <p className={cn(mori, "pointer-events-none absolute left-[49.56%] top-[41.9%] -translate-x-1/2 -translate-y-1/2 -rotate-[5.54deg] whitespace-nowrap text-[8.47cqw] leading-none tracking-[-0.05em] text-[#0285ff]")}>
-          There’s a Place for you here
-        </p>
-        <Masked
-          mask="closing-mask.png"
-          className="absolute left-[35.21%] top-[8.23%] h-[88.35%] w-[29.65%]"
-          layers={[
-            { src: "closing-photo-1.png", left: "-61.83%", top: "-67.62%", width: "232.08%", height: "213.18%" },
-            { src: "texture.png", left: "-26.23%", top: "-27.65%", width: "362.06%", height: "221.49%", blend: "darken" },
-            { src: "closing-photo-2.png", left: "-61.83%", top: "-67.62%", width: "232.08%", height: "213.18%" },
-          ]}
-        />
-        <p className={cn(mori, "pointer-events-none absolute left-[66.08%] top-[55.19%] -translate-x-1/2 -translate-y-1/2 -rotate-[5.54deg] whitespace-nowrap text-[8.47cqw] leading-none tracking-[-0.05em] text-[#ffffff]")}>
-          Come <Ed>worship</Ed> with us come worship With Us
-        </p>
-      </section>
+      <ClosingScroll photo={A("closing-photo.png")} />
 
       {/* Footer */}
       <footer className="mx-auto max-w-[1440px] px-5 pb-[112px] pt-[22px] md:px-[60px]">
