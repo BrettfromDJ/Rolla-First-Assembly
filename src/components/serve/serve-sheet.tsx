@@ -237,7 +237,7 @@ export function ServeSheet({ teamId, onOpenChange }: { teamId: string | null; on
                   </div>
                 </fieldset>
 
-                <Textarea label="Any experience? (optional)" value={experience} onChange={(e) => setExperience(e.target.value)} placeholder="None is totally fine. We'll train you." />
+                <Textarea label="Any experience?" optional value={experience} onChange={(e) => setExperience(e.target.value)} placeholder="None is totally fine. We'll train you." />
                 <Checkbox checked={shadowFirst} onChange={setShadowFirst}>I&apos;d like to shadow someone for a Sunday first</Checkbox>
 
                 <Button type="submit" size="lg" className="w-full">

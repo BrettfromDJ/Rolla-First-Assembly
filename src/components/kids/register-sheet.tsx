@@ -341,7 +341,7 @@ export function KidsSheet({ open, onOpenChange }: { open: boolean; onOpenChange:
                     );
                   })}
                 </div>
-                <Textarea label="Anything else? (optional)" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="First time away from us, special needs, a sibling who'd like to stay together…" />
+                <Textarea label="Anything else?" optional value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="First time away from us, special needs, a sibling who'd like to stay together…" />
                 <Button size="lg" className="w-full" onClick={next}>Pre-register {kids.length === 1 ? kids[0].firstName || "my child" : `${kids.length} kids`} <Check /></Button>
                 <p className="text-center text-xs text-stone-400">Simulated for this prototype. Nothing is sent.</p>
               </div>

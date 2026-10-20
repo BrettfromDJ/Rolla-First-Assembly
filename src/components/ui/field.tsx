@@ -41,14 +41,18 @@ export const Field = forwardRef<HTMLInputElement, FieldProps>(({ label, hint, er
 });
 Field.displayName = "Field";
 
-export function Textarea({ label, className, ...props }: React.TextareaHTMLAttributes<HTMLTextAreaElement> & { label: string }) {
+export function Textarea({ label, optional, className, ...props }: React.TextareaHTMLAttributes<HTMLTextAreaElement> & { label: string; optional?: boolean }) {
   const id = useId();
   return (
     <div className={cn("space-y-2", className)}>
-      <label htmlFor={id} className="text-sm font-medium text-stone-800">{label}</label>
+      {/* Laid out like Field's label (a block), so the gap above the box matches every other field. */}
+      <label htmlFor={id} className="flex items-baseline justify-between text-sm font-medium text-stone-800">
+        {label}
+        {optional && <span className="text-xs font-normal text-stone-400">Optional</span>}
+      </label>
       <textarea
         id={id}
-        className="min-h-28 w-full resize-none rounded-2xl bg-white p-4 text-[16px] ring-1 ring-stone-200 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-forest-500"
+        className="min-h-28 w-full resize-none rounded-2xl bg-white p-4 text-[16px] text-stone-900 ring-1 ring-stone-200 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-forest-500"
         {...props}
       />
     </div>

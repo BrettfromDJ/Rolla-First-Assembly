@@ -734,7 +734,7 @@ function AttendanceSheet({ open, onOpenChange, date: initialDate, service: initi
           <NumberField label="Online views" hint="Livestream, separate" value={online} onChange={setOnline} disabled={service === "wed"} />
         </div>
 
-        <Textarea label="Note (optional)" value={note} onChange={(e) => setNote(e.target.value)} placeholder="Easter, snow, guest speaker, VBS kickoff…" className="[&_textarea]:min-h-20" />
+        <Textarea label="Note" optional value={note} onChange={(e) => setNote(e.target.value)} placeholder="Easter, snow, guest speaker, VBS kickoff…" className="[&_textarea]:min-h-20" />
 
         {error && <p className="text-sm text-clay" role="alert">{error}</p>}
 
