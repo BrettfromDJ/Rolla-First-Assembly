@@ -289,7 +289,7 @@ export function ChurchHome() {
       </div>
 
       {/* Closing */}
-      <ClosingScroll photo={A("closing-photo.png")} />
+      <ClosingScroll photo={A("closing-photo.webp")} />
 
       {/* Footer */}
       <Rise><footer className="mx-auto max-w-[1440px] px-5 pb-[112px] pt-[22px] md:px-[60px]">
