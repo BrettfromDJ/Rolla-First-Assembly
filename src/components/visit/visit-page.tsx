@@ -155,7 +155,7 @@ export function VisitPage() {
                 <p className="text-[13px] font-medium uppercase tracking-[0.16em] text-forest-500">Gather Kids</p>
                 <h2 className="mt-5 font-display text-5xl leading-[1] tracking-[-0.02em] text-stone-900 md:text-6xl">Kids are the best part of Sunday.</h2>
                 <p className="mt-6 max-w-md text-[17px] leading-relaxed text-stone-600">
-                  During both services, kids from birth through 5th grade have their own space to play, learn, and be known by name. Students in 6th–12th meet Wednesday nights.
+                  During both services, kids from birth through 5th grade have their own space to play, learn, and be known by name. Students in 6th–12th meet Wednesday nights in the youth room upstairs.
                 </p>
               </Reveal>
               <Reveal delay={0.08}>

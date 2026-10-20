@@ -4,13 +4,13 @@ import type { InterestId, Offering, Person } from "./types";
 
 export const church = {
   name: "Gather Church",
-  address: "1200 Larkspur Lane",
+  address: "N Oak St & E 17th St",
   city: "Rolla, MO 65401",
   phone: "(573) 555-0142",
   email: "hello@gather.church",
   services: ["9:00", "11:00"] as const,
   serviceLength: "About 70 minutes",
-  mapsUrl: "https://www.google.com/maps/search/?api=1&query=1200+Larkspur+Lane+Rolla+MO",
+  mapsUrl: "https://www.google.com/maps/search/?api=1&query=Rolla+First+Assembly+of+God+Rolla+MO",
 };
 
 /* ---------- People ---------- */
@@ -127,9 +127,9 @@ export function buildOfferings(): Offering[] {
       schedule: "Sundays · After the 11:00 service",
       date: sun(12, 15),
       durationMin: 45,
-      location: "Main lobby, by the coffee bar",
+      location: "The Gym (downstairs), at the coffee bar",
       expect: [
-        "Fresh coffee from our friends at Larkspur Roasters",
+        "Fresh coffee and a comfy spot to sit",
         "Short, easy introductions, and only if you want to",
         "A small welcome gift to take home",
         "Answers to any questions about Gather",
@@ -284,7 +284,7 @@ export function buildOfferings(): Offering[] {
       itemsTitle: "This season's studies",
       items: [
         { id: "b-john", title: "The Gospel of John", meta: "Wednesdays · 7:00 PM", location: "The Library", leader: "Grace Kim", description: "A slow read through the life of Jesus.", spots: 5 },
-        { id: "b-psalms", title: "Psalms at Sunrise", meta: "Fridays · 6:30 AM", location: "Main lobby café", leader: "Henry Osei", description: "Poetry, prayer, and pastries before work.", spots: 8 },
+        { id: "b-psalms", title: "Psalms at Sunrise", meta: "Fridays · 6:30 AM", location: "The Gym coffee bar", leader: "Henry Osei", description: "Poetry, prayer, and pastries before work.", spots: 8 },
         { id: "b-women", title: "Women in the Word", meta: "Tuesdays · 9:30 AM", location: "Room 201 · Childcare available", leader: "Ruth Alvarez", description: "Studying Ruth and Esther this season.", spots: 6 },
       ],
       matchKeys: ["bible-study", "deeper", "returning"],
@@ -307,7 +307,7 @@ export function buildOfferings(): Offering[] {
       schedule: "Sundays · 9:00 & 11:00",
       date: sun(8, 45),
       durationMin: 85,
-      location: "Kids Wing · Follow the blue signs",
+      location: "Kids area (downstairs) · Follow the blue signs",
       expect: ["A 2-minute check-in at the Kids Welcome desk", "A matching security tag for you and your child", "Age-specific rooms with trained leaders", "We'll text you if your child needs you"],
       hostIds: ["priya"],
       cta: "Plan for my kids",
@@ -333,7 +333,7 @@ export function buildOfferings(): Offering[] {
       image: img.family,
       summary: "A quick hello with the people who'll care for your kids and students.",
       description: [
-        "Every parent has questions. Meet Priya and Ellie for a 15-minute chat and a tour of the Kids Wing and Student Center.",
+        "Every parent has questions. Meet Priya and Ellie for a 15-minute chat and a tour of the kids area downstairs and the youth room upstairs.",
         "It's the fastest way to feel at ease about dropping your kids off.",
       ],
       schedule: "Sundays · Between services",
@@ -372,7 +372,7 @@ export function buildOfferings(): Offering[] {
       items: [
         { id: "f-movie", title: "Family Movie Night", meta: "", location: "The Commons", leader: "Kids Team", description: "Popcorn, blankets, and a classic. PJs encouraged.", date: iso(nextDow(5, 18, 30, 0)), durationMin: 150 },
         { id: "f-pumpkin", title: "Pumpkin Patch Morning", meta: "", location: "Rolling Hills Farm", leader: "Priya Shah", description: "Hayrides, cider, and the great pumpkin hunt.", date: iso(nextDow(6, 10, 0, 1)), durationMin: 180 },
-        { id: "f-students", title: "Student Night Kickoff", meta: "", location: "Student Center", leader: "Ellie Thompson", description: "For 6th–12th graders. Games, food, and a short talk.", date: iso(nextDow(3, 18, 30, 0)), durationMin: 120 },
+        { id: "f-students", title: "Student Night Kickoff", meta: "", location: "Youth room (upstairs)", leader: "Ellie Thompson", description: "For 6th–12th graders. Games, food, and a short talk.", date: iso(nextDow(3, 18, 30, 0)), durationMin: 120 },
       ],
       matchKeys: ["parents", "middle", "high", "elementary"],
     },
@@ -389,7 +389,7 @@ export function buildOfferings(): Offering[] {
       summary: "How a dozen friends in a living room became Gather Church.",
       description: [
         "In 2011, twelve people started meeting in a living room on 10th Street. They wanted a church that felt like a family dinner: honest, warm, and open to anyone.",
-        "Today we're a few hundred people in a renovated feed mill on Larkspur Lane. A lot has changed. That part hasn't.",
+        "Today we're a few hundred people on the corner of Oak and 17th. A lot has changed. That part hasn't.",
         "We believe Jesus changes everything, that church should be a place to belong before you believe, and that the best way to love our city is to show up for it.",
       ],
       schedule: "Monthly Newcomers Lunch",
@@ -479,8 +479,8 @@ export function buildOfferings(): Offering[] {
       confirmBody: "The team leader will reach out to set up a shadow shift. No commitment until you're ready.",
       itemsTitle: "Teams looking for people",
       items: [
-        { id: "t-welcome", title: "Welcome Team", meta: "Sundays · 2x/month", location: "Lobby & parking", leader: "Jamie Okafor", description: "Greeters, coffee, and the first smile people see.", tags: ["hospitality"] },
-        { id: "t-kids", title: "Kids Team", meta: "Sundays · 2x/month", location: "Kids Wing", leader: "Priya Shah", description: "Lead a small group or help with check-in. Background check required.", tags: ["kids"] },
+        { id: "t-welcome", title: "Welcome Team", meta: "Sundays · 2x/month", location: "Main entrance & parking lots", leader: "Jamie Okafor", description: "Greeters, coffee, and the first smile people see.", tags: ["hospitality"] },
+        { id: "t-kids", title: "Kids Team", meta: "Sundays · 2x/month", location: "Kids area (downstairs)", leader: "Priya Shah", description: "Lead a small group or help with check-in. Background check required.", tags: ["kids"] },
         { id: "t-production", title: "Production Team", meta: "Sundays · 1x/month", location: "Auditorium", leader: "Leo Park", description: "Sound, lights, slides, and livestream. We'll train you.", tags: ["production"] },
         { id: "t-care", title: "Prayer & Care", meta: "Flexible", location: "Prayer room & meals", leader: "Ruth Alvarez", description: "Pray with people after services or bring meals to families in need.", tags: ["care"] },
       ],
@@ -526,14 +526,14 @@ export function buildOfferings(): Offering[] {
       schedule: "Sundays · Before the 9:00 service",
       date: sun(8, 15),
       durationMin: 60,
-      location: "Main lobby café",
+      location: "The Gym coffee bar (downstairs)",
       expect: ["Arrive at 8:15, done by 9:15", "A buddy the whole time", "Free coffee, obviously"],
       hostIds: ["jamie"],
       cta: "Try it once",
       action: "Count me in",
       actionKind: "signup",
       confirmTitle: "You're in!",
-      confirmBody: "Jamie will meet you at the café at 8:15 with an apron and a smile.",
+      confirmBody: "Jamie will meet you at the coffee bar in the gym at 8:15 with an apron and a smile.",
       matchKeys: ["hospitality", "serving", "coffee", "behind"],
     },
   ];
@@ -557,5 +557,5 @@ export const faqs = [
   { q: "Will I be singled out?", a: "Never. We won't ask you to stand up, raise your hand, or introduce yourself. Visit at your own pace." },
   { q: "Do I need to give money?", a: "No. Giving is for people who call Gather home. Guests are our guests." },
   { q: "I'm not sure what I believe. Is that okay?", a: "Absolutely. Lots of people here are asking questions. You're welcome exactly as you are." },
-  { q: "Where do I park?", a: "Guest parking is right by the main entrance off Larkspur Lane. Look for the blue signs and a friendly wave." },
+  { q: "Where do I park?", a: "Anywhere you like. We have lots north of the building across 17th St, south of the building, and across Oak St. Then head to the main entrance on Oak St." },
 ];

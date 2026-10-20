@@ -126,7 +126,7 @@ export function Landing() {
               </Reveal>
               <Reveal delay={0.1}>
                 <div className="mt-12 grid gap-8 text-[17px] leading-relaxed text-stone-600 sm:grid-cols-2">
-                  <p>Gather started in 2011 with twelve friends in a living room. Today we&apos;re a few hundred people in an old feed mill on Larkspur Lane: students, retirees, young families, and everyone in between.</p>
+                  <p>Gather started in 2011 with twelve friends in a living room. Today we&apos;re a few hundred people on the corner of Oak and 17th: students, retirees, young families, and everyone in between.</p>
                   <p>You don&apos;t need to know the songs, own a Bible, or have it all together. Come as you are. Ask the hard questions. Stay for coffee.</p>
                 </div>
               </Reveal>
@@ -166,7 +166,7 @@ export function Landing() {
                 <div className="flex h-full flex-col justify-between rounded-[28px] bg-forest-800 p-7 text-paper md:p-8">
                   <ol className="space-y-4">
                     {[
-                      ["8:30", "Grab a coffee in the lobby"],
+                      ["8:30", "Grab a coffee in the gym"],
                       ["9:00", "Music and a warm welcome"],
                       ["9:25", "A talk worth thinking about"],
                       ["10:10", "Linger, meet someone new"],

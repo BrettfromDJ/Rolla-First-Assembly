@@ -2,67 +2,138 @@
 
 import { useState } from "react";
 import { motion } from "motion/react";
-import { Car, Coffee, DoorOpen, Sprout, Armchair } from "lucide-react";
+import { Armchair, Car, Coffee, DoorOpen, Sprout, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+/**
+ * Illustrated campus map, traced from an aerial view of the building at
+ * N Oak St & E 17th St. North is up.
+ */
 const stops = [
-  { n: 1, icon: Car, title: "Park in a guest spot", body: "Turn in off Larkspur Lane. Guest parking is the first row, marked with blue signs.", x: 150, y: 400 },
-  { n: 2, icon: DoorOpen, title: "Meet us at the welcome tent", body: "Right outside the main doors. Jamie and the team will say hi and answer anything.", x: 352, y: 300 },
-  { n: 3, icon: Coffee, title: "Grab a coffee", body: "The lobby café opens at 8:30. Coffee, tea, and pastries are always free.", x: 420, y: 205 },
-  { n: 4, icon: Sprout, title: "Check in the kids", body: "Kids Wing is to the left of the lobby. Look for the blue Kids Welcome desk.", x: 205, y: 160 },
-  { n: 5, icon: Armchair, title: "Find a seat", body: "The auditorium doors open 10 minutes before. Sit anywhere. Really.", x: 600, y: 160 },
+  { n: 1, icon: Car, title: "Park in any lot", body: "Lots north of the building (across 17th St), south of the building, and across Oak St are all yours.", x: 448, y: 545 },
+  { n: 2, icon: DoorOpen, title: "Come in the main entrance", body: "On the west side of the building, facing Oak St. The welcome team will be right inside to say hi.", x: 334, y: 296 },
+  { n: 3, icon: Coffee, title: "Grab a coffee in the gym", body: "Head downstairs to the gym. Coffee, tea, and pastries are always free.", x: 442, y: 380 },
+  { n: 4, icon: Sprout, title: "Check in the kids", body: "The kids area is downstairs too. Look for the blue Kids Welcome desk.", x: 510, y: 318 },
+  { n: 5, icon: Armchair, title: "Find a seat in the auditorium", body: "Doors open 10 minutes before. Sit anywhere. Really.", x: 510, y: 272 },
+  { n: 6, icon: Users, title: "Students, head upstairs", body: "6th–12th graders meet in the youth room upstairs on Wednesday nights.", x: 497, y: 424 },
 ];
+
+const C = {
+  ground: "#121212",
+  road: "#1f1f1f",
+  roadLine: "#3a3a3a",
+  lot: "#171717",
+  stripe: "#2c2c2c",
+  house: "#1b1b1b",
+  tree: "#18211b",
+  building: "#151515",
+  edge: "#3b3b3a",
+  blue: "#0a7cff",
+  cream: "#ebe4d8",
+  dim: "#77736c",
+};
+
+function Lot({ x, y, w, h, rows = 2, label }: { x: number; y: number; w: number; h: number; rows?: number; label?: string }) {
+  const rowH = h / rows;
+  return (
+    <g>
+      <rect x={x} y={y} width={w} height={h} rx="8" fill={C.lot} stroke={C.stripe} />
+      {Array.from({ length: rows }).map((_, r) => (
+        <g key={r}>
+          {Array.from({ length: Math.floor((w - 16) / 16) }).map((__, i) => (
+            <line key={i} x1={x + 12 + i * 16} x2={x + 12 + i * 16} y1={y + r * rowH + 8} y2={y + r * rowH + rowH * 0.42} stroke={C.stripe} strokeWidth="1.5" />
+          ))}
+        </g>
+      ))}
+      <g transform={`translate(${x + w - 18} ${y + 18})`}>
+        <circle r="10" fill={C.blue} />
+        <text textAnchor="middle" dy="4" fontSize="12" fontWeight="700" fontFamily="var(--font-sans)" fill="#0e0e0e">P</text>
+      </g>
+      {label && (
+        <text x={x + 10} y={y + h - 9} fontSize="9" fontFamily="var(--font-sans)" fill={C.dim} letterSpacing="1.2">
+          {label}
+        </text>
+      )}
+    </g>
+  );
+}
+
+function Zone({ x, y, w, h, fill, title, sub }: { x: number; y: number; w: number; h: number; fill: string; title: string; sub?: string }) {
+  return (
+    <g>
+      <rect x={x} y={y} width={w} height={h} rx="4" fill={fill} />
+      <text x={x + 8} y={y + 15} fontSize="9.5" fontWeight="600" fontFamily="var(--font-sans)" fill={C.cream} letterSpacing="1.2">
+        {title}
+      </text>
+      {sub && (
+        <text x={x + 8} y={y + 27} fontSize="8.5" fontFamily="var(--font-sans)" fill={C.dim}>
+          {sub}
+        </text>
+      )}
+    </g>
+  );
+}
 
 export function CampusMap() {
   const [active, setActive] = useState(1);
 
   return (
-    <div className="grid gap-8 lg:grid-cols-[1.35fr_1fr] lg:gap-12">
+    <div className="grid gap-8 lg:grid-cols-[1.2fr_1fr] lg:gap-12">
       <div className="relative overflow-hidden rounded-[32px] bg-ink-2 ring-1 ring-stone-200/60">
-        <svg viewBox="0 0 800 520" className="h-auto w-full" role="img" aria-label="Illustrated map of the Gather Church campus">
-          <defs>
-            <pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse">
-              <path d="M24 0H0V24" fill="none" stroke="#1c1c1c" strokeWidth="1" />
-            </pattern>
-            <pattern id="stripes" width="22" height="40" patternUnits="userSpaceOnUse">
-              <path d="M0 0V40" stroke="#2c2c2c" strokeWidth="2" />
-            </pattern>
-          </defs>
-          <rect width="800" height="520" fill="url(#grid)" />
+        <svg viewBox="40 40 560 640" className="h-auto w-full" role="img" aria-label="Map of the church campus at N Oak St and E 17th St, showing parking lots, the main entrance, gym, kids area, auditorium, and youth room">
+          <rect x="0" y="0" width="800" height="720" fill={C.ground} />
 
-          {/* Road */}
-          <rect x="0" y="462" width="800" height="58" fill="#1f1f1f" />
-          <path d="M0 491H800" stroke="#3a3a3a" strokeWidth="3" strokeDasharray="22 18" />
-          <text x="660" y="510" className="fill-stone-500" fontSize="13" fontFamily="var(--font-sans)" letterSpacing="2">LARKSPUR LN</text>
+          {/* Neighborhood context */}
+          {[
+            [160, 340, 76, 44], [70, 470, 60, 50], [190, 545, 70, 70], [80, 600, 60, 60], [150, 650, 50, 40],
+            [560, 250, 40, 34], [575, 380, 30, 60],
+          ].map(([x, y, w, h], i) => (
+            <rect key={i} x={x} y={y} width={w} height={h} rx="3" fill={C.house} />
+          ))}
+          {[
+            [70, 60, 22], [120, 60, 16], [230, 120, 12], [72, 300, 16], [125, 360, 18], [250, 470, 14], [240, 640, 18],
+            [560, 300, 20], [575, 460, 22], [565, 600, 18], [520, 60, 18],
+          ].map(([x, y, r], i) => (
+            <circle key={i} cx={x} cy={y} r={r} fill={C.tree} />
+          ))}
+
+          {/* Streets */}
+          <rect x="276" y="0" width="48" height="720" fill={C.road} />
+          <rect x="0" y="184" width="800" height="50" fill={C.road} />
+          <path d="M300 0V184M300 234V720" stroke={C.roadLine} strokeWidth="1.5" strokeDasharray="10 10" />
+          <path d="M0 209H276M324 209H800" stroke={C.roadLine} strokeWidth="1.5" strokeDasharray="10 10" />
+          <text x="306" y="600" fontSize="11" fontWeight="600" fontFamily="var(--font-sans)" fill={C.dim} letterSpacing="2.5" transform="rotate(-90 306 600)">N OAK ST</text>
+          <text x="96" y="213" fontSize="11" fontWeight="600" fontFamily="var(--font-sans)" fill={C.dim} letterSpacing="2.5">E 17TH ST</text>
+          <text x="420" y="213" fontSize="11" fontWeight="600" fontFamily="var(--font-sans)" fill={C.dim} letterSpacing="2.5">E 17TH ST</text>
 
           {/* Parking */}
-          <rect x="40" y="350" width="270" height="96" rx="14" fill="#181818" />
-          <rect x="52" y="362" width="246" height="34" fill="url(#stripes)" />
-          <rect x="52" y="400" width="246" height="34" fill="url(#stripes)" />
-          <rect x="52" y="362" width="110" height="34" fill="#0f1f38" />
-          <text x="60" y="384" fontSize="11" fontFamily="var(--font-sans)" className="fill-forest-700" fontWeight="600">GUEST</text>
-          <path d="M310 446v16" stroke="#1f1f1f" strokeWidth="40" />
+          <Lot x={78} y={86} w={188} h={92} label="NORTHWEST LOT" />
+          <Lot x={342} y={40} w={182} h={138} rows={3} label="NORTH LOT" />
+          <Lot x={70} y={244} w={198} h={84} label="WEST LOT" />
+          <Lot x={345} y={470} w={207} h={192} rows={4} label="SOUTH LOT" />
 
-          {/* Path from parking to entrance */}
-          <path d="M175 360 C 200 320, 300 330, 352 312" fill="none" stroke="#0a7cff" strokeWidth="3" strokeDasharray="2 9" strokeLinecap="round" />
+          {/* Walking routes to the entrance */}
+          <g fill="none" stroke={C.blue} strokeWidth="2.5" strokeDasharray="1 8" strokeLinecap="round" opacity="0.9">
+            <path d="M430 178 V 238 H 334 V 296" />
+            <path d="M268 286 H 334" />
+            <path d="M420 470 V 456 H 334 V 296" />
+          </g>
 
           {/* Building */}
-          <rect x="110" y="70" width="620" height="220" rx="26" fill="#151515" stroke="#2e2e2e" />
-          <rect x="120" y="80" width="190" height="200" rx="18" fill="#2a1912" />
-          <text x="140" y="108" fontSize="12" fontFamily="var(--font-sans)" fill="#ff8a5c" fontWeight="600" letterSpacing="1.5">KIDS WING</text>
-          <rect x="320" y="150" width="170" height="130" rx="18" fill="#262013" />
-          <text x="340" y="176" fontSize="12" fontFamily="var(--font-sans)" fill="#f2c75c" fontWeight="600" letterSpacing="1.5">LOBBY · CAFÉ</text>
-          <rect x="500" y="80" width="220" height="200" rx="18" fill="#0f1f38" />
-          <text x="520" y="108" fontSize="12" fontFamily="var(--font-sans)" fill="#8cc4ff" fontWeight="600" letterSpacing="1.5">AUDITORIUM</text>
-          {/* Doors */}
-          <rect x="370" y="284" width="70" height="10" rx="5" fill="#0a7cff" />
+          <path d="M351 242 H532 V452 H497 V466 H437 V398 H354 V340 H351 Z" fill={C.building} stroke={C.edge} strokeWidth="1.5" />
+          <Zone x={395} y={248} w={131} h={48} fill="#0f1f38" title="AUDITORIUM" />
+          <Zone x={395} y={300} w={131} h={36} fill="#13231b" title="KIDS" sub="downstairs" />
+          <Zone x={358} y={342} w={104} h={52} fill="#262013" title="GYM · COFFEE" sub="downstairs" />
+          <Zone x={467} y={342} w={59} h={104} fill="#1c1626" title="YOUTH" sub="upstairs" />
+          <text x="358" y="262" fontSize="9" fontWeight="600" fontFamily="var(--font-sans)" fill={C.cream} letterSpacing="1">ENTRY</text>
+          {/* Main doors on the Oak St side */}
+          <rect x="347" y="280" width="8" height="34" rx="4" fill={C.blue} />
 
-          {/* Trees */}
-          {[
-            [60, 90, 26], [62, 160, 18], [770, 340, 24], [740, 400, 16], [520, 350, 20], [560, 390, 14], [620, 360, 18], [80, 250, 20],
-          ].map(([x, y, r], i) => (
-            <circle key={i} cx={x} cy={y} r={r} fill="#1d2620" opacity="0.9" />
-          ))}
+          {/* North arrow */}
+          <g transform="translate(578 76)">
+            <circle r="16" fill="none" stroke={C.edge} />
+            <path d="M0 -10 L5 4 L0 1 L-5 4 Z" fill={C.cream} />
+          </g>
 
           {/* Pins */}
           {stops.map((s) => {
@@ -70,17 +141,17 @@ export function CampusMap() {
             return (
               <g key={s.n} transform={`translate(${s.x} ${s.y})`} className="cursor-pointer" onClick={() => setActive(s.n)} onMouseEnter={() => setActive(s.n)}>
                 {on && (
-                  <motion.circle r="26" fill="#0a7cff" initial={{ opacity: 0.35, scale: 0.6 }} animate={{ opacity: 0, scale: 1.6 }} transition={{ duration: 1.6, repeat: Infinity }} />
+                  <motion.circle r="20" fill={C.blue} initial={{ opacity: 0.4, scale: 0.6 }} animate={{ opacity: 0, scale: 1.7 }} transition={{ duration: 1.6, repeat: Infinity }} />
                 )}
-                <circle r="17" fill={on ? "#0a7cff" : "#171717"} stroke="#0a7cff" strokeWidth="2" />
-                <text textAnchor="middle" dy="5" fontSize="14" fontWeight="600" fontFamily="var(--font-sans)" fill={on ? "#0e0e0e" : "#ebe4d8"}>
+                <circle r="13" fill={on ? C.blue : "#171717"} stroke={C.blue} strokeWidth="2" />
+                <text textAnchor="middle" dy="4.5" fontSize="12.5" fontWeight="700" fontFamily="var(--font-sans)" fill={on ? "#0e0e0e" : C.cream}>
                   {s.n}
                 </text>
               </g>
             );
           })}
         </svg>
-        <span className="absolute left-5 top-5 rounded-full bg-white/90 px-3 py-1.5 text-xs font-medium text-stone-600 shadow-sm backdrop-blur">Not to scale · but close</span>
+        <span className="absolute bottom-4 left-4 rounded-full bg-ink/80 px-3 py-1.5 text-xs font-medium text-stone-500 ring-1 ring-stone-200 backdrop-blur">N Oak St &amp; E 17th St</span>
       </div>
 
       <ol className="space-y-2">
@@ -93,7 +164,7 @@ export function CampusMap() {
                 onClick={() => setActive(s.n)}
                 onMouseEnter={() => setActive(s.n)}
                 aria-pressed={on}
-                className={cn("flex w-full gap-4 rounded-3xl p-4 text-left transition duration-300 md:p-5", on ? "bg-white shadow-soft" : "hover:bg-white/50")}
+                className={cn("flex w-full gap-4 rounded-3xl p-4 text-left transition duration-300 md:p-5", on ? "bg-white shadow-soft ring-1 ring-stone-200" : "hover:bg-white/50")}
               >
                 <span className={cn("flex size-10 shrink-0 items-center justify-center rounded-full text-sm font-semibold transition", on ? "bg-forest-700 text-ink" : "bg-stone-200/70 text-stone-600")}>
                   {s.n}

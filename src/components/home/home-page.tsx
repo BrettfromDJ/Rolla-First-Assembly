@@ -103,7 +103,7 @@ export function HomePage() {
                 tone="forest"
                 eyebrow={`${relativeDay(profile.visitPlan.date)} · ${profile.visitPlan.service} AM`}
                 title="Your first Sunday"
-                body="Park in a guest spot and look for the welcome tent. Jamie will be there to say hello."
+                body="Park in any of our lots and head to the main entrance on Oak St. Jamie will be there to say hello."
                 cta="See your Sunday guide"
                 badge="You're on the list"
               />

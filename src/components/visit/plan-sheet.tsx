@@ -207,7 +207,7 @@ function Confirmation({ name, date, service, kids, onDone }: { name: string; dat
           {[
             ["When", `${formatDay(date)} · ${service} AM`],
             ["Where", `${church.address}, ${church.city}`],
-            ["Park", "Guest spots by the main entrance"],
+            ["Park", "Lots north, south, or across Oak St"],
             ["Kids", kids ? `${kids} kid${kids > 1 ? "s" : ""}, name tags ready at the blue desk` : "Just the grown-ups"],
           ].map(([k, v]) => (
             <div key={k} className="flex gap-4 px-5 py-3.5 text-[15px]">
@@ -218,7 +218,7 @@ function Confirmation({ name, date, service, kids, onDone }: { name: string; dat
         </dl>
         <div className="flex items-center gap-3 bg-forest-50 px-5 py-4">
           <Avatar name={jamie.name} src={jamie.photo} />
-          <p className="text-sm text-forest-300">Jamie will meet you at the welcome tent out front.</p>
+          <p className="text-sm text-forest-300">Jamie will meet you at the main entrance on Oak St.</p>
         </div>
       </div>
 
