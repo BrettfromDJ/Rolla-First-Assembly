@@ -18,7 +18,7 @@ export const church = {
 /** Destinations outside this prototype. Swap in the church's real URLs. */
 export const churchLinks = {
   give: "https://rollafirst.church",
-  sermons: "https://rollafirst.church",
+  sermons: "/sermons",
   facebook: "https://www.facebook.com/",
   instagram: "https://www.instagram.com/",
   youtube: "https://www.youtube.com/",

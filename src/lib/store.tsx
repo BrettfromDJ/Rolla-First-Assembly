@@ -66,10 +66,11 @@ interface State {
   attendance: AttendanceRecord[];
   prayers: PrayerRequest[];
   prayed: string[]; // prayer ids this browser has prayed for
+  sermonNotes: Record<string, string>; // the visitor's own notes, by sermon id
   seedVersion?: number;
 }
 
-const freshState = (): State => ({ profile: freshProfile(), visitors: buildSeedVisitors(), overlay: freshOverlay(), attendance: buildSeedAttendance(), prayers: buildSeedPrayers(), prayed: [], seedVersion: SEED_VERSION });
+const freshState = (): State => ({ profile: freshProfile(), visitors: buildSeedVisitors(), overlay: freshOverlay(), attendance: buildSeedAttendance(), prayers: buildSeedPrayers(), prayed: [], sermonNotes: {}, seedVersion: SEED_VERSION });
 
 export type VisitorPatch = Partial<Pick<Visitor, "stage" | "assigneeId" | "status">>;
 
@@ -106,6 +107,8 @@ interface Store extends State {
   removeMyPrayer: (id: string) => void;
   patchPrayer: (id: string, patch: Partial<Pick<PrayerRequest, "status" | "wallApproved" | "assigneeId" | "contacted" | "visibility" | "update">>) => void;
   addPrayerNote: (id: string, body: string, authorId: string) => void;
+  /* sermons */
+  saveSermonNote: (sermonId: string, text: string) => void;
 }
 
 const Ctx = createContext<Store | null>(null);
@@ -205,6 +208,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
           attendance: parsed.attendance ?? buildSeedAttendance(),
           prayers: parsed.prayers ?? buildSeedPrayers(),
           prayed: parsed.prayed ?? [],
+          sermonNotes: parsed.sermonNotes ?? {},
           seedVersion: SEED_VERSION,
         });
       }
@@ -347,6 +351,10 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       editPrayer(id, (p) => ({ notes: [{ id: uid("note"), body, authorId, createdAt: new Date().toISOString() }, ...p.notes] })),
     [editPrayer],
   );
+
+  const saveSermonNote = useCallback((sermonId: string, text: string) => {
+    setState((s) => ({ ...s, sermonNotes: { ...s.sermonNotes, [sermonId]: text } }));
+  }, []);
 
   const cancelKids = useCallback(() => {
     setState((s) => ({ ...s, profile: { ...s.profile, kids: null } }));
@@ -499,6 +507,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     removeMyPrayer,
     patchPrayer,
     addPrayerNote,
+    saveSermonNote,
   };
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
