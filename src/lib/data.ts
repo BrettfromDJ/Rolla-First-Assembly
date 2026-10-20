@@ -334,6 +334,7 @@ export function buildOfferings(): Offering[] {
         { id: "k-elementary", title: "Elementary", meta: "K – 5th grade", location: "The Treehouse", leader: "Micah Wells", description: "Big-group worship, small-group conversation, and lots of energy." },
       ],
       matchKeys: ["babies", "elementary", "kids"],
+      href: "/kids",
     },
     {
       id: "family-team",
@@ -631,3 +632,26 @@ export function baptismDates(count = 3, from = new Date()) {
   }
   return out;
 }
+
+/* ---------- Kids First ---------- */
+
+export const kidsGroups = [
+  { id: "nursery", label: "Nursery", ages: "Birth – 2", room: "Nursery", blurb: "Rocking chairs, soft toys, and very patient grown-ups. We'll follow your routine." },
+  { id: "preschool", label: "Preschool", ages: "Ages 3 – 5", room: "Preschool room", blurb: "Songs, crafts, snacks, and a Bible story told at their level." },
+  { id: "elementary", label: "Elementary", ages: "K – 5th grade", room: "Elementary room", blurb: "Big-group worship, a Bible lesson that sticks, and small groups with the same leaders each week." },
+  { id: "students", label: "Students", ages: "6th – 12th grade", room: "Youth room (upstairs)", blurb: "Wednesday nights at 6:30 PM with Pastor Gannon. Sundays, students sit with their families in the service." },
+] as const;
+
+/** Options for "which group" when a parent pre-registers a child (students meet separately). */
+export const kidGradeOptions = [
+  { id: "nursery", label: "Nursery (birth–2)", group: "nursery" },
+  { id: "preschool", label: "Preschool (3–5)", group: "preschool" },
+  { id: "k", label: "Kindergarten", group: "elementary" },
+  { id: "1", label: "1st grade", group: "elementary" },
+  { id: "2", label: "2nd grade", group: "elementary" },
+  { id: "3", label: "3rd grade", group: "elementary" },
+  { id: "4", label: "4th grade", group: "elementary" },
+  { id: "5", label: "5th grade", group: "elementary" },
+] as const;
+
+export const kidGradeLabel = (id: string) => kidGradeOptions.find((g) => g.id === id)?.label ?? id;

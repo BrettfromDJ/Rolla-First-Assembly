@@ -189,7 +189,7 @@ export function HomePage() {
             <h2 id="plans" className="text-sm font-medium text-stone-500">Your plans</h2>
             {plans.length > 0 && <span className="text-sm text-stone-400">{plans.length} saved</span>}
           </div>
-          {plans.length === 0 && !profile.visitPlan && !profile.baptism ? (
+          {plans.length === 0 && !profile.visitPlan && !profile.baptism && !profile.kids ? (
             <div className="flex flex-col items-start gap-4 rounded-[28px] border border-dashed border-stone-300 p-8 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-center gap-4">
                 <span className="flex size-12 items-center justify-center rounded-2xl bg-white text-stone-400 ring-1 ring-stone-200"><CalendarDays className="size-5" /></span>
@@ -209,6 +209,15 @@ export function HomePage() {
                   title={profile.baptism.age === "child" ? `${profile.baptism.firstName}'s baptism` : "Baptism"}
                   meta={`${profile.baptism.service} AM · Class ${formatShortDay(profile.baptism.classDate)} at noon`}
                   status="Registered"
+                />
+              )}
+              {profile.kids && (
+                <PlanRow
+                  href="/kids"
+                  date={profile.kids.date}
+                  title={`Kids First · ${profile.kids.kids.map((k) => k.firstName).join(" & ")}`}
+                  meta={`${profile.kids.service} AM · Kids Welcome desk, downstairs`}
+                  status="Pre-registered"
                 />
               )}
               {profile.visitPlan && (

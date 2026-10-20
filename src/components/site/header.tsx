@@ -15,6 +15,7 @@ const mori = "font-mori font-semibold";
 export const siteNav = [
   { href: "/#mission", label: "Mission" },
   { href: "/visit", label: "New here" },
+  { href: "/kids", label: "Kids" },
   { href: "/events", label: "Events" },
   { href: "/baptism", label: "Baptism" },
   { href: churchLinks.sermons, label: "Sermons" },

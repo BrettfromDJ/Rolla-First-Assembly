@@ -19,6 +19,7 @@ import {
   Users,
   ArrowRightLeft,
   Droplets,
+  Baby,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Sheet } from "@/components/ui/sheet";
@@ -33,6 +34,7 @@ import {
   interestShort,
   serveAreaOptions,
   staffById,
+  kidGradeLabel,
   vibeOptions,
   welcomeTeam,
 } from "@/lib/data";
@@ -45,6 +47,7 @@ const actIcon: Record<Activity["kind"], React.ComponentType<{ className?: string
   visit: Footprints,
   plan: CalendarDays,
   baptism: Droplets,
+  kids: Baby,
   onboarding: Sparkles,
   rsvp: CalendarCheck,
   join: Users,
@@ -197,13 +200,26 @@ function PanelBody({ v }: { v: Visitor }) {
         </Section>
 
         <Section title="Event registrations">
-          {v.visitPlan || v.rsvps.length || v.baptism ? (
+          {v.visitPlan || v.rsvps.length || v.baptism || v.kids ? (
             <ul className="space-y-2">
               {v.visitPlan && (
                 <li className="flex items-center gap-3 rounded-2xl bg-sky-soft/50 px-4 py-3 text-sm">
                   <CalendarDays className="size-4 text-sky" />
                   <span className="flex-1 text-stone-800">Sunday service · {v.visitPlan.service} AM{v.visitPlan.bringingKids ? ` · ${v.visitPlan.kidsCount || ""} kid${v.visitPlan.kidsCount === 1 ? "" : "s"}` : ""}</span>
                   <span className="text-stone-500">{formatShortDay(v.visitPlan.date)}</span>
+                </li>
+              )}
+              {v.kids && (
+                <li className="rounded-2xl bg-stone-50 px-4 py-3 text-sm">
+                  <div className="flex items-center gap-3">
+                    <Baby className="size-4 text-forest-500" />
+                    <span className="flex-1 text-stone-800">Kids First · {v.kids.kids.map((k) => `${k.firstName} (${kidGradeLabel(k.group)})`).join(", ")}</span>
+                    <span className="text-stone-500">{formatShortDay(v.kids.date)} · {v.kids.service}</span>
+                  </div>
+                  {v.kids.kids.some((k) => k.allergies) && (
+                    <p className="mt-1.5 pl-7 text-xs text-clay">Allergies: {v.kids.kids.filter((k) => k.allergies).map((k) => `${k.firstName}: ${k.allergies}`).join(" · ")}</p>
+                  )}
+                  {v.kids.notes && <p className="mt-1.5 pl-7 text-xs text-stone-500">Note: {v.kids.notes}</p>}
                 </li>
               )}
               {v.baptism && (

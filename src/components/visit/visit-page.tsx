@@ -246,6 +246,9 @@ export function VisitPage() {
                 <p className="mt-8 rounded-2xl bg-white/70 p-4 text-sm leading-relaxed text-stone-600">
                   <span className="font-medium text-stone-900">Safety first, always.</span> Every volunteer is background-checked, trained, and serves in pairs. Kids&apos; rooms have secure entry.
                 </p>
+                <Link href="/kids" className="mt-6 inline-flex items-center gap-1.5 text-[15px] font-medium text-forest-500 hover:underline">
+                  Everything about Kids First <ArrowRight className="size-4" />
+                </Link>
               </Reveal>
             </div>
           </div>

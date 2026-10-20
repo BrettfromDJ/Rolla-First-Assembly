@@ -47,6 +47,24 @@ export interface Profile {
   visitPlan: VisitPlan | null;
   rsvps: Rsvp[];
   baptism: BaptismRegistration | null;
+  kids: KidsRegistration | null;
+  createdAt: string;
+}
+
+export interface KidInfo {
+  firstName: string;
+  lastName: string;
+  group: string; // KidsGroup id, e.g. "nursery" | "preschool" | "k" | "1"…"5"
+  allergies?: string;
+}
+
+export interface KidsRegistration {
+  parentName: string;
+  contact: string;
+  kids: KidInfo[];
+  date: string; // ISO of their first Sunday (service start)
+  service: ServiceTime;
+  notes?: string;
   createdAt: string;
 }
 
@@ -154,7 +172,7 @@ export interface Task {
 
 export interface Activity {
   id: string;
-  kind: "visit" | "plan" | "baptism" | "onboarding" | "rsvp" | "contacted" | "assigned" | "note" | "task" | "stage" | "join" | "question";
+  kind: "visit" | "plan" | "baptism" | "kids" | "onboarding" | "rsvp" | "contacted" | "assigned" | "note" | "task" | "stage" | "join" | "question";
   label: string;
   at: string;
 }
@@ -176,6 +194,7 @@ export interface Visitor {
   rsvps: Rsvp[];
   visitPlan?: VisitPlan | null;
   baptism?: BaptismRegistration | null;
+  kids?: KidsRegistration | null;
   household?: string;
   notes: Note[];
   tasks: Task[];
