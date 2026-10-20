@@ -39,6 +39,8 @@ const pastors: { first: string; last: string; role: string; image?: string; phot
   { first: "Gannon", last: "Breig", role: "Youth / Worship Pastor", image: "team/gannon-breig.jpg" },
   { first: "Micah", last: "Wells", role: "Children's Pastor", image: "team/micah-wells.jpg" },
   { first: "Pam", last: "", role: "Children's Discipleship Pastor", image: "team/pam.jpg" },
+  { first: "Debbie", last: "Skyles", role: "", image: "team/debbie-skyles.jpg" },
+  { first: "Brice", last: "Adams", role: "", image: "team/brice-adams.jpg" },
 ];
 
 /* ---------- Building blocks ---------- */
@@ -274,14 +276,14 @@ export function ChurchHome() {
       <div className="mx-auto max-w-[1440px]">
         <ul className="no-scrollbar mt-[48px] flex snap-x snap-mandatory overflow-x-auto md:mt-[67px]">
           {pastors.map((p) => (
-            <li key={`${p.first}-${p.role}`} className="w-[min(340px,78vw)] shrink-0 snap-start">
+            <li key={`${p.first}-${p.last}`} className="w-[min(340px,78vw)] shrink-0 snap-start">
               <div className="flex min-h-[78px] flex-col justify-end text-right">
                 <p className={cn(mori, "text-[26px] uppercase leading-none tracking-[-0.03em]")}>
                   {p.first}
                   {p.last && <br />}
                   {p.last}
                 </p>
-                <p className={cn(mori, "mt-[8px] text-[16px] uppercase leading-[1.1] tracking-[-0.03em] text-[#0285ff]")}>{p.role}</p>
+                {p.role && <p className={cn(mori, "mt-[8px] text-[16px] uppercase leading-[1.1] tracking-[-0.03em] text-[#0285ff]")}>{p.role}</p>}
               </div>
               <div className="relative mt-[18px] aspect-[340/605] bg-[#d9d9d9]">
                 {p.image ? (
