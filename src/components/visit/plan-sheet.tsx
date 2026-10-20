@@ -112,7 +112,7 @@ export function PlanVisitSheet({ open, onOpenChange }: { open: boolean; onOpenCh
             {step === 1 && (
               <div className="space-y-7">
                 <Heading title={`Which Sunday works, ${firstName.split(" ")[0]}?`} body="Both services are the same. Pick whatever fits your morning." />
-                <div className="no-scrollbar -mx-1 flex gap-2 overflow-x-auto overflow-y-hidden px-1">
+                <div className="no-scrollbar -mx-1 flex gap-2 overflow-x-auto overflow-y-hidden px-1 py-1">
                   {sundays.map((s, i) => {
                     const on = new Date(date).toDateString() === s.toDateString();
                     return (

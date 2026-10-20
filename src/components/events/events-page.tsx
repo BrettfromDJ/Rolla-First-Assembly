@@ -46,7 +46,7 @@ export function EventsPage() {
             </motion.div>
           </AnimatePresence>
 
-          <div role="tablist" aria-label="Areas" className="no-scrollbar -mx-5 mt-10 flex gap-2 overflow-x-auto overflow-y-hidden px-5 md:mx-0 md:px-0">
+          <div role="tablist" aria-label="Areas" className="no-scrollbar -mx-5 mt-10 flex gap-2.5 overflow-x-auto overflow-y-hidden px-5 py-1 md:mx-0 md:flex-wrap md:px-0">
             {areas.map((a) => (
               <button
                 key={a.id}
@@ -54,8 +54,8 @@ export function EventsPage() {
                 aria-selected={a.id === area}
                 onClick={() => router.replace(a.id === "all" ? "/events" : `/events?area=${a.id}`, { scroll: false })}
                 className={cn(
-                  "shrink-0 rounded-full px-4 py-2 text-sm ring-1 transition",
-                  a.id === area ? "bg-forest-700 text-ink ring-forest-700" : "bg-white text-stone-700 ring-stone-200 hover:ring-stone-300",
+                  "flex h-11 shrink-0 items-center rounded-full border-2 px-5 font-mori text-[15px] font-semibold tracking-[-0.03em] transition",
+                  a.id === area ? "border-[#0285ff] bg-[#0285ff] text-black" : "border-[#dcd2c5]/25 text-[#dcd2c5] hover:border-[#0285ff] hover:text-[#0285ff]",
                 )}
               >
                 {a.label}

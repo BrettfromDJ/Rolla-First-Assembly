@@ -78,9 +78,9 @@ export function VisitPage() {
             />
           </div>
 
-          <nav aria-label="On this page" className="no-scrollbar -mx-5 mt-12 flex gap-2 overflow-x-auto overflow-y-hidden px-5 md:mx-0 md:px-0">
+          <nav aria-label="On this page" className="no-scrollbar -mx-5 mt-12 flex gap-2.5 overflow-x-auto overflow-y-hidden px-5 py-1 md:mx-0 md:flex-wrap md:px-0">
             {sections.map((s) => (
-              <a key={s.id} href={`#${s.id}`} className="shrink-0 rounded-full px-4 py-2 font-mori text-sm font-semibold text-[#dcd2c5] ring-2 ring-[#dcd2c5]/30 transition hover:ring-[#0285ff]">
+              <a key={s.id} href={`#${s.id}`} className="flex h-11 shrink-0 items-center rounded-full border-2 border-[#dcd2c5]/25 px-5 font-mori text-[15px] font-semibold tracking-[-0.03em] text-[#dcd2c5] transition hover:border-[#0285ff] hover:text-[#0285ff]">
                 {s.label}
               </a>
             ))}
