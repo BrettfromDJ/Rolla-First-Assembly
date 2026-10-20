@@ -196,7 +196,7 @@ export function VisitPage() {
           <div className="mx-auto grid max-w-7xl gap-12 px-5 py-24 md:px-8 md:py-32 lg:grid-cols-2 lg:gap-20">
             <Reveal>
               <div className="relative">
-                <Photo src={img.kidsPlay} alt="Kids drawing and playing together" tone="clay" className="aspect-[4/5] rounded-[32px] sm:aspect-[5/4] lg:aspect-[4/5]" />
+                <Photo src="/home/kids-worship.jpg" alt="Kids leading worship on stage with hands raised during Kids First" tone="clay" className="aspect-[4/5] rounded-[32px] sm:aspect-[3/2] lg:aspect-[4/5]" imgClassName="object-[50%_55%]" />
                 <div className="absolute bottom-5 left-5 right-5 flex items-center gap-3 rounded-2xl bg-white/95 p-4 shadow-soft backdrop-blur sm:right-auto">
                   <Avatar name={staffById.micah.name} src={staffById.micah.photo} />
                   <div className="text-sm">
