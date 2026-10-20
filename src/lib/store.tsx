@@ -14,6 +14,7 @@ import type {
   ServeSignup,
   BaptismRegistration,
   KidsRegistration,
+  StudentsRegistration,
   FollowStatus,
   FollowUps,
   Note,
@@ -52,6 +53,7 @@ const freshProfile = (): Profile => ({
   visitPlan: null,
   baptism: null,
   kids: null,
+  students: null,
   rsvps: [],
   createdAt: new Date().toISOString(),
 });
@@ -59,7 +61,7 @@ const freshProfile = (): Profile => ({
 const freshOverlay = (): VisitorOverlay => ({ notes: [], tasks: [], activity: [] });
 
 /** Bump when the sample data changes, so saved demos pick up the new examples. */
-const SEED_VERSION = 3;
+const SEED_VERSION = 4;
 
 interface State {
   profile: Profile;
@@ -86,6 +88,8 @@ interface Store extends State {
   saveBaptism: (reg: Omit<BaptismRegistration, "createdAt">) => void;
   cancelBaptism: () => void;
   saveKids: (reg: Omit<KidsRegistration, "createdAt">) => void;
+  saveStudents: (reg: Omit<StudentsRegistration, "createdAt">) => void;
+  cancelStudents: () => void;
   cancelKids: () => void;
   addRsvp: (r: { offeringId: string; itemId?: string; message?: string }) => Rsvp;
   cancelRsvp: (id: string) => void;
@@ -143,7 +147,7 @@ function rsvpLabel(r: Rsvp) {
 const kidsLabel = (n: number) => (n > 0 ? `${n} kid${n === 1 ? "" : "s"}` : "kids");
 
 function profileToVisitor(p: Profile, o: VisitorOverlay): Visitor | null {
-  const touched = p.firstName || p.interests.length || p.visitPlan || p.rsvps.length || p.onboardingComplete || p.baptism || p.kids;
+  const touched = p.firstName || p.interests.length || p.visitPlan || p.rsvps.length || p.onboardingComplete || p.baptism || p.kids || p.students;
   if (!touched) return null;
   const activity: Activity[] = [...o.activity];
   if (p.visitPlan) {
@@ -159,6 +163,11 @@ function profileToVisitor(p: Profile, o: VisitorOverlay): Visitor | null {
     const names = p.kids.kids.map((k) => k.firstName).join(" & ");
     const d = new Date(p.kids.date).toLocaleDateString("en-US", { month: "short", day: "numeric" });
     activity.push({ id: "you_kids", kind: "kids", label: `Pre-registered ${names} for Kids First (${d}, ${p.kids.service})`, at: p.kids.createdAt });
+  }
+  if (p.students) {
+    const names = p.students.students.map((k) => k.firstName).join(" & ");
+    const d = new Date(p.students.date).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+    activity.push({ id: "you_students", kind: "students", label: `Signed up ${names} for Wednesday Students (starting ${d})`, at: p.students.createdAt });
   }
   if (p.path === "visited") activity.push({ id: "you_visit", kind: "visit", label: "Visited a Sunday service", at: p.createdAt });
   if (p.onboardingCompletedAt) activity.push({ id: "you_onb", kind: "onboarding", label: "Completed onboarding", at: p.onboardingCompletedAt });
@@ -185,6 +194,7 @@ function profileToVisitor(p: Profile, o: VisitorOverlay): Visitor | null {
     visitPlan: p.visitPlan,
     baptism: p.baptism,
     kids: p.kids,
+    students: p.students,
     household: p.visitPlan?.bringingKids ? `Bringing ${kidsLabel(p.visitPlan.kidsCount)}` : undefined,
     notes: o.notes,
     tasks: o.tasks,
@@ -301,6 +311,23 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         },
       };
     });
+  }, []);
+
+  const saveStudents = useCallback((reg: Omit<StudentsRegistration, "createdAt">) => {
+    setState((s) => ({
+      ...s,
+      profile: {
+        ...s.profile,
+        firstName: s.profile.firstName || reg.parent.firstName,
+        email: s.profile.email || reg.parent.email,
+        phone: s.profile.phone || reg.parent.phone,
+        students: { ...reg, createdAt: new Date().toISOString() },
+      },
+    }));
+  }, []);
+
+  const cancelStudents = useCallback(() => {
+    setState((s) => ({ ...s, profile: { ...s.profile, students: null } }));
   }, []);
 
   const saveAttendance = useCallback((r: Omit<AttendanceRecord, "id" | "updatedAt">) => {
@@ -526,6 +553,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     saveBaptism,
     cancelBaptism,
     saveKids,
+    saveStudents,
+    cancelStudents,
     cancelKids,
     addRsvp,
     cancelRsvp,

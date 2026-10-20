@@ -48,6 +48,7 @@ const actIcon: Record<Activity["kind"], React.ComponentType<{ className?: string
   plan: CalendarDays,
   baptism: Droplets,
   kids: Baby,
+  students: Users,
   onboarding: Sparkles,
   rsvp: CalendarCheck,
   join: Users,
@@ -200,7 +201,7 @@ function PanelBody({ v }: { v: Visitor }) {
         </Section>
 
         <Section title="Event registrations">
-          {v.visitPlan || v.rsvps.length || v.baptism || v.kids ? (
+          {v.visitPlan || v.rsvps.length || v.baptism || v.kids || v.students ? (
             <ul className="space-y-2">
               {v.visitPlan && (
                 <li className="flex items-center gap-3 rounded-2xl bg-sky-soft/50 px-4 py-3 text-sm">
@@ -233,6 +234,30 @@ function PanelBody({ v }: { v: Visitor }) {
                     {v.kids.emergency && <span className="block">Emergency: {v.kids.emergency.name} · {v.kids.emergency.phone}</span>}
                   </p>
                   {v.kids.notes && <p className="mt-1.5 pl-7 text-xs text-stone-500">Note: {v.kids.notes}</p>}
+                </li>
+              )}
+              {v.students && (
+                <li className="rounded-2xl bg-stone-50 px-4 py-3 text-sm">
+                  <div className="flex items-center gap-3">
+                    <Users className="size-4 text-forest-500" />
+                    <span className="flex-1 text-stone-800">Wednesday Students · {v.students.students.length} {v.students.students.length === 1 ? "student" : "students"}</span>
+                    <span className="text-stone-500">Starts {formatShortDay(v.students.date)}</span>
+                  </div>
+                  <ul className="mt-2 space-y-1.5 pl-7 text-xs text-stone-600">
+                    {v.students.students.map((s, i) => (
+                      <li key={i}>
+                        <span className="font-medium text-stone-800">{s.firstName} {s.lastName}</span> · {s.grade}th grade
+                        {s.school ? ` · ${s.school}` : ""}
+                        {s.phone ? ` · cell ${s.phone}` : ""}
+                        {s.medicalNotes && <span className="block text-clay">Medical: {s.medicalNotes}</span>}
+                      </li>
+                    ))}
+                  </ul>
+                  <p className="mt-2 pl-7 text-xs text-stone-500">
+                    Parent: {v.students.parent.firstName} {v.students.parent.lastName} · {v.students.parent.phone} · {v.students.parent.email}
+                    <span className="block">{v.students.parentTexts ? "Wants weekly parent texts" : "No parent texts"}{v.students.studentTexts ? " · OK to add student to group text" : ""}</span>
+                  </p>
+                  {v.students.notes && <p className="mt-1.5 pl-7 text-xs text-stone-500">Note: {v.students.notes}</p>}
                 </li>
               )}
               {v.baptism && (

@@ -13,6 +13,7 @@ import { fullName, stageStyle } from "./helpers";
 type Show = "all" | "kids" | "nokids";
 type Group = (typeof kidsGroups)[number]["id"];
 
+const hasKids = (v: Visitor) => !!v.kids || !!v.students;
 const groupOf = (k: KidInfo) => kidGradeOptions.find((g) => g.id === k.grade)?.group;
 const birth = (ymd: string) => new Date(`${ymd}T12:00:00`);
 
@@ -45,13 +46,14 @@ export function MembersView({ query, onOpen }: { query: string; onOpen: (visitor
   const visible = members.filter(
     (v) =>
       matches(v) &&
-      (show === "all" || (show === "kids" ? !!v.kids : !v.kids)) &&
-      (!group || !!v.kids?.kids.some((k) => groupOf(k) === group)),
+      (show === "all" || (show === "kids" ? hasKids(v) : !hasKids(v))) &&
+      (!group || (group === "students" ? !!v.students : !!v.kids?.kids.some((k) => groupOf(k) === group))),
   );
 
   const allKids = members.flatMap((v) => v.kids?.kids.map((k) => ({ v, k })) ?? []);
   const shownKids = visible.flatMap((v) => v.kids?.kids.filter((k) => !group || groupOf(k) === group).map((k) => ({ v, k })) ?? []);
-  const groupCount = (g: Group) => allKids.filter(({ k }) => groupOf(k) === g).length;
+  const groupCount = (g: Group) =>
+    g === "students" ? members.reduce((n, v) => n + (v.students?.students.length ?? 0), 0) : allKids.filter(({ k }) => groupOf(k) === g).length;
 
   const exportCsv = () => {
     const head = ["Child first name", "Last name", "Goes by", "Birthdate", "Age", "Gender", "Grade", "Room", "School", "Allergies / medical notes", "Parent", "Parent mobile", "Parent email", "Second guardian", "Second guardian phone", "Also allowed to pick up", "Emergency contact", "First Sunday", "Service"];
@@ -82,7 +84,7 @@ export function MembersView({ query, onOpen }: { query: string; onOpen: (visitor
       {/* Totals */}
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
         <Stat icon={Users} label="Members" value={members.length} sub="Everyone with an account" ready={hydrated} />
-        <Stat icon={Users} label="Families with kids" value={members.filter((v) => v.kids).length} sub="Pre-registered for Kids First" ready={hydrated} />
+        <Stat icon={Users} label="Families with kids" value={members.filter(hasKids).length} sub="Pre-registered for Kids First" ready={hydrated} />
         <Stat icon={Baby} label="Kids registered" value={allKids.length} sub={kidsGroups.filter((g) => g.id !== "students").map((g) => `${groupCount(g.id)} ${g.label.toLowerCase()}`).join(" · ")} ready={hydrated} />
         <Stat icon={HeartPulse} label="Allergies & medical" value={allKids.filter(({ k }) => k.medicalNotes).length} sub="Printed on name tags" ready={hydrated} warn />
       </div>
@@ -93,7 +95,7 @@ export function MembersView({ query, onOpen }: { query: string; onOpen: (visitor
           <Pill key={id} on={show === id} onClick={() => { setShow(id); if (id === "nokids") setGroup(""); }}>{label}</Pill>
         ))}
         <span className="mx-1 hidden h-5 w-px bg-stone-200 sm:block" />
-        {kidsGroups.filter((g) => g.id !== "students").map((g) => (
+        {kidsGroups.map((g) => (
           <Pill key={g.id} on={group === g.id} onClick={() => { setGroup(group === g.id ? "" : g.id); if (show === "nokids") setShow("all"); }}>
             {g.label} <span className="ml-1 tabular-nums opacity-60">{hydrated ? groupCount(g.id) : ""}</span>
           </Pill>
@@ -141,8 +143,9 @@ export function MembersView({ query, onOpen }: { query: string; onOpen: (visitor
                 </span>
 
                 <span className="flex min-w-0 flex-wrap gap-1.5">
-                  {v.kids ? (
-                    v.kids.kids.map((k, i) => (
+                  {hasKids(v) ? (
+                    <>
+                    {v.kids?.kids.map((k, i) => (
                       <span
                         key={i}
                         title={k.medicalNotes ? `Medical: ${k.medicalNotes}` : undefined}
@@ -156,7 +159,23 @@ export function MembersView({ query, onOpen }: { query: string; onOpen: (visitor
                         <span className="text-stone-500">{kidGradeLabel(k.grade)} · {ageLabel(k.birthdate)}</span>
                         {k.medicalNotes && <HeartPulse className="size-3.5 text-clay" aria-label="Has allergies or medical notes" />}
                       </span>
-                    ))
+                    ))}
+                    {v.students?.students.map((st, i) => (
+                      <span
+                        key={`s${i}`}
+                        title={st.medicalNotes ? `Medical: ${st.medicalNotes}` : undefined}
+                        className={cn(
+                          "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs ring-1",
+                          group && group !== "students" ? "opacity-40" : "",
+                          st.medicalNotes ? "bg-clay/10 text-stone-800 ring-clay/40" : "bg-forest-50 text-stone-700 ring-forest-700/30",
+                        )}
+                      >
+                        <span className="font-medium">{st.firstName}</span>
+                        <span className="text-stone-500">{st.grade}th · Wednesdays</span>
+                        {st.medicalNotes && <HeartPulse className="size-3.5 text-clay" aria-label="Has allergies or medical notes" />}
+                      </span>
+                    ))}
+                    </>
                   ) : (
                     <span className="text-xs text-stone-400">No kids registered{v.household ? ` · ${v.household}` : ""}</span>
                   )}
@@ -166,6 +185,10 @@ export function MembersView({ query, onOpen }: { query: string; onOpen: (visitor
                   {v.kids ? (
                     <>
                       {formatShortDay(v.kids.date)} <span className="text-stone-400">· {v.kids.service}</span>
+                    </>
+                  ) : v.students ? (
+                    <>
+                      {formatShortDay(v.students.date)} <span className="text-stone-400">· Wed</span>
                     </>
                   ) : (
                     <span className={cn("inline-flex items-center gap-1.5 text-xs text-stone-400")}>

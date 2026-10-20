@@ -139,7 +139,14 @@ export function KidsPage() {
                     <p className={cn(mori, "mt-2 text-[40px] leading-none tracking-[-0.05em]")}>{g.label}</p>
                     <p className="mt-2 font-mori text-[15px] font-semibold text-[#0285ff]">{g.ages}</p>
                   </div>
-                  <p className="text-[15px] leading-relaxed text-stone-600">{g.blurb}</p>
+                  <div>
+                    <p className="text-[15px] leading-relaxed text-stone-600">{g.blurb}</p>
+                    {g.id === "students" && (
+                      <Link href="/students" className="mt-4 inline-flex items-center gap-1.5 text-[15px] font-medium text-[#0285ff] hover:underline">
+                        Wednesday nights <ArrowUpRight className="size-4" />
+                      </Link>
+                    )}
+                  </div>
                 </div>
               </Rise>
             ))}

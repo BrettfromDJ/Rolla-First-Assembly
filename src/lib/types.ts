@@ -48,6 +48,7 @@ export interface Profile {
   rsvps: Rsvp[];
   baptism: BaptismRegistration | null;
   kids: KidsRegistration | null;
+  students: StudentsRegistration | null;
   createdAt: string;
 }
 
@@ -87,6 +88,26 @@ export interface KidsRegistration {
   emergency?: { name: string; phone: string };
   date: string; // ISO of their first Sunday (service start)
   service: ServiceTime;
+  notes?: string;
+  createdAt: string;
+}
+
+/** A parent signing up 6th–12th graders for Wednesday nights (mirrors Planning Center fields like Kids First). */
+export interface StudentInfo {
+  firstName: string;
+  lastName: string;
+  grade: string; // "6"…"12"
+  school?: string;
+  medicalNotes?: string;
+  phone?: string; // the student's own cell, for group texts (with the parent's OK)
+}
+
+export interface StudentsRegistration {
+  parent: Guardian & { email: string };
+  students: StudentInfo[];
+  parentTexts: boolean; // weekly parent updates by text
+  studentTexts: boolean; // OK to add the student to the youth group text
+  date: string; // ISO of their first Wednesday (6:30 PM)
   notes?: string;
   createdAt: string;
 }
@@ -193,7 +214,7 @@ export interface Task {
 
 export interface Activity {
   id: string;
-  kind: "visit" | "plan" | "baptism" | "kids" | "onboarding" | "rsvp" | "contacted" | "assigned" | "note" | "task" | "stage" | "join" | "question";
+  kind: "visit" | "plan" | "baptism" | "kids" | "students" | "onboarding" | "rsvp" | "contacted" | "assigned" | "note" | "task" | "stage" | "join" | "question";
   label: string;
   at: string;
 }
@@ -216,6 +237,7 @@ export interface Visitor {
   visitPlan?: VisitPlan | null;
   baptism?: BaptismRegistration | null;
   kids?: KidsRegistration | null;
+  students?: StudentsRegistration | null;
   household?: string;
   notes: Note[];
   tasks: Task[];

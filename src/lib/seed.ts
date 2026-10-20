@@ -1,7 +1,7 @@
 import { portraits } from "./images";
 import { daysAgo, daysFromNow, nextDow } from "./utils";
 import { baptismDates } from "./data";
-import type { Activity, BaptismAge, BaptismRegistration, FollowUps, KidInfo, KidsRegistration, PickupPerson, InterestId, Note, Stage, Task, Visitor, FollowStatus, Rsvp } from "./types";
+import type { Activity, BaptismAge, BaptismRegistration, FollowUps, KidInfo, KidsRegistration, PickupPerson, StudentsRegistration, InterestId, Note, Stage, Task, Visitor, FollowStatus, Rsvp } from "./types";
 
 const emptyF: FollowUps = { vibes: [], groupSize: null, faithStage: null, ageGroups: [], homeTopics: [], serveAreas: [] };
 
@@ -45,6 +45,7 @@ function v(input: {
     pickup?: PickupPerson[];
     school?: string;
   };
+  students?: { list: [string, string, string?][]; daysAgo: number }; // [first name, grade, school?]
 }): Visitor {
   const phone = `(573) 555-0${100 + n}`.slice(0, 14);
   const email = `${input.first}.${input.last}`.toLowerCase().replace(/[^a-z.]/g, "") + "@example.com";
@@ -103,6 +104,20 @@ function v(input: {
     const d = date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
     input.activity.push({ kind: "kids", label: `Pre-registered ${list.map((x) => x.firstName).join(" & ")} for Kids First (${d}, ${k.service})`, daysAgo: k.daysAgo, hour: 19 });
   }
+  let students: StudentsRegistration | null = null;
+  if (input.students) {
+    const st = input.students;
+    const date = nextDow(3, 18, 30);
+    students = {
+      parent: { firstName: input.first, lastName: input.last, phone, email },
+      students: st.list.map(([first, grade, school]) => ({ firstName: first, lastName: input.last, grade, school })),
+      parentTexts: true,
+      studentTexts: false,
+      date: date.toISOString(),
+      createdAt: daysAgo(st.daysAgo),
+    };
+    input.activity.push({ kind: "students", label: `Signed up ${st.list.map((x) => x[0]).join(" & ")} for Wednesday Students`, daysAgo: st.daysAgo, hour: 21 });
+  }
   const activity: Activity[] = input.activity.map((a) => ({ id: id("act"), kind: a.kind, label: a.label, at: daysAgo(a.daysAgo, a.hour ?? 11) }));
   return {
     id: id("v"),
@@ -133,6 +148,7 @@ function v(input: {
       : null,
     baptism,
     kids,
+    students,
     notes,
     tasks,
     activity: activity.sort((a, b) => +new Date(b.at) - +new Date(a.at)),
@@ -225,6 +241,7 @@ export function buildSeedVisitors(): Visitor[] {
     }),
     v({
       first: "Sofia", last: "Martinez",
+      students: { list: [["Daniela", "10", "Rolla High School"], ["Lucas", "7", "Rolla Junior High"]], daysAgo: 1 },
       baptism: { slot: 0, service: "10:30", age: "student", first: "Daniela", story: "I gave my life to Jesus at youth camp this summer.", share: true, guests: 4, daysAgo: 1 }, visitedDaysAgo: 1, source: "Plan a visit",
       interests: ["family"], f: { ageGroups: ["middle", "high"] },
       stage: "Event RSVP", assignee: null, status: "Needs follow-up", household: "1 adult · 2 students",
