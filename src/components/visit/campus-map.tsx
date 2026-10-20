@@ -28,8 +28,8 @@ const C = {
   tree: "#18211b",
   building: "#151515",
   edge: "#3b3b3a",
-  blue: "#0a7cff",
-  cream: "#ebe4d8",
+  blue: "#0285ff",
+  cream: "#dcd2c5",
   dim: "#77736c",
 };
 

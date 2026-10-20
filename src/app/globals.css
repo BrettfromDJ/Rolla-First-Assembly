@@ -4,6 +4,12 @@
   --font-sans: "Inter Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-serif: "Instrument Serif", ui-serif, Georgia, "Times New Roman", serif;
 
+  /* Church homepage type, from the Figma file. The PP / Magda faces are licensed;
+     they load if installed (see @font-face below) and otherwise fall back. */
+  --font-mori: "PP Mori", "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-editorial: "PP Editorial New", "Instrument Serif", ui-serif, Georgia, serif;
+  --font-magda: "MagdaClean", "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+
   /* "forest" is now the brand blue: 400–700 are the electric accent, 800–950 near-black panels, 50–200 deep navy tints */
   --color-forest-50: #0c1626;
   --color-forest-100: #0f1f38;
@@ -12,17 +18,17 @@
   --color-forest-400: #4aa3ff;
   --color-forest-500: #2b93ff;
   --color-forest-600: #1688ff;
-  --color-forest-700: #0a7cff;
+  --color-forest-700: #0285ff;
   --color-forest-800: #151515;
   --color-forest-900: #101010;
   --color-forest-950: #070707;
 
   /* Ink: the page itself */
-  --color-ink: #0e0e0e;
+  --color-ink: #0f0f0f;
   --color-ink-2: #141414;
 
   /* Cream: primary type on dark (kept under the old "paper" name) */
-  --color-paper: #ebe4d8;
+  --color-paper: #dcd2c5;
   --color-paper-2: #1b1b1b;
   --color-sand: #1d1d1d;
 
@@ -35,8 +41,8 @@
   --color-stone-500: #9a958c;
   --color-stone-600: #b3ada3;
   --color-stone-700: #c9c3b8;
-  --color-stone-800: #dcd5c9;
-  --color-stone-900: #ebe4d8;
+  --color-stone-800: #d2c8bb;
+  --color-stone-900: #dcd2c5;
 
   --color-white: #171717;
   --color-black: #000000;
@@ -61,6 +67,26 @@
     from { opacity: 0; transform: translateY(12px); }
     to { opacity: 1; transform: translateY(0); }
   }
+}
+
+@font-face {
+  font-family: "PP Mori";
+  font-weight: 600;
+  src: local("PP Mori SemiBold"), local("PPMori-SemiBold");
+}
+@font-face {
+  font-family: "PP Editorial New";
+  font-style: italic;
+  src: local("PP Editorial New Italic"), local("PPEditorialNew-Italic");
+}
+@font-face {
+  font-family: "PP Editorial New";
+  font-style: normal;
+  src: local("PP Editorial New Regular"), local("PPEditorialNew-Regular");
+}
+@font-face {
+  font-family: "MagdaClean";
+  src: local("MagdaClean Regular"), local("MagdaClean-Regular");
 }
 
 @layer base {

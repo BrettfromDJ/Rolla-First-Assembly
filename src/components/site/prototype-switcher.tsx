@@ -9,6 +9,7 @@ import { useStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
 const visitor = [
+  { href: "/", label: "Church homepage", hint: "From Figma" },
   { href: "/new", label: "New here", hint: "Landing page" },
   { href: "/visit", label: "Plan your visit", hint: "Sunday guide" },
   { href: "/connect", label: "Get connected", hint: "Onboarding" },
