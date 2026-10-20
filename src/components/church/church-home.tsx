@@ -124,13 +124,14 @@ export function ChurchHome() {
           <div className="relative lg:mt-[200px]">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={A("r-mark.svg")} alt="" width={253} height={232} className="pointer-events-none absolute left-[37%] top-[-142px] z-10 hidden lg:block" />
-            <Masked
-              mask="hero-mask.png"
-              className="aspect-[427/471] w-full"
-              layers={[
-                { src: "texture.png", left: "-26.23%", top: "-40.98%", width: "362.06%", height: "328.24%", blend: "overlay" },
-                { src: "hero-photo.png", left: "-100.47%", top: "-24.63%", width: "311.48%", height: "205.1%" },
-              ]}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={A("hero-main.jpg")}
+              alt="Pastor Lance leading worship with arms raised, a guitarist behind him"
+              width={427}
+              height={471}
+              fetchPriority="high"
+              className="aspect-[427/471] h-auto w-full object-cover"
             />
           </div>
 
@@ -141,14 +142,13 @@ export function ChurchHome() {
             <p className={cn(mori, "mt-[12px] max-w-[256px] text-[15px] uppercase leading-none")}>
               More than you ask, think or imagine According to His power working in us
             </p>
-            <Masked
-              mask="side-mask.png"
-              className="mt-8 aspect-[287/327] w-full max-w-[287px] lg:mt-auto"
-              layers={[
-                { src: "side-photo-base.png", left: "0", top: "0", width: "100%", height: "100%" },
-                { src: "texture.png", left: "-39.02%", top: "-59.02%", width: "538.68%", height: "472.78%", blend: "overlay" },
-                { src: "side-photo-top.png", left: "0", top: "0", width: "100%", height: "100%" },
-              ]}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={A("hero-side.png")}
+              alt="A worship leader singing and playing acoustic guitar on stage"
+              width={287}
+              height={327}
+              className="mt-8 aspect-[287/327] h-auto w-full max-w-[287px] object-cover lg:mt-auto"
             />
           </div>
         </section>
