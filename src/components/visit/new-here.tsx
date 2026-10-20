@@ -26,28 +26,26 @@ export function PathCard({
   variant: "light" | "glass";
 }) {
   const blue = variant === "light";
+  // Both cards share one shape and layout; path one is just filled blue.
   return (
     <button
       onClick={onClick}
       className={cn(
-        "group relative flex h-full min-h-64 w-full flex-col justify-between gap-10 overflow-hidden p-7 text-left transition duration-300 md:min-h-80 md:p-8",
-        blue
-          ? "rounded-[44px] bg-forest-700 text-ink hover:bg-forest-500 md:rounded-[999px] md:items-center md:px-10 md:py-12 md:text-center"
-          : "rounded-[28px] text-paper ring-2 ring-paper/85 hover:bg-paper/[0.04]",
+        "group relative flex h-full min-h-64 w-full flex-col justify-between gap-10 overflow-hidden rounded-[28px] p-7 text-left ring-2 transition duration-300 md:min-h-80 md:p-8",
+        blue ? "bg-forest-700 text-ink ring-forest-700 hover:bg-forest-500 hover:ring-forest-500" : "text-paper ring-paper/85 hover:bg-paper/[0.04]",
       )}
     >
-      <span className={cn("flex items-center gap-2", blue && "md:flex-col")}>
+      <span className="flex items-center gap-2">
         <span className={cn("flex size-10 items-center justify-center rounded-full", blue ? "bg-ink/10" : "bg-paper/10 text-forest-500")}>{icon}</span>
         <span className={cn("eyebrow", blue ? "text-ink/60" : "text-stone-500")}>{eyebrow}</span>
       </span>
-      <span className={cn("block", blue && "md:flex md:flex-col md:items-center")}>
-        <span className={cn("block font-display text-[34px] leading-[0.98] md:text-[40px]", !blue && "pr-16")}>{title}</span>
-        <span className={cn("mt-3 block text-[15px]", blue ? "text-ink/70" : "text-stone-500")}>{body}</span>
+      <span className="block">
+        <span className="block pr-16 font-display text-[34px] leading-[0.98] md:text-[40px]">{title}</span>
+        <span className={cn("mt-3 block pr-16 text-[15px]", blue ? "text-ink/70" : "text-stone-500")}>{body}</span>
         <span
           className={cn(
-            "mt-7 flex size-14 items-center justify-center rounded-full transition duration-300 group-hover:rotate-45",
+            "absolute bottom-7 right-7 flex size-14 items-center justify-center rounded-full transition duration-300 group-hover:rotate-45 md:bottom-8 md:right-8",
             blue ? "bg-paper text-ink" : "bg-forest-700 text-ink",
-            !blue && "absolute bottom-7 right-7 mt-0 md:bottom-8 md:right-8",
           )}
         >
           <ArrowUpRight className="size-6" strokeWidth={1.5} />
