@@ -334,3 +334,41 @@ export interface ServeSignup {
   isYou?: boolean;
   createdAt: string;
 }
+
+/* ---------- Volunteer scheduling ---------- */
+
+export interface Volunteer {
+  id: string;
+  firstName: string;
+  lastName: string;
+  phone: string;
+  teamId: string;
+  positions: string[];
+  service: ServiceTime | "either"; // the service they usually serve
+  frequency: "weekly" | "biweekly" | "monthly";
+  blockouts: string[]; // YYYY-MM-DD Sundays they've said they're away
+}
+
+export type AssignmentStatus = "pending" | "confirmed" | "declined";
+
+export interface Assignment {
+  id: string;
+  date: string; // YYYY-MM-DD (a Sunday)
+  service: ServiceTime;
+  teamId: string;
+  position: string;
+  slot: number; // which of that position's spots (0-based)
+  volunteerId: string;
+  status: AssignmentStatus;
+  reason?: string; // why they can't make it
+  assignedAt: string;
+  respondedAt?: string;
+}
+
+export interface ScheduleSettings {
+  reminders: boolean;
+  daysBefore: number; // reminder text this many days before
+  time: string; // "18:00"
+  dayOf: boolean; // a second text the morning of
+  dayOfTime: string; // "07:30"
+}

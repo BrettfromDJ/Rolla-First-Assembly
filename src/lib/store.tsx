@@ -6,10 +6,14 @@ import { buildSeedVisitors } from "./seed";
 import { buildSeedAttendance } from "./attendance";
 import { buildSeedPrayers } from "./prayer";
 import { buildSeedServe } from "./serve";
+import { autoFill, buildSeedSchedule, defaultScheduleSettings } from "./schedule";
 import { uid } from "./utils";
 import type {
   Activity,
   AttendanceRecord,
+  Assignment,
+  ScheduleSettings,
+  Volunteer,
   PrayerRequest,
   ServeSignup,
   BaptismRegistration,
@@ -72,10 +76,11 @@ interface State {
   prayed: string[]; // prayer ids this browser has prayed for
   sermonNotes: Record<string, string>; // the visitor's own notes, by sermon id
   serve: ServeSignup[];
+  schedule: { volunteers: Volunteer[]; assignments: Assignment[]; settings: ScheduleSettings };
   seedVersion?: number;
 }
 
-const freshState = (): State => ({ profile: freshProfile(), visitors: buildSeedVisitors(), overlay: freshOverlay(), attendance: buildSeedAttendance(), prayers: buildSeedPrayers(), prayed: [], sermonNotes: {}, serve: buildSeedServe(), seedVersion: SEED_VERSION });
+const freshState = (): State => ({ profile: freshProfile(), visitors: buildSeedVisitors(), overlay: freshOverlay(), attendance: buildSeedAttendance(), prayers: buildSeedPrayers(), prayed: [], sermonNotes: {}, serve: buildSeedServe(), schedule: { ...buildSeedSchedule(), settings: defaultScheduleSettings }, seedVersion: SEED_VERSION });
 
 export type VisitorPatch = Partial<Pick<Visitor, "stage" | "assigneeId" | "status">>;
 
@@ -121,6 +126,14 @@ interface Store extends State {
   cancelMyServe: (id: string) => void;
   patchServe: (id: string, patch: Partial<Pick<ServeSignup, "status" | "backgroundCheck" | "shadowDate">>) => void;
   addServeNote: (id: string, body: string, authorId: string) => void;
+  /* scheduling */
+  assignVolunteer: (spot: Pick<Assignment, "date" | "service" | "teamId" | "position" | "slot">, volunteerId: string) => void;
+  setAssignment: (id: string, patch: Partial<Pick<Assignment, "status" | "reason">>) => void;
+  removeAssignment: (id: string) => void;
+  /** Fills a Sunday's open spots for a team; returns how many were filled. */
+  autoFillSunday: (date: string, teamId: string) => { filled: number; stretched: number };
+  toggleBlockout: (volunteerId: string, date: string) => void;
+  updateScheduleSettings: (patch: Partial<ScheduleSettings>) => void;
 }
 
 const Ctx = createContext<Store | null>(null);
@@ -228,6 +241,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
           prayed: parsed.prayed ?? [],
           sermonNotes: parsed.sermonNotes ?? {},
           serve: parsed.serve ?? buildSeedServe(),
+          schedule: parsed.schedule?.volunteers ? { ...parsed.schedule, settings: { ...defaultScheduleSettings, ...parsed.schedule.settings } } : { ...buildSeedSchedule(), settings: defaultScheduleSettings },
           seedVersion: SEED_VERSION,
         });
       }
@@ -422,6 +436,48 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     }));
   }, []);
 
+  const editSchedule = useCallback((fn: (sch: State["schedule"]) => Partial<State["schedule"]>) => {
+    setState((s) => ({ ...s, schedule: { ...s.schedule, ...fn(s.schedule) } }));
+  }, []);
+
+  const assignVolunteer = useCallback(
+    (spot: Pick<Assignment, "date" | "service" | "teamId" | "position" | "slot">, volunteerId: string) =>
+      editSchedule((sch) => ({
+        assignments: [
+          ...sch.assignments.filter((a) => !(a.date === spot.date && a.service === spot.service && a.teamId === spot.teamId && a.position === spot.position && a.slot === spot.slot && a.status !== "declined")),
+          { ...spot, id: uid("as"), volunteerId, status: "pending", assignedAt: new Date().toISOString() },
+        ],
+      })),
+    [editSchedule],
+  );
+
+  const setAssignment = useCallback(
+    (id: string, patch: Partial<Pick<Assignment, "status" | "reason">>) =>
+      editSchedule((sch) => ({ assignments: sch.assignments.map((a) => (a.id === id ? { ...a, ...patch, respondedAt: new Date().toISOString() } : a)) })),
+    [editSchedule],
+  );
+
+  const removeAssignment = useCallback((id: string) => editSchedule((sch) => ({ assignments: sch.assignments.filter((a) => a.id !== id) })), [editSchedule]);
+
+  const autoFillSunday = useCallback(
+    (date: string, teamId: string) => {
+      const { added, stretched } = autoFill(state.schedule.volunteers, state.schedule.assignments, date, teamId);
+      if (added.length) editSchedule((sch) => ({ assignments: [...sch.assignments, ...added] }));
+      return { filled: added.length, stretched };
+    },
+    [state.schedule, editSchedule],
+  );
+
+  const toggleBlockout = useCallback(
+    (volunteerId: string, date: string) =>
+      editSchedule((sch) => ({
+        volunteers: sch.volunteers.map((v) => (v.id === volunteerId ? { ...v, blockouts: v.blockouts.includes(date) ? v.blockouts.filter((d) => d !== date) : [...v.blockouts, date] } : v)),
+      })),
+    [editSchedule],
+  );
+
+  const updateScheduleSettings = useCallback((patch: Partial<ScheduleSettings>) => editSchedule((sch) => ({ settings: { ...sch.settings, ...patch } })), [editSchedule]);
+
   const cancelKids = useCallback(() => {
     setState((s) => ({ ...s, profile: { ...s.profile, kids: null } }));
   }, []);
@@ -580,6 +636,12 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     cancelMyServe,
     patchServe,
     addServeNote,
+    assignVolunteer,
+    setAssignment,
+    removeAssignment,
+    autoFillSunday,
+    toggleBlockout,
+    updateScheduleSettings,
   };
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
