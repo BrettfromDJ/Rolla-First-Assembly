@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { BookOpenCheck, Check, Download, Droplets, MessageSquareQuote, PhoneCall, Users } from "lucide-react";
+import { Check, Download, Droplets, MessageSquareQuote, PhoneCall, Users } from "lucide-react";
 import { toast } from "sonner";
 import { Avatar } from "@/components/ui/avatar";
 import { baptism as baptismInfo, baptismDates, staffById } from "@/lib/data";
@@ -10,7 +10,7 @@ import type { BaptismRegistration, ServiceTime, Visitor } from "@/lib/types";
 import { cn, formatDate, formatShortDay, timeAgo } from "@/lib/utils";
 
 type Row = { v: Visitor; b: BaptismRegistration };
-type Flag = "classAttended" | "pastorContacted" | "baptized";
+type Flag = "pastorContacted" | "baptized";
 
 const ageLabel = { adult: "Adult", student: "Student", child: "Child" } as const;
 const dayKey = (iso: string) => new Date(iso).toDateString();
@@ -46,17 +46,14 @@ export function BaptismsView({ query, onOpen }: { query: string; onOpen: (visito
   const totals = {
     people: visible.length,
     seats: visible.reduce((n, r) => n + r.b.guests, 0),
-    classPending: visible.filter((r) => !r.b.classAttended).length,
     toContact: visible.filter((r) => !r.b.pastorContacted).length,
     stories: visible.filter((r) => r.b.okToShare && r.b.story).length,
   };
-  const classDay = active !== "all" ? upcoming.find((d) => d.date.toDateString() === active)?.classDate ?? rows.find((r) => dayKey(r.b.date) === active && r.b.classDate)?.b.classDate : undefined;
 
   const toggle = (r: Row, flag: Flag) => {
     const on = !r.b[flag];
     const who = r.b.firstName;
     const label = {
-      classAttended: on ? `${who} attended the Baptism Class` : `Class attendance cleared for ${who}`,
       pastorContacted: on ? `Pastor reached out to ${who} about baptism` : `Baptism follow-up reopened for ${who}`,
       baptized: on ? `${who} was baptized` : `Baptism unmarked for ${who}`,
     }[flag];
@@ -65,10 +62,10 @@ export function BaptismsView({ query, onOpen }: { query: string; onOpen: (visito
   };
 
   const exportCsv = () => {
-    const head = ["Sunday", "Service", "Name", "Age group", "Parent/guardian", "Contact", "Guests", "Class", "Class attended", "Pastor contacted", "Baptized", "OK to share story", "Story"];
+    const head = ["Sunday", "Service", "Name", "Age group", "Parent/guardian", "Contact", "Guests", "Pastor contacted", "Baptized", "OK to share story", "Story"];
     const lines = visible.map(({ b }) => [
       new Date(b.date).toLocaleDateString("en-US"), b.service, `${b.firstName} ${b.lastName}`, ageLabel[b.age], b.parentName ?? "", b.contact, b.guests,
-      new Date(b.classDate).toLocaleDateString("en-US"), b.classAttended ? "Yes" : "No", b.pastorContacted ? "Yes" : "No", b.baptized ? "Yes" : "No", b.okToShare ? "Yes" : "No", b.story ?? "",
+      b.pastorContacted ? "Yes" : "No", b.baptized ? "Yes" : "No", b.okToShare ? "Yes" : "No", b.story ?? "",
     ]);
     const csv = [head, ...lines].map((l) => l.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(",")).join("\r\n");
     const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
@@ -115,12 +112,11 @@ export function BaptismsView({ query, onOpen }: { query: string; onOpen: (visito
       </div>
 
       {/* Totals */}
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-5">
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
         <Stat icon={Droplets} label="Being baptized" value={totals.people} sub={active === "all" ? "All dates" : formatShortDay(new Date(active).toISOString())} />
         <Stat icon={Users} label="Seats to save" value={totals.seats} sub="Friends & family" />
-        <Stat icon={BookOpenCheck} label="Class not yet attended" value={totals.classPending} sub={classDay ? `Class ${formatShortDay(new Date(classDay).toISOString())} · ${baptismInfo.classTime}` : "Sunday before at noon"} warn={totals.classPending > 0} />
         <Stat icon={PhoneCall} label="Need a pastor call" value={totals.toContact} sub="Not yet contacted" warn={totals.toContact > 0} />
-        <Stat icon={MessageSquareQuote} label="Stories to share" value={totals.stories} sub="Said yes to sharing" className="col-span-2 md:col-span-1" />
+        <Stat icon={MessageSquareQuote} label="Stories to share" value={totals.stories} sub="Said yes to sharing" />
       </div>
 
       <div className="grid gap-6 2xl:grid-cols-[1fr_340px]">
@@ -158,7 +154,6 @@ export function BaptismsView({ query, onOpen }: { query: string; onOpen: (visito
                           <th className="py-2.5 pl-5 pr-3 font-medium">Name</th>
                           <th className="px-3 font-medium">Guests</th>
                           <th className="px-3 font-medium">Story</th>
-                          <th className="px-3 text-center font-medium">Class</th>
                           <th className="px-3 text-center font-medium">Pastor call</th>
                           <th className="px-3 pr-5 text-center font-medium">Baptized</th>
                         </tr>
@@ -191,7 +186,6 @@ export function BaptismsView({ query, onOpen }: { query: string; onOpen: (visito
                                 <span className="text-xs text-stone-300">—</span>
                               )}
                             </td>
-                            <td className="px-3 text-center"><Toggle on={!!r.b.classAttended} onClick={() => toggle(r, "classAttended")} label={`Class attended: ${r.b.firstName}`} /></td>
                             <td className="px-3 text-center"><Toggle on={!!r.b.pastorContacted} onClick={() => toggle(r, "pastorContacted")} label={`Pastor contacted: ${r.b.firstName}`} /></td>
                             <td className="px-3 pr-5 text-center"><Toggle on={!!r.b.baptized} onClick={() => toggle(r, "baptized")} label={`Baptized: ${r.b.firstName}`} strong /></td>
                           </tr>
@@ -211,7 +205,6 @@ export function BaptismsView({ query, onOpen }: { query: string; onOpen: (visito
                             </span>
                           </button>
                           <div className="flex flex-wrap gap-2">
-                            <Chip on={!!r.b.classAttended} onClick={() => toggle(r, "classAttended")}>Class</Chip>
                             <Chip on={!!r.b.pastorContacted} onClick={() => toggle(r, "pastorContacted")}>Pastor call</Chip>
                             <Chip on={!!r.b.baptized} onClick={() => toggle(r, "baptized")}>Baptized</Chip>
                           </div>
@@ -256,7 +249,7 @@ export function BaptismsView({ query, onOpen }: { query: string; onOpen: (visito
             </ul>
             <div className="mt-4 flex items-center gap-3 border-t border-stone-100 px-1 pt-4">
               <Avatar name={staffById[baptismInfo.hostId].name} src={staffById[baptismInfo.hostId].photo} className="size-8" />
-              <p className="text-xs text-stone-500">{staffById[baptismInfo.hostId].name} leads the class · {baptismInfo.classLocation}</p>
+              <p className="text-xs text-stone-500">{staffById[baptismInfo.hostId].name} leads baptisms · {baptismInfo.rule.toLowerCase()}</p>
             </div>
           </div>
         </aside>

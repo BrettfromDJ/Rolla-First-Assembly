@@ -94,7 +94,7 @@ interface Store extends State {
   addNote: (id: string, body: string, authorId: string) => void;
   addTask: (id: string, task: Omit<Task, "id" | "createdAt" | "done">) => void;
   toggleTask: (id: string, taskId: string) => void;
-  patchBaptism: (id: string, patch: Pick<BaptismRegistration, "classAttended" | "pastorContacted" | "baptized">, label: string) => void;
+  patchBaptism: (id: string, patch: Pick<BaptismRegistration, "pastorContacted" | "baptized">, label: string) => void;
   /** Adds or replaces the count for one service on one date. */
   saveAttendance: (r: Omit<AttendanceRecord, "id" | "updatedAt">) => void;
   deleteAttendance: (id: string) => void;
@@ -444,7 +444,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   );
 
   const patchBaptism = useCallback(
-    (id: string, patch: Pick<BaptismRegistration, "classAttended" | "pastorContacted" | "baptized">, label: string) => {
+    (id: string, patch: Pick<BaptismRegistration, "pastorContacted" | "baptized">, label: string) => {
       setState((s) => {
         const entry: Activity = { id: uid("act"), kind: "baptism", label, at: new Date().toISOString() };
         if (id === "you") {

@@ -10,7 +10,7 @@ import { Faq } from "@/components/visit/new-here";
 import { BaptismSheet } from "./register-sheet";
 import { baptism, baptismDates, church, staffById } from "@/lib/data";
 import { useStore } from "@/lib/store";
-import { cn, downloadIcs, formatDay, formatTime } from "@/lib/utils";
+import { cn, downloadIcs, formatDay } from "@/lib/utils";
 
 const mori = "font-mori font-semibold";
 const Ed = ({ children }: { children: React.ReactNode }) => <span className="font-editorial font-normal italic tracking-[-0.03em]">{children}</span>;
@@ -19,7 +19,7 @@ const faqs = [
   { q: "I was baptized as a baby. Should I be baptized again?", a: "Many people who were baptized as infants choose to be baptized as believers, as their own decision to follow Jesus. There's no pressure either way. Pastor Lance is happy to talk it through with you." },
   { q: "Do I have to share my story in front of everyone?", a: "No. Some people love to share, some would rather not. You'll only be asked to speak if you want to, and we'll always check with you first." },
   { q: "Can my child be baptized?", a: "Yes. Pastor Micah meets with every family first to make sure your child understands the decision. Register your child here and we'll reach out to set up a time." },
-  { q: "What if I'm nervous?", a: "Totally normal. You'll practice at the class, a pastor will be right beside you the whole time, and it's over in about a minute. Then everyone cheers." },
+  { q: "What if I'm nervous?", a: "Totally normal. We'll walk you through every step ahead of time, a pastor will be right beside you the whole time, and it's over in about a minute. Then everyone cheers." },
   { q: "Do I need to be a member of Rolla First?", a: "No. Baptism is about your faith in Jesus, not membership. If you're ready to take this step, you're welcome here." },
   { q: "What should I wear?", a: "Wear dark clothes you don't mind getting wet. We'll give you a Rolla First baptism shirt to wear over them, and towels. Bring a change of clothes for afterward." },
 ];
@@ -66,7 +66,7 @@ export function BaptismPage() {
                   </p>
                   <div className="mt-6 flex flex-wrap gap-2 text-[13px]">
                     <span className="rounded-full bg-black/10 px-3 py-1.5 font-medium">{days === 0 ? "Today" : `In ${days} day${days === 1 ? "" : "s"}`}</span>
-                    <span className="rounded-full bg-black/10 px-3 py-1.5 font-medium">Class {next.classDate.toLocaleDateString("en-US", { month: "short", day: "numeric" })} at noon</span>
+                    <span className="rounded-full bg-black/10 px-3 py-1.5 font-medium">Both services</span>
                   </div>
                 </>
               ) : (
@@ -80,7 +80,7 @@ export function BaptismPage() {
                       {reg.age === "child" ? `${reg.firstName} is registered` : "You're registered"} for {new Date(reg.date).toLocaleDateString("en-US", { month: "long", day: "numeric" })}.
                     </p>
                     <p className="mt-1 text-[15px] text-black/70">
-                      {reg.service} AM service · Class {formatDay(reg.classDate)} at {formatTime(reg.classDate)}
+                      {formatDay(reg.date)} · {reg.service} AM service
                     </p>
                     <div className="mt-5 flex flex-wrap gap-2">
                       <button onClick={() => open(reg.date)} className={cn(mori, "inline-flex h-11 items-center gap-2 rounded-[80px] bg-[#dcd2c5] px-5 text-[14px] uppercase tracking-[-0.04em] transition hover:bg-[#f5f0e9]")}>
@@ -164,7 +164,7 @@ export function BaptismPage() {
             <ol className="border-t border-[#dcd2c5]/15">
               {[
                 { t: "Register", b: "Takes about two minutes. Pick the Sunday that works for you and who's coming to cheer you on." },
-                { t: "Come to the Baptism Class", b: `The Sunday before, at noon in the Gym, right after the 10:30 service. About ${baptism.classMinutes} minutes, lunch included. We'll talk about what baptism means and walk through the day.` },
+                { t: "Talk with a pastor", b: "A pastor will reach out to hear your story, answer your questions, and walk you through exactly what happens on the day." },
                 { t: "Baptism Sunday", b: "Arrive 30 minutes before your service and change into your shirt. You'll be baptized during the service with your people watching." },
                 { t: "Celebrate", b: "Hugs, photos, and a little gift from us. Then we'll help you find your next step: a group, a team, or a class." },
               ].map((s, i) => (
@@ -221,7 +221,7 @@ export function BaptismPage() {
                     <div>
                       <p className="font-magda text-[13px] uppercase tracking-[0.04em] opacity-60">{d.date.toLocaleDateString("en-US", { weekday: "long" })}</p>
                       <p className={cn(mori, "mt-2 text-[44px] leading-none tracking-[-0.05em]")}>{d.date.toLocaleDateString("en-US", { month: "long", day: "numeric" })}</p>
-                      <p className="mt-3 text-[15px] text-stone-500">Class {d.classDate.toLocaleDateString("en-US", { month: "short", day: "numeric" })} at noon</p>
+                      <p className="mt-3 text-[15px] text-stone-500">9:00 &amp; 10:30 services</p>
                     </div>
                     {mine ? (
                       <span className={cn(mori, "inline-flex h-12 w-fit items-center rounded-[80px] bg-[#0285ff]/15 px-5 text-[14px] uppercase tracking-[-0.04em] text-[#0285ff]")}>You&apos;re registered</span>

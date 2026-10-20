@@ -210,7 +210,7 @@ export function buildOfferings(): Offering[] {
       action: "Count me in",
       actionKind: "rsvp",
       confirmTitle: "You're on the list!",
-      confirmBody: "We'll save you a spot. Someone from our welcome team will be looking out for you.",
+      confirmBody: "Someone from our welcome team will be looking out for you.",
       itemsTitle: "Coming up",
       items: [
         { id: "h-pizza", title: "Pizza in the Park", meta: "", location: "Ber Juan Park pavilion", leader: "Welcome Team", description: "Wood-fired pizza, lawn games, and plenty of shade.", tags: ["Food", "Outdoors"], date: iso(nextDow(6, 17, 30, 0)), durationMin: 120 },
@@ -558,12 +558,12 @@ export function buildOfferings(): Offering[] {
       interests: ["faith", "home"],
       image: "/home/hero-main.jpg",
       summary: "Take the next step. A public way of saying, \"I'm following Jesus.\"",
-      description: ["Baptism Sundays happen once a month during both services, with a short class the Sunday before."],
+      description: ["Baptism Sundays happen once a month during both services. A pastor will reach out beforehand to hear your story and answer any questions."],
       schedule: "Second Sunday of every month",
       date: baptismDates(1)[0]?.date.toISOString(),
       durationMin: 70,
       location: "Rolla First · Auditorium",
-      expect: ["A short class the Sunday before", "A pastor beside you the whole time", "Seats saved for your family"],
+      expect: ["A conversation with a pastor beforehand", "A pastor beside you the whole time", "Seats saved for your family"],
       hostIds: ["lance"],
       cta: "Learn more",
       action: "Register",
@@ -601,14 +601,10 @@ export const faqs = [
 
 /**
  * Baptism Sundays are the second Sunday of each month, during both services.
- * The Baptism Class is the Sunday before, at noon in the Gym.
  * Change the rule here and every date on the site follows.
  */
 export const baptism = {
   rule: "Second Sunday of every month",
-  classTime: "12:00 PM",
-  classMinutes: 45,
-  classLocation: "The Gym (downstairs)",
   hostId: "lance",
 };
 
@@ -618,17 +614,14 @@ function secondSunday(year: number, month: number) {
   return d;
 }
 
-/** Upcoming baptism Sundays, skipping any whose class has already passed. */
+/** Upcoming baptism Sundays. Registration for a Sunday closes once that day's services start. */
 export function baptismDates(count = 3, from = new Date()) {
-  const out: { date: Date; classDate: Date }[] = [];
+  const out: { date: Date }[] = [];
   for (let m = 0; out.length < count && m < 24; m++) {
     const sunday = secondSunday(from.getFullYear(), from.getMonth() + m);
-    const classDate = new Date(sunday);
-    classDate.setDate(classDate.getDate() - 7);
-    classDate.setHours(12, 0, 0, 0);
-    if (classDate.getTime() < from.getTime()) continue;
     sunday.setHours(9, 0, 0, 0);
-    out.push({ date: sunday, classDate });
+    if (sunday.getTime() < from.getTime()) continue;
+    out.push({ date: sunday });
   }
   return out;
 }

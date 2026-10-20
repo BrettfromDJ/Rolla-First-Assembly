@@ -34,7 +34,6 @@ function v(input: {
     share?: boolean;
     guests: number;
     daysAgo: number;
-    classAttended?: boolean;
     pastorContacted?: boolean;
   };
   kids?: {
@@ -74,12 +73,10 @@ function v(input: {
       parentName: age === "child" ? `${input.first} ${input.last}` : undefined,
       date: date.toISOString(),
       service: b.service,
-      classDate: slot.classDate.toISOString(),
       story: b.story,
       okToShare: !!b.share,
       guests: b.guests,
       createdAt: daysAgo(b.daysAgo),
-      classAttended: b.classAttended,
       pastorContacted: b.pastorContacted,
     };
     const d = date.toLocaleDateString("en-US", { month: "short", day: "numeric" });

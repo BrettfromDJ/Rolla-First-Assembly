@@ -101,13 +101,11 @@ export interface BaptismRegistration {
   parentName?: string;
   date: string; // ISO of the baptism Sunday (service start)
   service: ServiceTime;
-  classDate: string; // ISO of the class they'll attend
   story?: string;
   okToShare: boolean;
   guests: number;
   createdAt: string;
   /* Tracked by staff in the Baptisms tab */
-  classAttended?: boolean;
   pastorContacted?: boolean;
   baptized?: boolean;
 }

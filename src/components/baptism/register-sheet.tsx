@@ -12,7 +12,7 @@ import { Avatar } from "@/components/ui/avatar";
 import { baptism, baptismDates, church, staffById } from "@/lib/data";
 import { useStore } from "@/lib/store";
 import type { BaptismAge, ServiceTime } from "@/lib/types";
-import { cn, downloadIcs, formatDay, formatTime, isEmail, isPhone } from "@/lib/utils";
+import { cn, downloadIcs, formatDay, isEmail, isPhone } from "@/lib/utils";
 
 type Step = 0 | 1 | 2 | 3;
 
@@ -92,7 +92,6 @@ export function BaptismSheet({ open, onOpenChange, initialDate }: { open: boolea
         contact: contact.trim(),
         date: serviceStart(chosen.date.toISOString(), service),
         service,
-        classDate: chosen.classDate.toISOString(),
         story: story.trim() || undefined,
         okToShare,
         guests,
@@ -197,12 +196,9 @@ export function BaptismSheet({ open, onOpenChange, initialDate }: { open: boolea
                     );
                   })}
                 </div>
-                <div className="rounded-2xl border-2 border-dashed border-stone-200 p-4 text-[15px]">
-                  <p className="font-medium text-stone-900">Baptism Class · {formatDay(chosen.classDate.toISOString())}</p>
-                  <p className="mt-1 text-stone-500">
-                    {baptism.classTime} in {baptism.classLocation}, right after the 10:30 service. About {baptism.classMinutes} minutes, lunch included. We&apos;ll walk through what baptism means and exactly what happens on the day.
-                  </p>
-                </div>
+                <p className="rounded-2xl border-2 border-stone-200 p-4 text-[15px] text-stone-500">
+                  Before the day, a pastor will reach out to hear your story, answer any questions, and walk you through what happens.
+                </p>
                 <Button size="lg" className="w-full" onClick={next}>Continue <ArrowRight /></Button>
               </div>
             )}
@@ -241,7 +237,6 @@ export function BaptismSheet({ open, onOpenChange, initialDate }: { open: boolea
                 who={who}
                 date={serviceStart(chosen.date.toISOString(), service)}
                 service={service}
-                classDate={chosen.classDate.toISOString()}
                 child={age === "child"}
                 onDone={() => onOpenChange(false)}
               />
@@ -262,7 +257,7 @@ function Heading({ title, body }: { title: string; body: string }) {
   );
 }
 
-function Confirmation({ name, who, date, service, classDate, child, onDone }: { name: string; who: string; date: string; service: ServiceTime; classDate: string; child: boolean; onDone: () => void }) {
+function Confirmation({ name, who, date, service, child, onDone }: { name: string; who: string; date: string; service: ServiceTime; child: boolean; onDone: () => void }) {
   const pastor = child ? staffById.micah : staffById[baptism.hostId];
   const where = `${church.address}, ${church.city}`;
   return (
@@ -278,7 +273,6 @@ function Confirmation({ name, who, date, service, classDate, child, onDone }: { 
       <div className="mt-8 overflow-hidden rounded-2xl border-2 border-stone-200 text-left">
         <dl className="divide-y divide-stone-200/70">
           {[
-            ["Class", `${formatDay(classDate)} · ${formatTime(classDate)} · ${baptism.classLocation}`],
             ["Baptism", `${formatDay(date)} · ${service} AM service`],
             ["Bring", "A change of clothes. We'll have a shirt and towels."],
           ].map(([k, v]) => (
@@ -290,28 +284,20 @@ function Confirmation({ name, who, date, service, classDate, child, onDone }: { 
         </dl>
         <div className="flex items-center gap-3 bg-forest-50 px-5 py-4">
           <Avatar name={pastor.name} src={pastor.photo} />
-          <p className="text-sm text-forest-300">{pastor.name.split(" ")[0] === "Lance" ? "Pastor Lance" : `Pastor ${pastor.name.split(" ")[0]}`} will reach out this week to say congrats.</p>
+          <p className="text-sm text-forest-300">Pastor {pastor.name.split(" ")[0]} will reach out this week to say congrats and talk through the day.</p>
         </div>
       </div>
 
-      <div className="mt-6 grid gap-3 sm:grid-cols-2">
+      <div className="mt-6">
         <Button
-          variant="secondary"
-          onClick={() => {
-            downloadIcs({ title: "Baptism Class at Rolla First", start: classDate, durationMin: baptism.classMinutes, location: `${baptism.classLocation}, ${where}`, description: "A short class before your baptism. Lunch included." });
-            toast("Class added to your calendar");
-          }}
-        >
-          <CalendarPlus /> Add class
-        </Button>
-        <Button
+          className="w-full"
           variant="secondary"
           onClick={() => {
             downloadIcs({ title: child ? `${name}'s Baptism at Rolla First` : "My Baptism at Rolla First", start: date, durationMin: 70, location: where, description: "Arrive 30 minutes early. Bring a change of clothes." });
             toast("Baptism added to your calendar");
           }}
         >
-          <CalendarPlus /> Add baptism
+          <CalendarPlus /> Add to calendar
         </Button>
       </div>
       <Button asChild size="lg" className="mt-3 w-full" onClick={onDone}>

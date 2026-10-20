@@ -97,12 +97,13 @@ export function Pills({
             transition={{ delay: 0.04 * i, duration: 0.4 }}
             whileTap={{ scale: 0.96 }}
             className={cn(
-              "inline-flex items-center gap-2 rounded-full px-5 py-3 text-[15px] ring-1 transition-colors duration-200",
+              "inline-flex items-center rounded-full px-5 py-3 text-[15px] ring-1 transition-colors duration-200",
               on ? "bg-forest-700 text-ink ring-forest-700" : "bg-white text-stone-800 ring-stone-200 hover:ring-stone-300",
             )}
           >
-            <motion.span initial={false} animate={{ width: on ? 16 : 0, opacity: on ? 1 : 0 }} className="inline-flex overflow-hidden">
-              <Check className="size-4 shrink-0" strokeWidth={2.5} />
+            {/* The check brings its own gap, so an unselected pill has no empty space before the label. */}
+            <motion.span initial={false} animate={{ width: on ? 24 : 0, opacity: on ? 1 : 0 }} className="inline-flex shrink-0 overflow-hidden">
+              <Check className="mr-2 size-4 shrink-0" strokeWidth={2.5} />
             </motion.span>
             {o.label}
           </motion.button>

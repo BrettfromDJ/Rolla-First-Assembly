@@ -31,7 +31,7 @@ import { cn, isEmail, isPhone } from "@/lib/utils";
 type StepId = "interests" | `fu:${FollowUpKey}` | "about" | "results";
 
 const panel: Record<string, { src: string; quote: string; who: string }> = {
-  interests: { src: img.gathering, quote: "I came looking for a church. I found a family.", who: "Maya, joined in 2024" },
+  interests: { src: img.gathering, quote: "I came looking for a church. I\u00a0found a family.", who: "Maya, joined in 2024" },
   "fu:people": { src: img.dinner, quote: "Tuesday dinners are the best part of my week.", who: "Jordan, Twenties & Thirties" },
   "fu:faith": { src: img.reading, quote: "Nobody made me feel dumb for asking questions.", who: "Priya, Discover Christianity" },
   "fu:family": { src: img.family, quote: "My kids ask to go to church. Every week.", who: "Lucia, mom of two" },

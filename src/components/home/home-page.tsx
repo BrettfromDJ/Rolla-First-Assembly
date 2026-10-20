@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { ArrowRight, ArrowUpRight, BookOpen, CalendarDays, Check, HandHeart, MapPin, MessageCircle, SlidersHorizontal, Sparkles, Users } from "lucide-react";
+import { ArrowRight, BookOpen, CalendarDays, Check, Clock, HandHeart, MapPin, MessageCircle, SlidersHorizontal, Sparkles, Users } from "lucide-react";
 import { SiteHeader } from "@/components/site/header";
 import { SiteFooter } from "@/components/site/footer";
 import { ContactSheet } from "@/components/site/contact-sheet";
@@ -93,7 +93,7 @@ export function HomePage() {
                 tone="forest"
                 eyebrow={`${relativeDay(profile.baptism!.date)} · ${profile.baptism!.service} AM`}
                 title={profile.baptism!.age === "child" ? `${profile.baptism!.firstName}'s baptism` : "Your baptism"}
-                body={`Baptism Class ${formatDay(profile.baptism!.classDate)} at noon in the Gym. Bring a change of clothes.`}
+                body={`${formatDay(profile.baptism!.date)}. Arrive 30 minutes early and bring a change of clothes.`}
                 cta="View details"
                 badge="You're registered"
               />
@@ -171,11 +171,12 @@ export function HomePage() {
                   </span>
                   <span
                     className={cn(
-                      "flex size-12 items-center justify-center rounded-full transition duration-300 group-hover:rotate-45",
+                      "flex size-12 items-center justify-center rounded-full",
                       blue ? "mb-2 bg-paper text-ink md:absolute md:bottom-6 md:right-6 md:mb-0" : "absolute bottom-5 right-5 bg-forest-700 text-ink md:bottom-6 md:right-6",
                     )}
                   >
-                    <ArrowUpRight className="size-5" strokeWidth={1.5} />
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src="/home/arrow.svg" alt="" width={28} height={28} className="transition duration-500 group-hover:rotate-45" />
                   </span>
                 </Link>
               );
@@ -207,7 +208,7 @@ export function HomePage() {
                   href="/baptism"
                   date={profile.baptism.date}
                   title={profile.baptism.age === "child" ? `${profile.baptism.firstName}'s baptism` : "Baptism"}
-                  meta={`${profile.baptism.service} AM · Class ${formatShortDay(profile.baptism.classDate)} at noon`}
+                  meta={`${profile.baptism.service} AM service · Arrive 30 minutes early`}
                   status="Registered"
                 />
               )}
@@ -309,12 +310,18 @@ function SundayChip() {
   const plan = profile.visitPlan;
   return (
     <div className="flex items-center gap-4 rounded-3xl bg-white p-4 pr-6 ring-1 ring-stone-200/70">
-      <span className="flex size-12 flex-col items-center justify-center rounded-2xl bg-forest-700 text-ink">
-        <span className="text-[10px] uppercase tracking-wider text-paper/60">Sun</span>
-        <span className="text-lg font-semibold leading-none">{plan ? new Date(plan.date).getDate() : "9·11"}</span>
+      <span className="flex size-12 shrink-0 flex-col items-center justify-center rounded-2xl bg-forest-700 text-ink">
+        {plan ? (
+          <>
+            <span className="text-[10px] font-semibold uppercase leading-none tracking-wider text-ink/75">{new Date(plan.date).toLocaleDateString("en-US", { month: "short" })}</span>
+            <span className="mt-0.5 font-mori text-xl font-semibold leading-none">{new Date(plan.date).getDate()}</span>
+          </>
+        ) : (
+          <Clock className="size-5" strokeWidth={2} />
+        )}
       </span>
       <div className="text-sm">
-        <p className="font-medium text-stone-900">{plan ? `Your visit · ${plan.service} AM` : "Sundays at 9 & 11 AM"}</p>
+        <p className="font-medium text-stone-900">{plan ? `Your visit · ${plan.service} AM` : `Sundays at ${church.services.join(" & ")} AM`}</p>
         <p className="text-stone-500">{plan ? formatDay(plan.date) : church.address}</p>
       </div>
     </div>
@@ -347,14 +354,14 @@ function PlanRow({ href, date, title, meta, status }: { href: string; date?: str
   return (
     <li>
       <Link href={href} className="flex items-center gap-4 p-4 transition hover:bg-stone-50 md:px-6">
-        <span className="flex size-14 shrink-0 flex-col items-center justify-center rounded-2xl bg-stone-100">
+        <span className="flex size-14 shrink-0 flex-col items-center justify-center rounded-2xl bg-forest-700 text-ink">
           {date ? (
             <>
-              <span className="text-[10px] font-medium uppercase tracking-wider text-clay">{new Date(date).toLocaleDateString("en-US", { month: "short" })}</span>
-              <span className="font-display text-2xl leading-none text-stone-900">{new Date(date).getDate()}</span>
+              <span className="text-[10px] font-semibold uppercase leading-none tracking-wider text-ink/75">{new Date(date).toLocaleDateString("en-US", { month: "short" })}</span>
+              <span className="mt-1 font-mori text-2xl font-semibold leading-none">{new Date(date).getDate()}</span>
             </>
           ) : (
-            <Users className="size-5 text-stone-400" />
+            <Users className="size-5" />
           )}
         </span>
         <div className="min-w-0 flex-1">

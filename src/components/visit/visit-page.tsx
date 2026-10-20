@@ -307,7 +307,7 @@ export function VisitPage() {
                 <div className="p-8 md:p-14">
                   <h2 className="font-display text-5xl leading-[1] md:text-7xl">Let us know you&apos;re coming.</h2>
                   <p className="mt-5 max-w-md text-[17px] text-paper/70">
-                    Totally optional. But if you do, we&apos;ll save you a parking spot, have name tags ready for the kids, and make sure someone&apos;s looking out for you.
+                    Totally optional. But if you do, we&apos;ll have name tags ready for the kids and make sure someone&apos;s looking out for you.
                   </p>
                   <div className="mt-10 flex flex-col gap-3 sm:flex-row">
                     <Button variant="light" size="lg" onClick={() => setPlanOpen(true)}>I&apos;m coming <ArrowRight /></Button>

@@ -101,6 +101,18 @@
     padding-right: 2.5rem;
   }
 
+  /*
+   * Typesetting: lines in a block come out roughly even, so there's never a long line followed by a short one
+   * or a lone word on the last line. Browsers only balance short blocks (about six lines); longer copy falls
+   * back to regular wrapping, so tables keep "pretty", which just avoids a stranded last word.
+   */
+  h1, h2, h3, h4, h5, h6, legend, blockquote, p, li, dd, dt, figcaption, label {
+    text-wrap: balance;
+  }
+  td {
+    text-wrap: pretty;
+  }
+
   html {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
