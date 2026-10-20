@@ -12,14 +12,14 @@ import type { ExploreArea } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 export const areas: { id: ExploreArea | "all"; label: string; blurb: string }[] = [
-  { id: "all", label: "Everything", blurb: "All the ways to get connected at Gather." },
+  { id: "all", label: "Everything", blurb: "All the ways to get connected at Rolla First." },
   { id: "groups", label: "Find a Group", blurb: "Smaller circles, real friendships." },
   { id: "events", label: "Events", blurb: "Easy, open-door ways to meet people." },
   { id: "faith", label: "Grow in Faith", blurb: "Classes, studies, and honest conversations." },
-  { id: "serve", label: "Serve", blurb: "Make a difference, at Gather and across Rolla." },
+  { id: "serve", label: "Serve", blurb: "Make a difference, at Rolla First and across Rolla." },
 ];
 
-export function ExplorePage() {
+export function EventsPage() {
   const params = useSearchParams();
   const router = useRouter();
   const area = (params.get("area") as ExploreArea | null) ?? "all";
@@ -36,7 +36,7 @@ export function ExplorePage() {
   return (
     <>
       <SiteHeader />
-      <main className="pt-16 md:pt-18">
+      <main>
         <section className="mx-auto max-w-7xl px-5 pb-8 pt-12 md:px-8 md:pt-20">
           <p className="text-[13px] font-medium uppercase tracking-[0.16em] text-forest-500">Explore</p>
           <AnimatePresence mode="wait">
@@ -52,7 +52,7 @@ export function ExplorePage() {
                 key={a.id}
                 role="tab"
                 aria-selected={a.id === area}
-                onClick={() => router.replace(a.id === "all" ? "/explore" : `/explore?area=${a.id}`, { scroll: false })}
+                onClick={() => router.replace(a.id === "all" ? "/events" : `/events?area=${a.id}`, { scroll: false })}
                 className={cn(
                   "shrink-0 rounded-full px-4 py-2 text-sm ring-1 transition",
                   a.id === area ? "bg-forest-700 text-ink ring-forest-700" : "bg-white text-stone-700 ring-stone-200 hover:ring-stone-300",

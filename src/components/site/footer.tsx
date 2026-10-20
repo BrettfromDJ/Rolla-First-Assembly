@@ -1,45 +1,65 @@
 import Link from "next/link";
-import { Logo } from "@/components/ui/logo";
-import { church } from "@/lib/data";
+import { church, churchLinks } from "@/lib/data";
+import { cn } from "@/lib/utils";
 
+const mori = "font-mori font-semibold";
+
+const socials = [
+  ["facebook", "Facebook"],
+  ["instagram", "Instagram"],
+  ["youtube", "YouTube"],
+] as const;
+
+/** The Rolla First footer, shared by every visitor-facing page (including the homepage). */
 export function SiteFooter() {
   return (
-    <footer className="bg-forest-900 text-paper">
-      <div className="mx-auto grid max-w-7xl gap-12 px-5 py-16 md:grid-cols-[1.4fr_1fr_1fr_1fr] md:px-8 md:py-20">
-        <div className="space-y-5">
-          <Logo inverted />
-          <p className="max-w-xs text-[15px] leading-relaxed text-paper/60">
-            A church for people who are still figuring it out. Which is to say, all of us.
-          </p>
-        </div>
-        <div className="space-y-3 text-[15px]">
-          <p className="text-xs font-medium uppercase tracking-[0.14em] text-paper/40">Sundays</p>
-          <p>9:00 &amp; 11:00 AM</p>
-          <p className="text-paper/60">{church.serviceLength}</p>
-        </div>
-        <div className="space-y-3 text-[15px]">
-          <p className="text-xs font-medium uppercase tracking-[0.14em] text-paper/40">Find us</p>
-          <p>{church.address}</p>
-          <p className="text-paper/60">{church.city}</p>
-          <a href={church.mapsUrl} target="_blank" rel="noreferrer" className="inline-block text-forest-500 underline-offset-4 hover:underline">
-            Get directions
-          </a>
-        </div>
-        <div className="space-y-3 text-[15px]">
-          <p className="text-xs font-medium uppercase tracking-[0.14em] text-paper/40">Explore</p>
-          <ul className="space-y-2.5 text-paper/80">
-            <li><Link className="hover:text-paper" href="/visit">Plan a visit</Link></li>
-            <li><Link className="hover:text-paper" href="/connect">Get connected</Link></li>
-            <li><Link className="hover:text-paper" href="/explore">Groups &amp; events</Link></li>
-            <li><a className="hover:text-paper" href={`mailto:${church.email}`}>{church.email}</a></li>
+    <footer className="mx-auto max-w-[1440px] px-5 pb-[112px] pt-[22px] text-[#dcd2c5] md:px-[60px]">
+      <div className="flex flex-col justify-between gap-12 md:flex-row md:items-start">
+        <div>
+          <p className={cn(mori, "text-[32px] leading-none tracking-[-0.01em] text-[#0285ff]")}>FOLLOW ROLLA FIRST</p>
+          <ul className="mt-[32px] flex gap-[20px]">
+            {socials.map(([key, label]) => (
+              <li key={key}>
+                <a
+                  href={churchLinks[key]}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={`Rolla First on ${label}`}
+                  className="group relative flex size-[100px] items-center justify-center transition duration-500 ease-out hover:-translate-y-1"
+                >
+                  <span aria-hidden className="absolute inset-0 rounded-[60px] border-4 border-[#0285ff] opacity-30 transition duration-500 group-hover:opacity-100" />
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={`/home/icon-${key}.svg`} alt="" width={32} height={32} />
+                </a>
+              </li>
+            ))}
           </ul>
         </div>
+
+        <div className="grid gap-10 text-[15px] leading-snug sm:grid-cols-3 md:gap-14">
+          <div className="space-y-2">
+            <p className="font-magda text-[13px] uppercase tracking-[0.04em] opacity-60">Sundays</p>
+            <p className={mori}>9:00 &amp; 10:30 AM</p>
+            <p className="pt-2 font-magda text-[13px] uppercase tracking-[0.04em] opacity-60">Wednesdays</p>
+            <p className={mori}>6:30 PM · Adults &amp; youth</p>
+          </div>
+          <div className="space-y-2">
+            <p className="font-magda text-[13px] uppercase tracking-[0.04em] opacity-60">Find us</p>
+            <p className={mori}>{church.address}</p>
+            <p className="opacity-70">{church.city}</p>
+            <a href={church.mapsUrl} target="_blank" rel="noreferrer" className={cn(mori, "inline-flex h-9 items-center rounded-[80px] bg-[#0285ff] px-4 text-[13px] text-black transition hover:brightness-110")}>
+              Get directions
+            </a>
+          </div>
+          <div className="space-y-2">
+            <p className="font-magda text-[13px] uppercase tracking-[0.04em] opacity-60">Say hello</p>
+            <a href={`tel:${church.phone.replace(/\D/g, "")}`} className={cn(mori, "block hover:text-[#0285ff]")}>{church.phone}</a>
+            <a href={`mailto:${church.email}`} className={cn(mori, "block hover:text-[#0285ff]")}>{church.email}</a>
+            <Link href="/visit" className={cn(mori, "block text-[#0285ff] hover:underline")}>Plan your first visit</Link>
+          </div>
+        </div>
       </div>
-      <div className="border-t border-paper/10">
-        <p className="mx-auto max-w-7xl px-5 py-6 text-xs text-paper/40 md:px-8">
-          Gather Church is a fictional church created for this prototype. Names, places, and events are illustrative.
-        </p>
-      </div>
+      <p className="mt-[48px] font-magda text-[14px] uppercase leading-none tracking-[-0.03em] opacity-60">© 2026 ROLLA FIRST ASSEMBLY</p>
     </footer>
   );
 }

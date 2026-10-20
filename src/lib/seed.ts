@@ -23,7 +23,7 @@ function v(input: {
   notes?: { by: string; body: string; daysAgo: number }[];
   tasks?: { title: string; dueIn: number; who: string | null; done?: boolean }[];
   activity: { kind: Activity["kind"]; label: string; daysAgo: number; hour?: number }[];
-  plannedSunday?: { service: "9:00" | "11:00"; kids: number };
+  plannedSunday?: { service: "9:00" | "10:30"; kids: number };
 }): Visitor {
   const email = `${input.first}.${input.last}`.toLowerCase().replace(/[^a-z.]/g, "") + "@example.com";
   const rsvps: Rsvp[] = (input.rsvps ?? []).map((r) => ({ id: id("rsvp"), offeringId: r.offeringId, itemId: r.itemId, createdAt: daysAgo(r.daysAgo) }));
@@ -76,11 +76,11 @@ export function buildSeedVisitors(): Visitor[] {
     v({
       first: "Maya", last: "Chen", photo: portraits.v1, visitedDaysAgo: 2, source: "Connect card",
       interests: ["people", "faith"], f: { vibes: ["coffee", "small-groups"], groupSize: "small", faithStage: "exploring" },
-      stage: "Event RSVP", assignee: "jamie", status: "Needs follow-up",
+      stage: "Event RSVP", assignee: "amber", status: "Needs follow-up",
       rsvps: [{ offeringId: "coffee-welcome", daysAgo: 1 }],
-      tasks: [{ title: "Say hi at Coffee with the Welcome Team", dueIn: 4, who: "jamie" }],
+      tasks: [{ title: "Say hi at Coffee with the Welcome Team", dueIn: 4, who: "amber" }],
       activity: [
-        { kind: "visit", label: "Attended the 11:00 service", daysAgo: 2 },
+        { kind: "visit", label: "Attended the 10:30 service", daysAgo: 2 },
         { kind: "onboarding", label: "Completed onboarding", daysAgo: 2, hour: 14 },
         { kind: "rsvp", label: "RSVP'd to Coffee with the Welcome Team", daysAgo: 1 },
       ],
@@ -88,31 +88,31 @@ export function buildSeedVisitors(): Visitor[] {
     v({
       first: "Jordan", last: "Ellis", photo: portraits.v2, visitedDaysAgo: 9, source: "Plan a visit",
       interests: ["home", "serve"], f: { homeTopics: ["pastors", "membership"], serveAreas: ["production"] },
-      stage: "Getting connected", assignee: "marcus", status: "Contacted",
-      notes: [{ by: "marcus", body: "Great conversation after service. Jordan used to run sound at their old church, so they might be a fit for production. Following up Thursday.", daysAgo: 6 }],
-      tasks: [{ title: "Introduce Jordan to Leo (Production)", dueIn: 1, who: "marcus" }, { title: "Send welcome note", dueIn: -7, who: "nora", done: true }],
+      stage: "Getting connected", assignee: "garrett", status: "Contacted",
+      notes: [{ by: "garrett", body: "Great conversation after service. Jordan used to run sound at their old church, so they might be a fit for production. Following up Thursday.", daysAgo: 6 }],
+      tasks: [{ title: "Introduce Jordan to Leo (Production)", dueIn: 1, who: "garrett" }, { title: "Send welcome note", dueIn: -7, who: "amber", done: true }],
       activity: [
         { kind: "plan", label: "Planned a visit for the 9:00 service", daysAgo: 12 },
         { kind: "visit", label: "Attended the 9:00 service", daysAgo: 9 },
-        { kind: "contacted", label: "Marcus Bell marked as contacted", daysAgo: 6 },
+        { kind: "contacted", label: "Garrett Smith marked as contacted", daysAgo: 6 },
       ],
     }),
     v({
       first: "Lucia", last: "Alvarado", visitedDaysAgo: 0, source: "Plan a visit", household: "2 adults · 2 kids",
       interests: ["family", "people"], f: { ageGroups: ["babies", "elementary"], vibes: ["food"] },
-      stage: "Planning a visit", assignee: "priya", status: "Needs follow-up",
+      stage: "Planning a visit", assignee: "micah", status: "Needs follow-up",
       plannedSunday: { service: "9:00", kids: 2 },
-      tasks: [{ title: "Have kids' name tags ready for Sunday", dueIn: 3, who: "priya" }],
+      tasks: [{ title: "Have kids' name tags ready for Sunday", dueIn: 3, who: "micah" }],
       activity: [{ kind: "plan", label: "Planned a visit for the 9:00 service · 2 kids", daysAgo: 0, hour: 8 }],
     }),
     v({
       first: "Priya", last: "Natarajan", photo: portraits.v3, visitedDaysAgo: 16, source: "Connect card",
       interests: ["faith"], f: { faithStage: "curious" },
-      stage: "Event RSVP", assignee: "grace", status: "Contacted",
+      stage: "Event RSVP", assignee: "garrett", status: "Contacted",
       rsvps: [{ offeringId: "discover", daysAgo: 10 }],
-      notes: [{ by: "grace", body: "Grew up without any church background. Lots of thoughtful questions about suffering. Signed up for Discover Christianity.", daysAgo: 12 }],
+      notes: [{ by: "garrett", body: "Grew up without any church background. Lots of thoughtful questions about suffering. Signed up for Discover Christianity.", daysAgo: 12 }],
       activity: [
-        { kind: "visit", label: "Attended the 11:00 service", daysAgo: 16 },
+        { kind: "visit", label: "Attended the 10:30 service", daysAgo: 16 },
         { kind: "question", label: "Sent a question to Ask a Pastor", daysAgo: 14 },
         { kind: "rsvp", label: "Signed up for Discover Christianity", daysAgo: 10 },
       ],
@@ -126,11 +126,11 @@ export function buildSeedVisitors(): Visitor[] {
     v({
       first: "Hannah", last: "Brooks", visitedDaysAgo: 31, source: "Plan a visit",
       interests: ["people", "home"], f: { vibes: ["outdoors", "food"], groupSize: "either", homeTopics: ["story"] },
-      stage: "Connected", assignee: "nora", status: "Contacted",
+      stage: "Connected", assignee: "amber", status: "Contacted",
       rsvps: [{ offeringId: "small-groups", itemId: "g-trail", daysAgo: 22 }],
-      notes: [{ by: "nora", body: "Joined Trail & Table and loves it. Owen says she's already bringing friends.", daysAgo: 8 }],
+      notes: [{ by: "amber", body: "Joined Trail & Table and loves it. Owen says she's already bringing friends.", daysAgo: 8 }],
       activity: [
-        { kind: "visit", label: "Attended the 11:00 service", daysAgo: 31 },
+        { kind: "visit", label: "Attended the 10:30 service", daysAgo: 31 },
         { kind: "join", label: "Requested to join Trail & Table", daysAgo: 22 },
         { kind: "stage", label: "Moved to Connected", daysAgo: 8 },
       ],
@@ -138,9 +138,9 @@ export function buildSeedVisitors(): Visitor[] {
     v({
       first: "Eli", last: "Washington", photo: portraits.v5, visitedDaysAgo: 3, source: "Connect card",
       interests: ["faith", "people"], f: { faithStage: "returning", vibes: ["bible-study"] },
-      stage: "Getting connected", assignee: "sam", status: "Waiting to hear back",
-      tasks: [{ title: "Follow up about Wednesday Word", dueIn: 0, who: "sam" }],
-      notes: [{ by: "sam", body: "Left a voicemail. Eli mentioned it's been about ten years since he's been to church.", daysAgo: 1 }],
+      stage: "Getting connected", assignee: "gannon", status: "Waiting to hear back",
+      tasks: [{ title: "Follow up about Wednesday Word", dueIn: 0, who: "gannon" }],
+      notes: [{ by: "gannon", body: "Left a voicemail. Eli mentioned it's been about ten years since he's been to church.", daysAgo: 1 }],
       activity: [
         { kind: "visit", label: "Attended the 9:00 service", daysAgo: 3 },
         { kind: "onboarding", label: "Completed onboarding", daysAgo: 3, hour: 15 },
@@ -152,23 +152,23 @@ export function buildSeedVisitors(): Visitor[] {
       stage: "Event RSVP", assignee: null, status: "Needs follow-up", household: "1 adult · 2 students",
       rsvps: [{ offeringId: "family-events", itemId: "f-students", daysAgo: 1 }],
       activity: [
-        { kind: "visit", label: "Attended the 11:00 service", daysAgo: 1 },
+        { kind: "visit", label: "Attended the 10:30 service", daysAgo: 1 },
         { kind: "rsvp", label: "RSVP'd to Student Night Kickoff", daysAgo: 1, hour: 16 },
       ],
     }),
     v({
       first: "Ben", last: "Carter", visitedDaysAgo: 0, source: "Plan a visit",
       interests: ["home"], f: { homeTopics: ["sundays"] },
-      stage: "Planning a visit", assignee: "jamie", status: "Needs follow-up",
-      plannedSunday: { service: "11:00", kids: 0 },
-      activity: [{ kind: "plan", label: "Planned a visit for the 11:00 service", daysAgo: 0, hour: 7 }],
+      stage: "Planning a visit", assignee: "amber", status: "Needs follow-up",
+      plannedSunday: { service: "10:30", kids: 0 },
+      activity: [{ kind: "plan", label: "Planned a visit for the 10:30 service", daysAgo: 0, hour: 7 }],
     }),
     v({
       first: "Grace", last: "Liu", visitedDaysAgo: 23, source: "Connect card",
       interests: ["serve", "people"], f: { serveAreas: ["hospitality"], vibes: ["serving"] },
-      stage: "Connected", assignee: "jamie", status: "Contacted",
+      stage: "Connected", assignee: "amber", status: "Contacted",
       rsvps: [{ offeringId: "serve-sunday", daysAgo: 18 }],
-      notes: [{ by: "jamie", body: "Grace is a natural! Joined the Welcome Team rotation.", daysAgo: 10 }],
+      notes: [{ by: "amber", body: "Grace is a natural! Joined the Welcome Team rotation.", daysAgo: 10 }],
       activity: [
         { kind: "visit", label: "Attended the 9:00 service", daysAgo: 23 },
         { kind: "rsvp", label: "Signed up for Serve This Sunday", daysAgo: 18 },
@@ -178,19 +178,19 @@ export function buildSeedVisitors(): Visitor[] {
     v({
       first: "Noah", last: "Patel", visitedDaysAgo: 6, source: "Connect card",
       interests: ["people"], f: { vibes: ["food", "outdoors"], groupSize: "large" },
-      stage: "First-time visitor", assignee: "sam", status: "Needs follow-up",
-      tasks: [{ title: "Invite Noah to Pizza in the Park", dueIn: -1, who: "sam" }],
-      activity: [{ kind: "visit", label: "Attended the 11:00 service", daysAgo: 6 }],
+      stage: "First-time visitor", assignee: "gannon", status: "Needs follow-up",
+      tasks: [{ title: "Invite Noah to Pizza in the Park", dueIn: -1, who: "gannon" }],
+      activity: [{ kind: "visit", label: "Attended the 10:30 service", daysAgo: 6 }],
     }),
     v({
       first: "Olivia", last: "Grant", visitedDaysAgo: 12, source: "Connect card",
       interests: ["faith", "home"], f: { faithStage: "deeper", homeTopics: ["membership"] },
-      stage: "Event RSVP", assignee: "grace", status: "Contacted",
+      stage: "Event RSVP", assignee: "garrett", status: "Contacted",
       rsvps: [{ offeringId: "membership", daysAgo: 7 }],
       activity: [
         { kind: "visit", label: "Attended the 9:00 service", daysAgo: 12 },
         { kind: "rsvp", label: "Signed up for Discover Membership", daysAgo: 7 },
-        { kind: "contacted", label: "Grace Kim marked as contacted", daysAgo: 6 },
+        { kind: "contacted", label: "Garrett Smith marked as contacted", daysAgo: 6 },
       ],
     }),
   ];

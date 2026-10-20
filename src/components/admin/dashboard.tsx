@@ -130,7 +130,7 @@ export function Dashboard() {
           ))}
         </nav>
         <div className="mt-auto space-y-3">
-          <Link href="/new" className="flex items-center justify-between rounded-xl px-3 py-2 text-sm text-stone-600 hover:bg-stone-50">
+          <Link href="/" className="flex items-center justify-between rounded-xl px-3 py-2 text-sm text-stone-600 hover:bg-stone-50">
             View visitor site <ArrowUpRight className="size-4 text-stone-400" />
           </Link>
           <div className="flex items-center gap-3 rounded-2xl bg-stone-50 p-3">

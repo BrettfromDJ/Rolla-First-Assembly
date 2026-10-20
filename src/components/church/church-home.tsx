@@ -1,8 +1,12 @@
 import Link from "next/link";
-import { Logo } from "@/components/ui/logo";
+import { ArrowRight } from "lucide-react";
 import { ClosingScroll } from "./closing-scroll";
 import { Drift, MaskLines, Rise, SettleIn, WordsIn, Stagger, StaggerItem, WipeIn } from "./motion";
 import { cn } from "@/lib/utils";
+import { churchLinks } from "@/lib/data";
+import { SiteHeader } from "@/components/site/header";
+import { SiteFooter } from "@/components/site/footer";
+import { PlanVisitLink, WelcomeBackBar } from "./visitor-hooks";
 
 /**
  * Rolla First homepage, implemented from the Figma file
@@ -13,22 +17,6 @@ import { cn } from "@/lib/utils";
  */
 
 const A = (f: string) => `/home/${f}`;
-
-/** Destinations that live outside this prototype. Swap in the church's real URLs. */
-export const churchLinks = {
-  give: "https://rollafirst.church",
-  sermons: "https://rollafirst.church",
-  facebook: "https://www.facebook.com/",
-  instagram: "https://www.instagram.com/",
-  youtube: "https://www.youtube.com/",
-};
-
-const nav = [
-  { label: "Mission", href: "#mission" },
-  { label: "Giving", href: churchLinks.give },
-  { label: "Sermons", href: churchLinks.sermons },
-  { label: "Events", href: "/explore?area=events" },
-];
 
 /** Portraits are 340×605 (or 2×) in /public/home/team. */
 const pastors: { first: string; last: string; role: string; email: string; image: string }[] = [
@@ -66,28 +54,12 @@ const mori = "font-mori font-semibold";
 export function ChurchHome() {
   return (
     <div className="overflow-x-clip bg-ink text-[#dcd2c5]">
+      <Rise load y={-16} className="relative z-20">
+        <SiteHeader />
+      </Rise>
+      <WelcomeBackBar />
       <div className="mx-auto max-w-[1440px] px-5 md:px-[60px]">
-        {/* Header */}
-        <Rise load y={-16} className="relative z-20"><header className="flex items-center justify-between gap-6 pt-6 md:pt-[42px]">
-          <div className="flex items-center gap-[59px]">
-            <Link href="/" aria-label="Rolla First home" className="text-[#dcd2c5]">
-              <Logo className="h-[16px] w-auto fill-[#dcd2c5]" />
-            </Link>
-            <nav aria-label="Main" className="hidden items-center gap-[36px] lg:flex">
-              {nav.map((n) => (
-                <Link key={n.label} href={n.href} className={cn(mori, "relative text-[22px] leading-none tracking-[-0.05em] transition after:absolute after:-bottom-1.5 after:left-0 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-[#0285ff] after:transition-transform after:duration-500 hover:text-[#0285ff] hover:after:scale-x-100")}>
-                  {n.label}
-                </Link>
-              ))}
-            </nav>
-          </div>
-          <Link
-            href="/explore?area=events"
-            className={cn(mori, "flex h-[44px] items-center rounded-[80px] bg-[#0285ff] px-6 text-[14px] uppercase leading-none tracking-[-0.05em] text-black transition hover:brightness-110 md:h-[57px] md:px-8 md:text-[16px]")}
-          >
-            Upcoming events
-          </Link>
-        </header></Rise>
+
 
         {/* Hero */}
         <section className="relative grid gap-10 pt-16 md:pt-[63px] lg:grid-cols-[minmax(0,562fr)_minmax(0,427fr)_minmax(0,44fr)_minmax(0,287fr)] lg:gap-0">
@@ -164,6 +136,9 @@ export function ChurchHome() {
             Come join us <Ed>every</Ed>
             <br />
             Sunday &amp; Wednesday
+            <PlanVisitLink className="mt-5 flex items-center gap-2 text-[15px] tracking-[-0.03em] text-black underline decoration-black/40 underline-offset-4 transition hover:decoration-black">
+              Let us know you&apos;re coming <ArrowRight className="size-4" />
+            </PlanVisitLink>
           </p>
           <div className="grid border border-[rgba(220,210,197,0.24)] bg-ink md:min-h-[177px] md:grid-cols-[381px_1px_1fr]">
             <div className="px-6 pt-8 md:pl-[120px] md:pr-0 md:pt-[53px]">
@@ -208,7 +183,7 @@ export function ChurchHome() {
           </a>
           </StaggerItem>
           {[
-            { label: "Events", href: "/explore?area=events" },
+            { label: "Events", href: "/events?area=events" },
             { label: "Sermons", href: churchLinks.sermons },
           ].map((c) => (
             <StaggerItem key={c.label} index={c.label === "Events" ? 1 : 2}>
@@ -239,7 +214,7 @@ export function ChurchHome() {
             A night to encounter God
           </p>
           <p className="absolute bottom-[14.34%] left-[4.16%] font-magda text-[14px] uppercase leading-none tracking-[-0.03em] opacity-60">SUNDAY, JUNE 06 AT 8:30PM</p>
-          <Link href="/explore?area=events" aria-label="See A Night of Worship" className="group absolute bottom-[11.47%] right-[4.62%]">
+          <Link href="/events?area=events" aria-label="See A Night of Worship" className="group absolute bottom-[11.47%] right-[4.62%]">
             <Arrow tone="blue" />
           </Link>
         </section></Rise>
@@ -290,35 +265,23 @@ export function ChurchHome() {
 
       {/* Closing */}
       <ClosingScroll photo={A("closing-photo.webp")} />
+      <div className="relative z-10 -mt-6 flex justify-center px-5 pb-16 md:-mt-10">
+        <Link
+          href="/connect"
+          className={cn(mori, "group flex h-[67px] items-center gap-3 rounded-[80px] bg-[#0285ff] pl-8 pr-2 text-[16px] uppercase leading-none tracking-[-0.05em] text-black transition hover:brightness-110")}
+        >
+          Find your place
+          <span className="flex size-[51px] items-center justify-center rounded-full bg-[#dcd2c5]">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={A("arrow.svg")} alt="" width={30} height={30} className="transition duration-500 ease-out group-hover:rotate-45" />
+          </span>
+        </Link>
+      </div>
 
       {/* Footer */}
-      <Rise><footer className="mx-auto max-w-[1440px] px-5 pb-[112px] pt-[22px] md:px-[60px]">
-        <p className={cn(mori, "text-[32px] leading-none tracking-[-0.01em] text-[#0285ff]")}>FOLLOW ROLLA FIRST</p>
-        <ul className="mt-[32px] flex gap-[20px]">
-          {(
-            [
-              ["facebook", "Facebook"],
-              ["instagram", "Instagram"],
-              ["youtube", "YouTube"],
-            ] as const
-          ).map(([key, label]) => (
-            <li key={key}>
-              <a
-                href={churchLinks[key]}
-                target="_blank"
-                rel="noreferrer"
-                aria-label={`Rolla First on ${label}`}
-                className="group relative flex size-[100px] items-center justify-center transition duration-500 ease-out hover:-translate-y-1"
-              >
-                <span aria-hidden className="absolute inset-0 rounded-[60px] border-4 border-[#0285ff] opacity-30 transition duration-500 group-hover:opacity-100" />
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={A(`icon-${key}.svg`)} alt="" width={32} height={32} />
-              </a>
-            </li>
-          ))}
-        </ul>
-        <p className="mt-[32px] font-magda text-[14px] uppercase leading-none tracking-[-0.03em] opacity-60">2026 ROLLA FIRST ASSEMBLY</p>
-      </footer></Rise>
+      <Rise>
+        <SiteFooter />
+      </Rise>
     </div>
   );
 }

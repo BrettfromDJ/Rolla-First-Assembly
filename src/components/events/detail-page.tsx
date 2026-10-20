@@ -36,9 +36,9 @@ export function DetailPage({ offering: o }: { offering: Offering }) {
   return (
     <>
       <SiteHeader />
-      <main className="pt-16 md:pt-18">
+      <main>
         <div className="mx-auto max-w-7xl px-5 pt-6 md:px-8 md:pt-10">
-          <button onClick={() => (window.history.length > 1 ? router.back() : router.push("/explore"))} className="-ml-2 inline-flex items-center gap-1.5 rounded-full px-2 py-1.5 text-sm text-stone-500 transition hover:text-stone-900">
+          <button onClick={() => (window.history.length > 1 ? router.back() : router.push("/events"))} className="-ml-2 inline-flex items-center gap-1.5 rounded-full px-2 py-1.5 text-sm text-stone-500 transition hover:text-stone-900">
             <ArrowLeft className="size-4" /> Back
           </button>
         </div>
@@ -169,7 +169,7 @@ export function DetailPage({ offering: o }: { offering: Offering }) {
             <div className="mx-auto max-w-7xl px-5 py-16 md:px-8">
               <div className="flex items-end justify-between">
                 <h2 className="font-display text-4xl text-stone-900">You might also like</h2>
-                <Link href="/explore" className="text-sm text-stone-500 hover:text-stone-900">See everything</Link>
+                <Link href="/events" className="text-sm text-stone-500 hover:text-stone-900">See everything</Link>
               </div>
               <div className="mt-6 grid grid-cols-1 gap-1 md:grid-cols-3">
                 {related.map((r) => (

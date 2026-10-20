@@ -3,7 +3,7 @@ export type InterestId = "people" | "home" | "faith" | "family" | "serve";
 export type FaithStage = "curious" | "exploring" | "returning" | "deeper";
 export type GroupSize = "small" | "large" | "either";
 export type VisitPath = "planning" | "visited";
-export type ServiceTime = "9:00" | "11:00";
+export type ServiceTime = "9:00" | "10:30";
 
 export interface FollowUps {
   vibes: string[]; // Meet new people
@@ -57,6 +57,7 @@ export interface Person {
   role: string;
   photo: string;
   bio?: string;
+  email?: string;
 }
 
 export type OfferingKind = "event" | "group" | "class" | "serve" | "conversation" | "story";

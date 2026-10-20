@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Field, Checkbox } from "@/components/ui/field";
 import { InterestIcon, interestTone } from "@/components/ui/interest-icon";
 import { ChoiceCard, Pills, SingleList, Tiles } from "./options";
-import { FeatureCard, OfferingCard, OfferingRow } from "@/components/explore/offering-cards";
+import { FeatureCard, OfferingCard, OfferingRow } from "@/components/events/offering-cards";
 import {
   ageGroupOptions,
   faithStageOptions,
@@ -37,7 +37,7 @@ const panel: Record<string, { src: string; quote: string; who: string }> = {
   "fu:family": { src: img.family, quote: "My kids ask to go to church. Every week.", who: "Lucia, mom of two" },
   "fu:home": { src: img.venue, quote: "It felt like home before I knew anyone's name.", who: "Olivia, member since 2023" },
   "fu:serve": { src: img.volunteers, quote: "Serving on Saturdays is how I met my best friends.", who: "Grace, Food Pantry Crew" },
-  about: { src: img.conversation, quote: "Jamie texted me the day after my first visit. It meant a lot.", who: "Eli, first visit last month" },
+  about: { src: img.conversation, quote: "Someone texted me the day after my first visit. It meant a lot.", who: "Eli, first visit last month" },
 };
 
 const ease = [0.22, 1, 0.36, 1] as const;
@@ -72,7 +72,7 @@ export function ConnectFlow() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
   const next = () => go(steps[Math.min(i + 1, steps.length - 1)]);
-  const back = () => (i === 0 ? router.push(profile.onboardingComplete ? "/home" : "/new") : go(steps[i - 1]));
+  const back = () => (i === 0 ? router.push(profile.onboardingComplete ? "/me" : "/") : go(steps[i - 1]));
 
   useEffect(() => {
     if (step === "results") completeOnboarding();
@@ -99,7 +99,7 @@ export function ConnectFlow() {
               </motion.div>
             </AnimatePresence>
             <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/70" />
-            <Link href="/new" className="absolute left-8 top-8" aria-label="Rolla First home">
+            <Link href="/" className="absolute left-8 top-8" aria-label="Rolla First home">
               <Logo inverted />
             </Link>
             <AnimatePresence mode="wait">
@@ -117,7 +117,7 @@ export function ConnectFlow() {
         <header className={cn("sticky top-0 z-30 bg-ink/85 backdrop-blur-xl", isResults && "border-b border-stone-200/60")}>
           <div className={cn("mx-auto flex h-16 items-center gap-4 px-5 md:px-8", isResults ? "max-w-7xl" : "max-w-2xl")}>
             {isResults ? (
-              <Link href="/new" aria-label="Rolla First home"><Logo /></Link>
+              <Link href="/" aria-label="Rolla First home"><Logo /></Link>
             ) : (
               <>
                 <button onClick={back} className="-ml-2 flex size-10 items-center justify-center rounded-full text-stone-700 transition hover:bg-stone-900/5" aria-label="Back">
@@ -149,7 +149,7 @@ export function ConnectFlow() {
                 </Button>
               </div>
             ) : (
-              <Link href={profile.onboardingComplete ? "/home" : "/new"} className="flex size-10 items-center justify-center rounded-full text-stone-500 hover:bg-stone-900/5 lg:hidden" aria-label="Exit">
+              <Link href={profile.onboardingComplete ? "/me" : "/"} className="flex size-10 items-center justify-center rounded-full text-stone-500 hover:bg-stone-900/5 lg:hidden" aria-label="Exit">
                 <X className="size-5" />
               </Link>
             )}
@@ -411,7 +411,7 @@ function ResultsStep({ onEdit }: { onEdit: () => void }) {
           <h2 className="font-display text-4xl leading-tight text-stone-900">Your home base is ready.</h2>
           <p className="mt-3 max-w-sm text-stone-500">Everything you saved, plus what&apos;s coming up, all in one place. Come back anytime.</p>
           <Button asChild size="lg" className="mt-8">
-            <Link href="/home">Go to My Gather <ArrowRight /></Link>
+            <Link href="/me">Go to My Rolla First <ArrowRight /></Link>
           </Button>
           {profile.skippedContact && (
             <p className="mt-6 max-w-sm text-sm text-stone-400">

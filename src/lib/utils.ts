@@ -121,7 +121,7 @@ export function downloadIcs(opts: {
   const ics = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
-    "PRODID:-//Gather Church//Gather//EN",
+    "PRODID:-//Rolla First Assembly//Rolla First//EN",
     "CALSCALE:GREGORIAN",
     "BEGIN:VEVENT",
     `UID:${uid("evt")}@gather.church`,

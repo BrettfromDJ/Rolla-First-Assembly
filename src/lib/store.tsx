@@ -123,7 +123,7 @@ function profileToVisitor(p: Profile, o: VisitorOverlay): Visitor | null {
     email: p.email || (p.visitPlan?.contact.includes("@") ? p.visitPlan.contact : ""),
     phone: p.phone || (p.visitPlan && !p.visitPlan.contact.includes("@") ? p.visitPlan.contact : ""),
     firstVisit: p.visitPlan?.date && p.path !== "visited" ? p.visitPlan.date : p.createdAt,
-    source: p.visitPlan ? "Plan a visit" : "Gather onboarding",
+    source: p.visitPlan ? "Plan a visit" : "Online onboarding",
     interests: p.interests,
     followUps: p.followUps,
     stage: o.stage ?? derivedStage(p),

@@ -13,7 +13,7 @@ import { Avatar } from "@/components/ui/avatar";
 import { Sheet } from "@/components/ui/sheet";
 import { InterestIcon, interestTone } from "@/components/ui/interest-icon";
 import { ChoiceCard } from "@/components/connect/options";
-import { OfferingCard, toneFor } from "@/components/explore/offering-cards";
+import { OfferingCard, toneFor } from "@/components/events/offering-cards";
 import { church, getOffering, interests as interestList, interestShort, staffById } from "@/lib/data";
 import { img } from "@/lib/images";
 import { reasonFor, recommend } from "@/lib/recommend";
@@ -51,7 +51,7 @@ export function HomePage() {
     return (
       <>
         <SiteHeader />
-        <main className="mx-auto max-w-7xl px-5 pt-32 md:px-8">
+        <main className="mx-auto max-w-7xl px-5 pt-16 md:px-8">
           <div className="h-16 w-2/3 animate-pulse rounded-2xl bg-stone-200/60" />
           <div className="mt-10 h-80 animate-pulse rounded-[32px] bg-stone-200/50" />
         </main>
@@ -66,7 +66,7 @@ export function HomePage() {
   return (
     <>
       <SiteHeader />
-      <main className="pt-16 md:pt-18">
+      <main>
         {/* ---------- Welcome ---------- */}
         <section className="mx-auto max-w-7xl px-5 pb-10 pt-12 md:px-8 md:pt-20">
           <div className="grid gap-8 md:grid-cols-[1fr_auto] md:items-end">
@@ -87,7 +87,7 @@ export function HomePage() {
           <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.8, ease }}>
             {nextPlan ? (
               <NextStepCard
-                href={`/explore/${nextPlan.o.id}`}
+                href={`/events/${nextPlan.o.id}`}
                 image={nextPlan.o.image}
                 tone={toneFor(nextPlan.o)}
                 eyebrow={nextPlan.date ? `${relativeDay(nextPlan.date)} · ${formatTime(nextPlan.date)}` : nextPlan.item?.meta || nextPlan.o.schedule}
@@ -103,13 +103,13 @@ export function HomePage() {
                 tone="forest"
                 eyebrow={`${relativeDay(profile.visitPlan.date)} · ${profile.visitPlan.service} AM`}
                 title="Your first Sunday"
-                body="Park in any of our lots and head to the main entrance on Oak St. Jamie will be there to say hello."
+                body="Park in any of our lots and head to the main entrance on Oak St. Our team will be there to say hello."
                 cta="See your Sunday guide"
                 badge="You're on the list"
               />
             ) : recs[0] ? (
               <NextStepCard
-                href={`/explore/${recs[0].id}`}
+                href={`/events/${recs[0].id}`}
                 image={recs[0].image}
                 tone={toneFor(recs[0])}
                 eyebrow={recs[0].date ? `${relativeDay(recs[0].date)} · ${formatTime(recs[0].date)}` : recs[0].schedule}
@@ -137,10 +137,10 @@ export function HomePage() {
           <h2 id="explore" className="mb-4 text-sm font-medium text-stone-500">Explore</h2>
           <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
             {[
-              { href: "/explore?area=groups", label: "Find a Group", sub: "40+ groups across town", icon: Users },
-              { href: "/explore?area=events", label: "Events", sub: "What's coming up", icon: CalendarDays },
-              { href: "/explore?area=faith", label: "Grow in Faith", sub: "Classes & studies", icon: BookOpen },
-              { href: "/explore?area=serve", label: "Serve", sub: "Make a difference", icon: HandHeart },
+              { href: "/events?area=groups", label: "Find a Group", sub: "40+ groups across town", icon: Users },
+              { href: "/events?area=events", label: "Events", sub: "What's coming up", icon: CalendarDays },
+              { href: "/events?area=faith", label: "Grow in Faith", sub: "Classes & studies", icon: BookOpen },
+              { href: "/events?area=serve", label: "Serve", sub: "Make a difference", icon: HandHeart },
             ].map((t, k) => {
               const blue = k === 0;
               return (
@@ -186,7 +186,7 @@ export function HomePage() {
                   <p className="text-sm text-stone-500">When you RSVP or join a group, it&apos;ll show up here.</p>
                 </div>
               </div>
-              <Button asChild variant="secondary"><Link href="/explore?area=events">Browse events</Link></Button>
+              <Button asChild variant="secondary"><Link href="/events?area=events">Browse events</Link></Button>
             </div>
           ) : (
             <ul className="divide-y divide-stone-200/70 overflow-hidden rounded-[28px] bg-white ring-1 ring-stone-200/60">
@@ -196,7 +196,7 @@ export function HomePage() {
               {plans.map((p) => (
                 <PlanRow
                   key={p.rsvp.id}
-                  href={`/explore/${p.o.id}`}
+                  href={`/events/${p.o.id}`}
                   date={p.date}
                   title={p.item?.title ?? p.o.title}
                   meta={p.date ? `${formatTime(p.date)} · ${p.item?.location ?? p.o.location}` : `${p.item?.meta || p.o.schedule}`}
@@ -247,18 +247,18 @@ export function HomePage() {
             <Photo src={img.coffeeCup} alt="" tone="honey" className="min-h-56" />
             <div className="p-8 md:p-12">
               <div className="flex items-center gap-3">
-                <Avatar name={staffById.jamie.name} src={staffById.jamie.photo} className="size-12 ring-2 ring-paper/20" />
+                <Avatar name={staffById.amber.name} src={staffById.amber.photo} className="size-12 ring-2 ring-paper/20" />
                 <div>
-                  <p className="font-medium">Jamie Okafor</p>
-                  <p className="text-sm text-paper/60">Welcome Team Lead</p>
+                  <p className="font-medium">Amber Eckelkamp</p>
+                  <p className="text-sm text-paper/60">Administrative Assistant</p>
                 </div>
               </div>
               <h2 className="mt-8 font-display text-4xl leading-[1.05] md:text-5xl">Need anything? I&apos;m here.</h2>
               <p className="mt-4 max-w-md text-paper/70">
-                Questions about Sunday, a prayer request, or just want to grab coffee? Send me a note. I usually reply the same day.
+                Questions about Sunday, a prayer request, or just want to grab coffee? Send a note to the church office. We usually reply the same day.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
-                <Button variant="light" size="lg" onClick={() => setContactOpen(true)}><MessageCircle /> Message Jamie</Button>
+                <Button variant="light" size="lg" onClick={() => setContactOpen(true)}><MessageCircle /> Message Amber</Button>
                 <Button asChild variant="outlineLight" size="lg">
                   <a href={church.mapsUrl} target="_blank" rel="noreferrer"><MapPin /> Directions</a>
                 </Button>

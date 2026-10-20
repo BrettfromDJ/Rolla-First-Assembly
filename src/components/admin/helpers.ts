@@ -4,14 +4,14 @@ import type { Rsvp, Stage, Visitor } from "@/lib/types";
 export const stages: Stage[] = ["Planning a visit", "First-time visitor", "Getting connected", "Event RSVP", "Connected"];
 
 export const stageStyle: Record<Stage, { pill: string; dot: string; bar: string }> = {
-  "Planning a visit": { pill: "bg-sky-soft text-[#2f5361]", dot: "bg-[#6b93a3]", bar: "bg-[#9fbac4]" },
-  "First-time visitor": { pill: "bg-honey-soft text-[#7a5a17]", dot: "bg-honey", bar: "bg-honey" },
-  "Getting connected": { pill: "bg-clay-soft text-[#8a432a]", dot: "bg-clay", bar: "bg-clay" },
-  "Event RSVP": { pill: "bg-sage-soft text-forest-700", dot: "bg-forest-400", bar: "bg-forest-400" },
-  Connected: { pill: "bg-forest-700 text-paper", dot: "bg-forest-700", bar: "bg-forest-700" },
+  "Planning a visit": { pill: "bg-sky-soft text-sky", dot: "bg-sky", bar: "bg-sky" },
+  "First-time visitor": { pill: "bg-honey-soft text-honey", dot: "bg-honey", bar: "bg-honey" },
+  "Getting connected": { pill: "bg-clay-soft text-clay", dot: "bg-clay", bar: "bg-clay" },
+  "Event RSVP": { pill: "bg-forest-100 text-forest-300", dot: "bg-forest-400", bar: "bg-forest-400" },
+  Connected: { pill: "bg-forest-700 text-ink", dot: "bg-forest-700", bar: "bg-forest-700" },
 };
 
-export const ACTING_AS = "jamie";
+export const ACTING_AS = "amber";
 
 export function rsvpInfo(r: Rsvp) {
   const o = getOffering(r.offeringId);

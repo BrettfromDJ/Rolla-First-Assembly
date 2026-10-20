@@ -23,7 +23,7 @@ export function PlanVisitSheet({ open, onOpenChange }: { open: boolean; onOpenCh
   const [dir, setDir] = useState(1);
   const [firstName, setFirstName] = useState("");
   const [contact, setContact] = useState("");
-  const [service, setService] = useState<ServiceTime>("11:00");
+  const [service, setService] = useState<ServiceTime>("10:30");
   const [date, setDate] = useState(sundays[0].toISOString());
   const [kids, setKids] = useState<boolean | null>(null);
   const [kidsCount, setKidsCount] = useState(1);
@@ -36,7 +36,7 @@ export function PlanVisitSheet({ open, onOpenChange }: { open: boolean; onOpenCh
     setErrors({});
     setFirstName(p?.firstName ?? profile.firstName);
     setContact(p?.contact ?? (profile.email || profile.phone));
-    setService(p?.service ?? "11:00");
+    setService(p?.service ?? "10:30");
     setKids(p ? p.bringingKids : null);
     setKidsCount(p?.kidsCount || 1);
     const match = p && sundays.find((s) => s.toDateString() === new Date(p.date).toDateString());
@@ -61,7 +61,7 @@ export function PlanVisitSheet({ open, onOpenChange }: { open: boolean; onOpenCh
     else if (step === 2) {
       if (kids === null) return;
       const d = new Date(date);
-      d.setHours(service === "9:00" ? 9 : 11, 0, 0, 0);
+      d.setHours(service === "9:00" ? 9 : 10, service === "9:00" ? 0 : 30, 0, 0);
       savePlan({ firstName: firstName.trim(), contact: contact.trim(), service, date: d.toISOString(), bringingKids: kids, kidsCount: kids ? kidsCount : 0 });
       go(3);
     }
@@ -69,7 +69,7 @@ export function PlanVisitSheet({ open, onOpenChange }: { open: boolean; onOpenCh
 
   const visitDate = useMemo(() => {
     const d = new Date(date);
-    d.setHours(service === "9:00" ? 9 : 11, 0, 0, 0);
+    d.setHours(service === "9:00" ? 9 : 10, service === "9:00" ? 0 : 30, 0, 0);
     return d.toISOString();
   }, [date, service]);
 
@@ -124,7 +124,7 @@ export function PlanVisitSheet({ open, onOpenChange }: { open: boolean; onOpenCh
                   })}
                 </div>
                 <div className="grid grid-cols-2 gap-3">
-                  {(["9:00", "11:00"] as const).map((t) => {
+                  {(["9:00", "10:30"] as const).map((t) => {
                     const on = service === t;
                     return (
                       <button key={t} onClick={() => setService(t)} aria-pressed={on} className={cn("relative rounded-3xl p-5 text-left ring-1 transition", on ? "bg-white ring-2 ring-forest-600" : "bg-white/60 ring-stone-200 hover:bg-white")}>
@@ -193,7 +193,7 @@ function Heading({ title, body }: { title: string; body: string }) {
 }
 
 function Confirmation({ name, date, service, kids, onDone }: { name: string; date: string; service: ServiceTime; kids: number; onDone: () => void }) {
-  const jamie = staffById.jamie;
+  const host = staffById.amber;
   return (
     <div className="text-center">
       <motion.div initial={{ scale: 0.6, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ type: "spring", damping: 14, stiffness: 200, delay: 0.1 }} className="mx-auto flex size-16 items-center justify-center rounded-full bg-forest-700 text-ink">
@@ -217,8 +217,8 @@ function Confirmation({ name, date, service, kids, onDone }: { name: string; dat
           ))}
         </dl>
         <div className="flex items-center gap-3 bg-forest-50 px-5 py-4">
-          <Avatar name={jamie.name} src={jamie.photo} />
-          <p className="text-sm text-forest-300">Jamie will meet you at the main entrance on Oak St.</p>
+          <Avatar name={host.name} src={host.photo} />
+          <p className="text-sm text-forest-300">Someone from our team will meet you at the main entrance on Oak St.</p>
         </div>
       </div>
 
@@ -227,7 +227,7 @@ function Confirmation({ name, date, service, kids, onDone }: { name: string; dat
           variant="secondary"
           size="lg"
           onClick={() => {
-            downloadIcs({ title: "Sunday at Gather Church", start: date, durationMin: 70, location: `${church.address}, ${church.city}`, description: "Look for the welcome tent out front. We can't wait to meet you." });
+            downloadIcs({ title: "Sunday at Rolla First", start: date, durationMin: 70, location: `${church.address}, ${church.city}`, description: "Look for the welcome tent out front. We can't wait to meet you." });
             toast("Calendar invite downloaded");
           }}
         >

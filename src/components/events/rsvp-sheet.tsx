@@ -108,7 +108,7 @@ export function RsvpSheet({
                   variant="secondary"
                   size="lg"
                   onClick={() => {
-                    downloadIcs({ title, start: date, durationMin: duration, location, description: `${offering.summary}\n\nGather Church · ${location}` });
+                    downloadIcs({ title, start: date, durationMin: duration, location, description: `${offering.summary}\n\nRolla First · ${location}` });
                     toast("Calendar invite downloaded", { description: `${title} · ${formatDay(date)}` });
                   }}
                 >
@@ -120,8 +120,8 @@ export function RsvpSheet({
                 </Button>
               )}
               <Button asChild size="lg">
-                <Link href="/home">
-                  Go to My Gather <ArrowRight />
+                <Link href="/me">
+                  Go to My Rolla First <ArrowRight />
                 </Link>
               </Button>
             </div>

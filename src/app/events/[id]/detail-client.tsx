@@ -1,6 +1,6 @@
 "use client";
 
-import { DetailPage } from "@/components/explore/detail-page";
+import { DetailPage } from "@/components/events/detail-page";
 import { PageSkeleton } from "@/components/site/page-skeleton";
 import { getOffering } from "@/lib/data";
 import { useStore } from "@/lib/store";

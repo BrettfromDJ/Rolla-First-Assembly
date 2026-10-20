@@ -1,12 +1,12 @@
 import { Suspense } from "react";
-import { ExplorePage } from "@/components/explore/explore-page";
+import { EventsPage } from "@/components/events/events-page";
 
 export const metadata = { title: "Explore" };
 
 export default function Page() {
   return (
     <Suspense>
-      <ExplorePage />
+      <EventsPage />
     </Suspense>
   );
 }

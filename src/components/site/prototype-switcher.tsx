@@ -9,12 +9,11 @@ import { useStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
 const visitor = [
-  { href: "/", label: "Church homepage", hint: "From Figma" },
-  { href: "/new", label: "New here", hint: "Landing page" },
-  { href: "/visit", label: "Plan your visit", hint: "Sunday guide" },
+  { href: "/", label: "Homepage", hint: "From Figma" },
+  { href: "/visit", label: "New here", hint: "Plan a visit" },
   { href: "/connect", label: "Get connected", hint: "Onboarding" },
-  { href: "/explore", label: "Explore", hint: "Groups, events, serving" },
-  { href: "/home", label: "My Gather", hint: "Personal home" },
+  { href: "/events", label: "Events", hint: "Groups, events, serving" },
+  { href: "/me", label: "My Rolla First", hint: "Personal home" },
 ];
 
 /** A small, out-of-the-way control for moving between the visitor and staff experiences. */
@@ -76,7 +75,7 @@ export function PrototypeSwitcher() {
               onSelect={() => {
                 resetAll();
                 toast("Demo reset", { description: "Everything's back to a fresh start." });
-                router.push("/new");
+                router.push("/");
               }}
               className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm text-stone-500 outline-none data-[highlighted]:bg-stone-100"
             >

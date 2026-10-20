@@ -8,8 +8,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { PrototypeSwitcher } from "@/components/site/prototype-switcher";
 
 export const metadata: Metadata = {
-  title: { default: "Gather Church — New here? You're in the right place.", template: "%s · Gather Church" },
-  description: "Whether you're exploring faith, looking for community, or just checking things out, we're glad you're here.",
+  title: { default: "Rolla First — Where faith feels like family", template: "%s · Rolla First" },
+  description: "Rolla First Assembly in Rolla, MO. Sundays at 9:00 & 10:30 AM, Wednesdays at 6:30 PM. Belong. Believe. Become.",
   icons: { icon: "/icon.svg" },
 };
 

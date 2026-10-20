@@ -13,7 +13,7 @@ import { isEmail, isPhone } from "@/lib/utils";
 
 export function ContactSheet({ open, onOpenChange }: { open: boolean; onOpenChange: (o: boolean) => void }) {
   const { profile } = useStore();
-  const jamie = staffById.jamie;
+  const amber = staffById.amber;
   const [name, setName] = useState("");
   const [contact, setContact] = useState("");
   const [message, setMessage] = useState("");
@@ -29,21 +29,21 @@ export function ContactSheet({ open, onOpenChange }: { open: boolean; onOpenChan
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!message.trim()) return setError("Write a quick note so Jamie knows how to help.");
+    if (!message.trim()) return setError("Write a quick note so Amber knows how to help.");
     if (!isEmail(contact) && !isPhone(contact)) return setError("Add an email or phone number so we can reply.");
     onOpenChange(false);
     setMessage("");
-    toast("Message sent to Jamie", { description: "Simulated for this prototype. Nothing was actually sent." });
+    toast("Message sent to Amber", { description: "Simulated for this prototype. Nothing was actually sent." });
   };
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange} title="Ask us anything" hideTitle>
       <form onSubmit={submit} className="space-y-6 px-6 pb-8 pt-8 sm:px-8">
         <div className="flex items-center gap-4">
-          <Avatar name={jamie.name} src={jamie.photo} className="size-14" />
+          <Avatar name={amber.name} src={amber.photo} className="size-14" />
           <div>
-            <h2 className="font-display text-3xl leading-tight text-stone-900">Hi, I&apos;m Jamie.</h2>
-            <p className="text-sm text-stone-500">I lead our welcome team. Ask me anything.</p>
+            <h2 className="font-display text-3xl leading-tight text-stone-900">Hi, I&apos;m Amber.</h2>
+            <p className="text-sm text-stone-500">I work in the church office. Ask me anything.</p>
           </div>
         </div>
         <div className="grid gap-4 sm:grid-cols-2">
@@ -54,10 +54,10 @@ export function ContactSheet({ open, onOpenChange }: { open: boolean; onOpenChan
         {error && <p className="text-[13px] text-clay" role="alert">{error}</p>}
         <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex gap-4 text-sm text-stone-500">
-            <a href={`tel:${church.phone}`} className="inline-flex items-center gap-1.5 hover:text-stone-900"><Phone className="size-4" />Call</a>
+            <a href={`tel:${church.phone.replace(/\D/g, "")}`} className="inline-flex items-center gap-1.5 hover:text-stone-900"><Phone className="size-4" />Call</a>
             <a href={`mailto:${church.email}`} className="inline-flex items-center gap-1.5 hover:text-stone-900"><Mail className="size-4" />Email</a>
           </div>
-          <Button type="submit" size="lg"><MessageCircle />Send to Jamie</Button>
+          <Button type="submit" size="lg"><MessageCircle />Send to Amber</Button>
         </div>
       </form>
     </Sheet>
