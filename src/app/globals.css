@@ -173,20 +173,22 @@
 }
 .grain {
   position: absolute;
-  inset: -50%;
+  inset: -64px;
   opacity: 0.11;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 7 -3.6'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  will-change: transform;
   animation: grain 0.9s steps(6) infinite;
 }
 
+/* Small pixel jumps keep the layer only slightly larger than the screen, which is cheap to composite while scrolling. */
 @keyframes grain {
-  0% { transform: translate(0, 0); }
-  17% { transform: translate(-5%, -8%); }
-  33% { transform: translate(-12%, 4%); }
-  50% { transform: translate(7%, -11%); }
-  67% { transform: translate(-3%, 12%); }
-  83% { transform: translate(10%, 5%); }
-  100% { transform: translate(0, 0); }
+  0% { transform: translate3d(0, 0, 0); }
+  17% { transform: translate3d(-24px, -40px, 0); }
+  33% { transform: translate3d(-56px, 20px, 0); }
+  50% { transform: translate3d(32px, -52px, 0); }
+  67% { transform: translate3d(-12px, 56px, 0); }
+  83% { transform: translate3d(48px, 24px, 0); }
+  100% { transform: translate3d(0, 0, 0); }
 }
 
 /* Slow scrolling headline marquee */

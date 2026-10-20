@@ -1,7 +1,6 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useReducedMotion, useScroll, useTransform, type MotionValue } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import { cn } from "@/lib/utils";
 
 /**
@@ -90,31 +89,18 @@ export function Drift({ children, className }: { children: React.ReactNode; clas
   );
 }
 
-/** Children shift vertically at a different rate than the page scroll. */
-export function Parallax({ children, amount = 60, className }: { children: React.ReactNode; amount?: number; className?: string }) {
-  const ref = useRef<HTMLDivElement>(null);
+/** Banner image that settles from a slight zoom once it enters view. Not tied to scroll position. */
+export function SettleIn({ children, className }: { children: React.ReactNode; className?: string }) {
   const reduce = useReducedMotion();
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const y = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [amount, -amount]);
   return (
-    <div ref={ref} className={className}>
-      <motion.div style={{ y }} className="size-full">
-        {children}
-      </motion.div>
-    </div>
-  );
-}
-
-/** Banner image that slowly zooms out and drifts as it scrolls through. */
-export function ScrollZoom({ children, className }: { children: React.ReactNode; className?: string }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const reduce = useReducedMotion();
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const scale = useTransform(scrollYProgress, [0, 1], reduce ? [1, 1] : [1.18, 1]);
-  const y = useTransform(scrollYProgress, [0, 1], reduce ? ["0%", "0%"] : ["-4%", "4%"]);
-  return (
-    <div ref={ref} className={cn("overflow-hidden", className)}>
-      <motion.div style={{ scale, y }} className="size-full">
+    <div className={cn("overflow-hidden", className)}>
+      <motion.div
+        className="size-full"
+        initial={reduce ? false : { scale: 1.12 }}
+        whileInView={{ scale: 1 }}
+        viewport={{ once: true, margin: "-60px" }}
+        transition={{ duration: 1.8, ease }}
+      >
         {children}
       </motion.div>
     </div>
@@ -123,38 +109,32 @@ export function ScrollZoom({ children, className }: { children: React.ReactNode;
 
 type Word = { text: string; italic?: boolean; dim?: boolean; br?: boolean };
 
-/** Mission headline: each word brightens in turn as the reader scrolls. */
-export function ScrollWords({ words, className }: { words: Word[][]; className?: string }) {
-  const ref = useRef<HTMLHeadingElement>(null);
+/** Mission headline: words brighten one after another once it scrolls into view. Plays once, not tied to scroll position. */
+export function WordsIn({ words, className }: { words: Word[][]; className?: string }) {
   const reduce = useReducedMotion();
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 85%", "end 45%"] });
-  const flat = words.flat();
   let n = 0;
   return (
-    <h2 ref={ref} className={className}>
+    <motion.h2 className={className} initial={reduce ? false : "hidden"} whileInView="show" viewport={{ once: true, margin: "-120px" }}>
       {words.map((line, li) => (
         <span key={li} className={li === 0 ? "block leading-none lg:pl-[24.55%]" : "mt-[0.04em] block leading-[0.84]"}>
           {line.map((w, wi) => {
             const i = n++;
             return (
               <span key={wi}>
-                <ScrollWord progress={scrollYProgress} i={i} total={flat.length} target={w.dim ? 0.36 : 1} reduce={!!reduce}>
+                <motion.span
+                  variants={{ hidden: { opacity: 0.12 }, show: { opacity: w.dim ? 0.36 : 1, transition: { duration: 0.6, delay: i * 0.07, ease } } }}
+                  style={reduce ? { opacity: w.dim ? 0.36 : 1 } : undefined}
+                >
                   {w.italic ? <span className="font-editorial font-normal italic tracking-[-0.03em]">{w.text}</span> : w.text}
-                </ScrollWord>
+                </motion.span>
                 {w.br ? <br /> : wi < line.length - 1 ? " " : null}
               </span>
             );
           })}
         </span>
       ))}
-    </h2>
+    </motion.h2>
   );
-}
-
-function ScrollWord({ progress, i, total, target, reduce, children }: { progress: MotionValue<number>; i: number; total: number; target: number; reduce: boolean; children: React.ReactNode }) {
-  const start = i / total;
-  const opacity = useTransform(progress, [start, start + 1 / total], reduce ? [target, target] : [0.12, target]);
-  return <motion.span style={{ opacity }}>{children}</motion.span>;
 }
 
 /** Stagger children into view, e.g. cards or portraits. */

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Logo } from "@/components/ui/logo";
 import { ClosingScroll } from "./closing-scroll";
-import { Drift, MaskLines, Rise, ScrollWords, ScrollZoom, Stagger, StaggerItem, WipeIn } from "./motion";
+import { Drift, MaskLines, Rise, SettleIn, WordsIn, Stagger, StaggerItem, WipeIn } from "./motion";
 import { cn } from "@/lib/utils";
 
 /**
@@ -183,7 +183,7 @@ export function ChurchHome() {
         <section id="mission" className="scroll-mt-10 pt-[61px]">
           <div className="relative">
             <p className={cn(mori, "text-[16px] uppercase leading-[1.1] tracking-[-0.03em] text-[#0285ff] lg:absolute lg:left-[11px] lg:top-[47px]")}>Our mission</p>
-            <ScrollWords
+            <WordsIn
               className={cn(mori, "mt-4 text-[clamp(34px,7.78vw,112px)] tracking-[-0.05em] lg:mt-0")}
               words={[
                 [{ text: "Helping", dim: true }, { text: "people", dim: true }, { text: "come", italic: true }],
@@ -226,10 +226,10 @@ export function ChurchHome() {
 
         {/* A Night of Worship */}
         <Rise><section aria-label="A Night of Worship" className="group relative mt-[105px] aspect-[4/5] overflow-hidden @container sm:aspect-[1321/523]">
-          <ScrollZoom className="absolute inset-0">
+          <SettleIn className="absolute inset-0">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={A("worship.jpg")} alt="Gannon singing and playing guitar during a night of worship" width={1321} height={523} loading="lazy" className="size-full object-cover" />
-          </ScrollZoom>
+          </SettleIn>
           <h2 className="absolute left-[4.16%] top-[11.5%] font-editorial font-normal text-[clamp(48px,8.48cqw,112px)] leading-[0.94] tracking-[-0.05em] text-[#0285ff]">
             A Night
             <br />
@@ -265,7 +265,7 @@ export function ChurchHome() {
 
       {/* Full-bleed, horizontally scrollable leadership strip */}
       <div className="mx-auto max-w-[1440px]">
-        <Stagger as="ul" gap={0.07} className="no-scrollbar mt-[48px] flex snap-x snap-mandatory overflow-x-auto md:mt-[67px]">
+        <Stagger as="ul" gap={0.07} className="no-scrollbar mt-[48px] flex overflow-x-auto overscroll-x-contain md:mt-[67px]">
           {pastors.map((p) => (
             <StaggerItem as="li" key={`${p.first}-${p.last}`} className="group w-[min(340px,78vw)] shrink-0 snap-start">
               <div className="flex flex-col items-end text-right">
