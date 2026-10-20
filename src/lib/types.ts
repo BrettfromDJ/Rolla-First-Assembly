@@ -65,6 +65,10 @@ export interface BaptismRegistration {
   okToShare: boolean;
   guests: number;
   createdAt: string;
+  /* Tracked by staff in the Baptisms tab */
+  classAttended?: boolean;
+  pastorContacted?: boolean;
+  baptized?: boolean;
 }
 
 /* ---------- Content ---------- */

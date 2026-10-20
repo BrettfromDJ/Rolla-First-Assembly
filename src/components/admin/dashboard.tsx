@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion } from "motion/react";
 import {
   AlertCircle,
@@ -18,11 +18,13 @@ import {
   Users,
   X,
   FlaskConical,
+  Droplets,
 } from "lucide-react";
 import { Logo } from "@/components/ui/logo";
 import { Avatar } from "@/components/ui/avatar";
 import { InterestIcon, interestTone } from "@/components/ui/interest-icon";
 import { VisitorPanel } from "./visitor-panel";
+import { BaptismsView } from "./baptisms";
 import { interests as interestList, interestShort, staffById, welcomeTeam } from "@/lib/data";
 import { useStore } from "@/lib/store";
 import type { InterestId, Stage, Visitor } from "@/lib/types";
@@ -41,6 +43,14 @@ export function Dashboard() {
   const store = useStore();
   const { allVisitors, hydrated } = store;
   const [view, setView] = useState<View>("all");
+  const [tab, setTabState] = useState<"visitors" | "baptisms">("visitors");
+  const setTab = (t: "visitors" | "baptisms") => {
+    setTabState(t);
+    history.replaceState(null, "", t === "baptisms" ? "#baptisms" : location.pathname);
+  };
+  useEffect(() => {
+    if (location.hash === "#baptisms") setTabState("baptisms");
+  }, []);
   const [query, setQuery] = useState("");
   const [stage, setStage] = useState<Stage | "">("");
   const [interest, setInterest] = useState<InterestId | "">("");
@@ -107,7 +117,7 @@ export function Dashboard() {
             return (
               <button
                 key={x.id}
-                onClick={() => setView(x.id)}
+                onClick={() => { setView(x.id); setTab("visitors"); }}
                 className={cn("flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm transition", view === x.id ? "bg-stone-100 font-medium text-stone-900" : "text-stone-600 hover:bg-stone-50")}
               >
                 <x.icon className="size-4 text-stone-400" />
@@ -120,7 +130,7 @@ export function Dashboard() {
           {stageCounts.map(({ s, n }) => (
             <button
               key={s}
-              onClick={() => { setStage(stage === s ? "" : s); setView("all"); }}
+              onClick={() => { setStage(stage === s ? "" : s); setView("all"); setTab("visitors"); }}
               className={cn("flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm transition", stage === s ? "bg-stone-100 font-medium text-stone-900" : "text-stone-600 hover:bg-stone-50")}
             >
               <span className={cn("size-2 rounded-full", stageStyle[s].dot)} />
@@ -128,6 +138,15 @@ export function Dashboard() {
               <span className="text-xs tabular-nums text-stone-400">{hydrated ? n : "–"}</span>
             </button>
           ))}
+          <p className="px-3 pb-2 pt-6 text-[11px] font-semibold uppercase tracking-[0.12em] text-stone-400">Ministry</p>
+          <button
+            onClick={() => setTab("baptisms")}
+            className={cn("flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm transition", tab === "baptisms" ? "bg-stone-100 font-medium text-stone-900" : "text-stone-600 hover:bg-stone-50")}
+          >
+            <Droplets className="size-4 text-stone-400" />
+            <span className="flex-1 text-left">Baptisms</span>
+            <span className="text-xs tabular-nums text-stone-400">{hydrated ? allVisitors.filter((v) => v.baptism).length : "–"}</span>
+          </button>
         </nav>
         <div className="mt-auto space-y-3">
           <Link href="/" className="flex items-center justify-between rounded-xl px-3 py-2 text-sm text-stone-600 hover:bg-stone-50">
@@ -153,8 +172,8 @@ export function Dashboard() {
               <input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search visitors"
-                aria-label="Search visitors"
+                placeholder={tab === "baptisms" ? "Search baptisms" : "Search visitors"}
+                aria-label={tab === "baptisms" ? "Search baptisms" : "Search visitors"}
                 className="h-10 w-full rounded-full bg-white pl-10 pr-4 text-sm ring-1 ring-stone-200 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-forest-500"
               />
             </div>
@@ -164,6 +183,33 @@ export function Dashboard() {
           </div>
         </header>
 
+        <div className="px-5 pt-6 md:px-8">
+          <div role="tablist" aria-label="Dashboard sections" className="flex gap-1 border-b border-stone-200/70">
+            {([
+              ["visitors", "Visitors", Users],
+              ["baptisms", "Baptisms", Droplets],
+            ] as const).map(([id, label, Icon]) => (
+              <button
+                key={id}
+                role="tab"
+                aria-selected={tab === id}
+                onClick={() => setTab(id)}
+                className={cn("-mb-px flex items-center gap-2 border-b-2 px-3 pb-3 pt-1 text-sm transition", tab === id ? "border-forest-700 font-medium text-stone-900" : "border-transparent text-stone-500 hover:text-stone-800")}
+              >
+                <Icon className="size-4" /> {label}
+              </button>
+            ))}
+          </div>
+        </div>
+        {tab === "baptisms" ? (
+          <div className="px-5 pt-8 md:px-8">
+            <div className="mb-6">
+              <p className="text-sm text-stone-500">Ministry</p>
+              <h1 className="mt-1 text-[28px] font-semibold tracking-[-0.02em]">Baptisms</h1>
+            </div>
+            <BaptismsView query={query} onOpen={setSelectedId} />
+          </div>
+        ) : (
         <div className="px-5 pt-8 md:px-8">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
@@ -312,6 +358,7 @@ export function Dashboard() {
             </aside>
           </div>
         </div>
+        )}
       </main>
 
       <VisitorPanel visitor={selected} onOpenChange={(o) => !o && setSelectedId(null)} />

@@ -1,6 +1,7 @@
 import { portraits } from "./images";
 import { daysAgo, daysFromNow, nextDow } from "./utils";
-import type { Activity, FollowUps, InterestId, Note, Stage, Task, Visitor, FollowStatus, Rsvp } from "./types";
+import { baptismDates } from "./data";
+import type { Activity, BaptismAge, BaptismRegistration, FollowUps, InterestId, Note, Stage, Task, Visitor, FollowStatus, Rsvp } from "./types";
 
 const emptyF: FollowUps = { vibes: [], groupSize: null, faithStage: null, ageGroups: [], homeTopics: [], serveAreas: [] };
 
@@ -24,6 +25,18 @@ function v(input: {
   tasks?: { title: string; dueIn: number; who: string | null; done?: boolean }[];
   activity: { kind: Activity["kind"]; label: string; daysAgo: number; hour?: number }[];
   plannedSunday?: { service: "9:00" | "10:30"; kids: number };
+  baptism?: {
+    slot: 0 | 1; // which upcoming baptism Sunday
+    service: "9:00" | "10:30";
+    age?: BaptismAge;
+    first?: string; // the person being baptized, if not the visitor (child or student)
+    story?: string;
+    share?: boolean;
+    guests: number;
+    daysAgo: number;
+    classAttended?: boolean;
+    pastorContacted?: boolean;
+  };
 }): Visitor {
   const email = `${input.first}.${input.last}`.toLowerCase().replace(/[^a-z.]/g, "") + "@example.com";
   const rsvps: Rsvp[] = (input.rsvps ?? []).map((r) => ({ id: id("rsvp"), offeringId: r.offeringId, itemId: r.itemId, createdAt: daysAgo(r.daysAgo) }));
@@ -36,6 +49,32 @@ function v(input: {
     done: !!t.done,
     createdAt: daysAgo(Math.max(1, -t.dueIn + 2)),
   }));
+  let baptism: BaptismRegistration | null = null;
+  if (input.baptism) {
+    const b = input.baptism;
+    const slot = baptismDates(2)[b.slot];
+    const date = new Date(slot.date);
+    date.setHours(b.service === "9:00" ? 9 : 10, b.service === "9:00" ? 0 : 30, 0, 0);
+    const age = b.age ?? "adult";
+    baptism = {
+      firstName: b.first ?? input.first,
+      lastName: input.last,
+      contact: email,
+      age,
+      parentName: age === "child" ? `${input.first} ${input.last}` : undefined,
+      date: date.toISOString(),
+      service: b.service,
+      classDate: slot.classDate.toISOString(),
+      story: b.story,
+      okToShare: !!b.share,
+      guests: b.guests,
+      createdAt: daysAgo(b.daysAgo),
+      classAttended: b.classAttended,
+      pastorContacted: b.pastorContacted,
+    };
+    const d = date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+    input.activity.push({ kind: "baptism", label: `Registered${b.first ? ` ${b.first}` : ""} for baptism on ${d} (${b.service} service)`, daysAgo: b.daysAgo, hour: 20 });
+  }
   const activity: Activity[] = input.activity.map((a) => ({ id: id("act"), kind: a.kind, label: a.label, at: daysAgo(a.daysAgo, a.hour ?? 11) }));
   return {
     id: id("v"),
@@ -64,6 +103,7 @@ function v(input: {
           createdAt: daysAgo(input.visitedDaysAgo),
         }
       : null,
+    baptism,
     notes,
     tasks,
     activity: activity.sort((a, b) => +new Date(b.at) - +new Date(a.at)),
@@ -86,7 +126,8 @@ export function buildSeedVisitors(): Visitor[] {
       ],
     }),
     v({
-      first: "Jordan", last: "Ellis", photo: portraits.v2, visitedDaysAgo: 9, source: "Plan a visit",
+      first: "Jordan", last: "Ellis",
+      baptism: { slot: 0, service: "9:00", guests: 2, daysAgo: 4, share: false }, photo: portraits.v2, visitedDaysAgo: 9, source: "Plan a visit",
       interests: ["home", "serve"], f: { homeTopics: ["pastors", "membership"], serveAreas: ["production"] },
       stage: "Getting connected", assignee: "garrett", status: "Contacted",
       notes: [{ by: "garrett", body: "Great conversation after service. Jordan used to run sound at their old church, so they might be a fit for production. Following up Thursday.", daysAgo: 6 }],
@@ -98,7 +139,8 @@ export function buildSeedVisitors(): Visitor[] {
       ],
     }),
     v({
-      first: "Lucia", last: "Alvarado", visitedDaysAgo: 0, source: "Plan a visit", household: "2 adults · 2 kids",
+      first: "Lucia", last: "Alvarado",
+      baptism: { slot: 0, service: "10:30", age: "child", first: "Mateo", guests: 8, daysAgo: 0 }, visitedDaysAgo: 0, source: "Plan a visit", household: "2 adults · 2 kids",
       interests: ["family", "people"], f: { ageGroups: ["babies", "elementary"], vibes: ["food"] },
       stage: "Planning a visit", assignee: "micah", status: "Needs follow-up",
       plannedSunday: { service: "9:00", kids: 2 },
@@ -106,7 +148,8 @@ export function buildSeedVisitors(): Visitor[] {
       activity: [{ kind: "plan", label: "Planned a visit for the 9:00 service · 2 kids", daysAgo: 0, hour: 8 }],
     }),
     v({
-      first: "Priya", last: "Natarajan", photo: portraits.v3, visitedDaysAgo: 16, source: "Connect card",
+      first: "Priya", last: "Natarajan",
+      baptism: { slot: 1, service: "10:30", story: "Six months ago I didn't know what I believed. Discover Christianity changed everything.", share: true, guests: 3, daysAgo: 3 }, photo: portraits.v3, visitedDaysAgo: 16, source: "Connect card",
       interests: ["faith"], f: { faithStage: "curious" },
       stage: "Event RSVP", assignee: "garrett", status: "Contacted",
       rsvps: [{ offeringId: "discover", daysAgo: 10 }],
@@ -124,7 +167,8 @@ export function buildSeedVisitors(): Visitor[] {
       activity: [{ kind: "visit", label: "Attended the 9:00 service", daysAgo: 4 }],
     }),
     v({
-      first: "Hannah", last: "Brooks", visitedDaysAgo: 31, source: "Plan a visit",
+      first: "Hannah", last: "Brooks",
+      baptism: { slot: 0, service: "10:30", story: "I grew up around church but never made it my own. This year, through my Trail & Table group, I finally did.", share: true, guests: 6, daysAgo: 9, pastorContacted: true }, visitedDaysAgo: 31, source: "Plan a visit",
       interests: ["people", "home"], f: { vibes: ["outdoors", "food"], groupSize: "either", homeTopics: ["story"] },
       stage: "Connected", assignee: "amber", status: "Contacted",
       rsvps: [{ offeringId: "small-groups", itemId: "g-trail", daysAgo: 22 }],
@@ -136,7 +180,8 @@ export function buildSeedVisitors(): Visitor[] {
       ],
     }),
     v({
-      first: "Eli", last: "Washington", photo: portraits.v5, visitedDaysAgo: 3, source: "Connect card",
+      first: "Eli", last: "Washington",
+      baptism: { slot: 1, service: "9:00", guests: 1, daysAgo: 2 }, photo: portraits.v5, visitedDaysAgo: 3, source: "Connect card",
       interests: ["faith", "people"], f: { faithStage: "returning", vibes: ["bible-study"] },
       stage: "Getting connected", assignee: "gannon", status: "Waiting to hear back",
       tasks: [{ title: "Follow up about Wednesday Word", dueIn: 0, who: "gannon" }],
@@ -147,7 +192,8 @@ export function buildSeedVisitors(): Visitor[] {
       ],
     }),
     v({
-      first: "Sofia", last: "Martinez", visitedDaysAgo: 1, source: "Plan a visit",
+      first: "Sofia", last: "Martinez",
+      baptism: { slot: 0, service: "10:30", age: "student", first: "Daniela", story: "I gave my life to Jesus at youth camp this summer.", share: true, guests: 4, daysAgo: 1 }, visitedDaysAgo: 1, source: "Plan a visit",
       interests: ["family"], f: { ageGroups: ["middle", "high"] },
       stage: "Event RSVP", assignee: null, status: "Needs follow-up", household: "1 adult · 2 students",
       rsvps: [{ offeringId: "family-events", itemId: "f-students", daysAgo: 1 }],
@@ -164,7 +210,8 @@ export function buildSeedVisitors(): Visitor[] {
       activity: [{ kind: "plan", label: "Planned a visit for the 10:30 service", daysAgo: 0, hour: 7 }],
     }),
     v({
-      first: "Grace", last: "Liu", visitedDaysAgo: 23, source: "Connect card",
+      first: "Grace", last: "Liu",
+      baptism: { slot: 0, service: "9:00", story: "Serving on the Welcome Team showed me what it looks like to follow Jesus with your whole life.", share: true, guests: 3, daysAgo: 6, pastorContacted: true }, visitedDaysAgo: 23, source: "Connect card",
       interests: ["serve", "people"], f: { serveAreas: ["hospitality"], vibes: ["serving"] },
       stage: "Connected", assignee: "amber", status: "Contacted",
       rsvps: [{ offeringId: "serve-sunday", daysAgo: 18 }],
@@ -183,7 +230,8 @@ export function buildSeedVisitors(): Visitor[] {
       activity: [{ kind: "visit", label: "Attended the 10:30 service", daysAgo: 6 }],
     }),
     v({
-      first: "Olivia", last: "Grant", visitedDaysAgo: 12, source: "Connect card",
+      first: "Olivia", last: "Grant",
+      baptism: { slot: 1, service: "10:30", story: "I was baptized as a baby, but I want to do this as my own decision now.", share: false, guests: 5, daysAgo: 5, pastorContacted: true }, visitedDaysAgo: 12, source: "Connect card",
       interests: ["faith", "home"], f: { faithStage: "deeper", homeTopics: ["membership"] },
       stage: "Event RSVP", assignee: "garrett", status: "Contacted",
       rsvps: [{ offeringId: "membership", daysAgo: 7 }],

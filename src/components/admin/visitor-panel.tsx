@@ -217,6 +217,9 @@ function PanelBody({ v }: { v: Visitor }) {
                   </div>
                   <p className="mt-1.5 pl-7 text-xs text-stone-500">
                     Class {formatShortDay(v.baptism.classDate)} · {v.baptism.guests ? `${v.baptism.guests} guest${v.baptism.guests === 1 ? "" : "s"}` : "No guests listed"} · {v.baptism.okToShare ? "OK to share story" : "Keep story private"}
+                    {v.baptism.classAttended ? " · Class ✓" : " · Class pending"}
+                    {v.baptism.pastorContacted ? " · Pastor called ✓" : ""}
+                    {v.baptism.baptized ? " · Baptized ✓" : ""}
                   </p>
                   {v.baptism.story && <p className="mt-2 rounded-xl bg-white p-3 text-stone-600 ring-1 ring-stone-200/70">&ldquo;{v.baptism.story}&rdquo;</p>}
                 </li>

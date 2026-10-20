@@ -50,13 +50,17 @@ const freshProfile = (): Profile => ({
 
 const freshOverlay = (): VisitorOverlay => ({ notes: [], tasks: [], activity: [] });
 
+/** Bump when the sample data changes, so saved demos pick up the new examples. */
+const SEED_VERSION = 2;
+
 interface State {
   profile: Profile;
   visitors: Visitor[];
   overlay: VisitorOverlay;
+  seedVersion?: number;
 }
 
-const freshState = (): State => ({ profile: freshProfile(), visitors: buildSeedVisitors(), overlay: freshOverlay() });
+const freshState = (): State => ({ profile: freshProfile(), visitors: buildSeedVisitors(), overlay: freshOverlay(), seedVersion: SEED_VERSION });
 
 export type VisitorPatch = Partial<Pick<Visitor, "stage" | "assigneeId" | "status">>;
 
@@ -79,6 +83,7 @@ interface Store extends State {
   addNote: (id: string, body: string, authorId: string) => void;
   addTask: (id: string, task: Omit<Task, "id" | "createdAt" | "done">) => void;
   toggleTask: (id: string, taskId: string) => void;
+  patchBaptism: (id: string, patch: Pick<BaptismRegistration, "classAttended" | "pastorContacted" | "baptized">, label: string) => void;
 }
 
 const Ctx = createContext<Store | null>(null);
@@ -160,8 +165,10 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         const parsed = JSON.parse(raw) as State;
         setState({
           profile: { ...freshProfile(), ...parsed.profile, followUps: { ...emptyFollowUps(), ...parsed.profile?.followUps } },
-          visitors: parsed.visitors?.length ? parsed.visitors : buildSeedVisitors(),
+          // Older saves get the latest sample visitors; the visitor's own profile is kept.
+          visitors: parsed.visitors?.length && parsed.seedVersion === SEED_VERSION ? parsed.visitors : buildSeedVisitors(),
           overlay: { ...freshOverlay(), ...parsed.overlay },
+          seedVersion: SEED_VERSION,
         });
       }
     } catch {
@@ -322,6 +329,23 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     [editVisitor],
   );
 
+  const patchBaptism = useCallback(
+    (id: string, patch: Pick<BaptismRegistration, "classAttended" | "pastorContacted" | "baptized">, label: string) => {
+      setState((s) => {
+        const entry: Activity = { id: uid("act"), kind: "baptism", label, at: new Date().toISOString() };
+        if (id === "you") {
+          if (!s.profile.baptism) return s;
+          return { ...s, profile: { ...s.profile, baptism: { ...s.profile.baptism, ...patch } }, overlay: { ...s.overlay, activity: [entry, ...s.overlay.activity] } };
+        }
+        return {
+          ...s,
+          visitors: s.visitors.map((v) => (v.id === id && v.baptism ? { ...v, baptism: { ...v.baptism, ...patch }, activity: [entry, ...v.activity] } : v)),
+        };
+      });
+    },
+    [],
+  );
+
   const you = useMemo(() => profileToVisitor(state.profile, state.overlay), [state.profile, state.overlay]);
   const allVisitors = useMemo(() => (you ? [you, ...state.visitors] : state.visitors), [you, state.visitors]);
 
@@ -350,6 +374,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     addNote,
     addTask,
     toggleTask,
+    patchBaptism,
   };
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
