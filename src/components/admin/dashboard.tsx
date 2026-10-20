@@ -98,7 +98,7 @@ export function Dashboard() {
       <aside className="sticky top-0 hidden h-dvh flex-col border-r border-stone-200/70 bg-white px-4 py-5 lg:flex">
         <div className="px-2">
           <Logo />
-          <p className="mt-1 pl-9 text-xs text-stone-400">Welcome Team</p>
+          <p className="mt-2 text-xs text-stone-400">Welcome Team</p>
         </div>
         <nav className="mt-8 space-y-0.5" aria-label="Views">
           <p className="px-3 pb-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-stone-400">People</p>

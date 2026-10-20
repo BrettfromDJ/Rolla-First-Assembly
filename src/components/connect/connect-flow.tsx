@@ -99,7 +99,7 @@ export function ConnectFlow() {
               </motion.div>
             </AnimatePresence>
             <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/70" />
-            <Link href="/new" className="absolute left-8 top-8" aria-label="Gather home">
+            <Link href="/new" className="absolute left-8 top-8" aria-label="Rolla First home">
               <Logo inverted />
             </Link>
             <AnimatePresence mode="wait">
@@ -117,7 +117,7 @@ export function ConnectFlow() {
         <header className={cn("sticky top-0 z-30 bg-ink/85 backdrop-blur-xl", isResults && "border-b border-stone-200/60")}>
           <div className={cn("mx-auto flex h-16 items-center gap-4 px-5 md:px-8", isResults ? "max-w-7xl" : "max-w-2xl")}>
             {isResults ? (
-              <Link href="/new" aria-label="Gather home"><Logo /></Link>
+              <Link href="/new" aria-label="Rolla First home"><Logo /></Link>
             ) : (
               <>
                 <button onClick={back} className="-ml-2 flex size-10 items-center justify-center rounded-full text-stone-700 transition hover:bg-stone-900/5" aria-label="Back">

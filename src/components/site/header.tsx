@@ -44,7 +44,7 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
       )}
     >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 md:h-18 md:px-8">
-        <Link href="/new" aria-label="Gather home" className="rounded-lg">
+        <Link href="/new" aria-label="Rolla First home" className="rounded-lg">
           <Logo inverted={light} />
         </Link>
 
