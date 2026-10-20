@@ -83,7 +83,7 @@ export function BaptismPage() {
                       {reg.service} AM service · Class {formatDay(reg.classDate)} at {formatTime(reg.classDate)}
                     </p>
                     <div className="mt-5 flex flex-wrap gap-2">
-                      <button onClick={() => open(reg.date)} className={cn(mori, "inline-flex h-11 items-center gap-2 rounded-[80px] bg-[#dcd2c5] px-5 text-[14px] uppercase tracking-[-0.04em] transition hover:bg-white")}>
+                      <button onClick={() => open(reg.date)} className={cn(mori, "inline-flex h-11 items-center gap-2 rounded-[80px] bg-[#dcd2c5] px-5 text-[14px] uppercase tracking-[-0.04em] transition hover:bg-[#f5f0e9]")}>
                         <Pencil className="size-4" /> Edit
                       </button>
                       <button
@@ -107,7 +107,7 @@ export function BaptismPage() {
                     </div>
                   </div>
                 ) : (
-                  <button onClick={() => open()} className={cn(mori, "group flex h-[67px] w-full items-center justify-between rounded-[80px] bg-[#dcd2c5] pl-8 pr-2 text-[16px] uppercase tracking-[-0.05em] transition hover:bg-white")}>
+                  <button onClick={() => open()} className={cn(mori, "group flex h-[67px] w-full items-center justify-between rounded-[80px] bg-[#dcd2c5] pl-8 pr-2 text-[16px] uppercase tracking-[-0.05em] transition hover:bg-[#f5f0e9]")}>
                     Register for baptism
                     <span className="flex size-[51px] items-center justify-center rounded-full bg-[#0285ff]">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
