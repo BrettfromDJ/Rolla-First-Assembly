@@ -65,7 +65,7 @@ const mori = "font-mori font-semibold";
 
 export function ChurchHome() {
   return (
-    <div className="overflow-x-hidden bg-ink text-[#dcd2c5]">
+    <div className="overflow-x-clip bg-ink text-[#dcd2c5]">
       <div className="mx-auto max-w-[1440px] px-5 md:px-[60px]">
         {/* Header */}
         <Rise y={-16} className="relative z-20"><header className="flex items-center justify-between gap-6 pt-6 md:pt-[42px]">
@@ -265,7 +265,7 @@ export function ChurchHome() {
 
       {/* Full-bleed, horizontally scrollable leadership strip */}
       <div className="mx-auto max-w-[1440px]">
-        <Stagger as="ul" gap={0.07} className="no-scrollbar mt-[48px] flex overflow-x-auto overscroll-x-contain md:mt-[67px]">
+        <Stagger as="ul" gap={0.07} className="no-scrollbar mt-[48px] flex overflow-x-auto overflow-y-hidden md:mt-[67px]">
           {pastors.map((p) => (
             <StaggerItem as="li" key={`${p.first}-${p.last}`} className="group w-[min(340px,78vw)] shrink-0 snap-start">
               <div className="flex flex-col items-end text-right">

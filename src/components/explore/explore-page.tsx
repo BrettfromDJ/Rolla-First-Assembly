@@ -46,7 +46,7 @@ export function ExplorePage() {
             </motion.div>
           </AnimatePresence>
 
-          <div role="tablist" aria-label="Areas" className="no-scrollbar -mx-5 mt-10 flex gap-2 overflow-x-auto px-5 md:mx-0 md:px-0">
+          <div role="tablist" aria-label="Areas" className="no-scrollbar -mx-5 mt-10 flex gap-2 overflow-x-auto overflow-y-hidden px-5 md:mx-0 md:px-0">
             {areas.map((a) => (
               <button
                 key={a.id}

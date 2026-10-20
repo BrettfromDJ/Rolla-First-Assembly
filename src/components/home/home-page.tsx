@@ -230,7 +230,7 @@ export function HomePage() {
               </Button>
             </div>
           </div>
-          <div className="no-scrollbar flex snap-x snap-proximity gap-4 overflow-x-auto scroll-px-5 px-5 pb-4 md:scroll-px-8 md:px-8 xl:px-[max(2rem,calc((100vw-80rem)/2+2rem))] xl:scroll-px-[max(2rem,calc((100vw-80rem)/2+2rem))]">
+          <div className="no-scrollbar flex snap-x snap-proximity gap-4 overflow-x-auto overflow-y-hidden scroll-px-5 px-5 pb-4 md:scroll-px-8 md:px-8 xl:px-[max(2rem,calc((100vw-80rem)/2+2rem))] xl:scroll-px-[max(2rem,calc((100vw-80rem)/2+2rem))]">
             <AnimatePresence mode="popLayout" initial={false}>
               {recs.map((o) => (
                 <motion.div key={o.id} layout initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.96 }} transition={{ duration: 0.35, ease }} className="flex w-[82vw] max-w-[360px] shrink-0 snap-start">

@@ -55,7 +55,7 @@ export function VisitPage() {
             </motion.p>
           </div>
 
-          <nav aria-label="On this page" className="no-scrollbar -mx-5 mt-12 flex gap-2 overflow-x-auto px-5 md:mx-0 md:px-0">
+          <nav aria-label="On this page" className="no-scrollbar -mx-5 mt-12 flex gap-2 overflow-x-auto overflow-y-hidden px-5 md:mx-0 md:px-0">
             {sections.map((s) => (
               <a key={s.id} href={`#${s.id}`} className="shrink-0 rounded-full bg-white px-4 py-2 text-sm text-stone-700 ring-1 ring-stone-200 transition hover:ring-stone-300">
                 {s.label}
