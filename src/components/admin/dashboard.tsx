@@ -435,7 +435,7 @@ function Filter({ value, onChange, label, options }: { value: string; onChange: 
       onChange={(e) => onChange(e.target.value)}
       aria-label={label}
       className={cn(
-        "h-9 rounded-full px-3 pr-8 text-sm ring-1 transition focus:outline-none focus:ring-2 focus:ring-forest-500",
+        "h-9 rounded-full pl-3.5 pr-10 text-sm ring-1 transition focus:outline-none focus:ring-2 focus:ring-forest-500",
         value ? "bg-forest-50 text-forest-300 ring-forest-200" : "bg-white text-stone-600 ring-stone-200",
       )}
     >

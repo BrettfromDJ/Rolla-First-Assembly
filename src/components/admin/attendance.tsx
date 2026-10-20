@@ -241,7 +241,7 @@ function Select({ value, onChange, label, options }: { value: string; onChange: 
       value={value}
       onChange={(e) => onChange(e.target.value)}
       aria-label={label}
-      className="h-10 rounded-full bg-white px-4 pr-9 text-sm text-stone-700 ring-1 ring-stone-200 transition focus:outline-none focus:ring-2 focus:ring-forest-500"
+      className="h-10 rounded-full bg-white pl-4 pr-10 text-sm text-stone-700 ring-1 ring-stone-200 transition focus:outline-none focus:ring-2 focus:ring-forest-500"
     >
       {options.map((o) => (
         <option key={o.v} value={o.v}>{o.l}</option>

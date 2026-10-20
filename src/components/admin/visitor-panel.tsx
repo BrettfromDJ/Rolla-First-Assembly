@@ -127,7 +127,7 @@ function PanelBody({ v }: { v: Visitor }) {
                 patchVisitor(v.id, { stage: s }, `Stage changed to ${s}`, "stage");
                 toast(`Moved to ${s}`);
               }}
-              className="h-10 w-full rounded-xl bg-stone-50 px-3 text-sm ring-1 ring-stone-200 focus:outline-none focus:ring-2 focus:ring-forest-500"
+              className="h-10 w-full rounded-xl bg-stone-50 pl-3 pr-10 text-sm ring-1 ring-stone-200 focus:outline-none focus:ring-2 focus:ring-forest-500"
             >
               {stages.map((s) => <option key={s}>{s}</option>)}
             </select>
@@ -141,7 +141,7 @@ function PanelBody({ v }: { v: Visitor }) {
                 patchVisitor(v.id, { assigneeId: id }, id ? `Assigned to ${staffById[id].name}` : "Unassigned", "assigned");
                 toast(id ? `Assigned to ${staffById[id].name.split(" ")[0]}` : "Unassigned", { description: id ? "Simulated: no notification was sent." : undefined });
               }}
-              className="h-10 w-full rounded-xl bg-stone-50 px-3 text-sm ring-1 ring-stone-200 focus:outline-none focus:ring-2 focus:ring-forest-500"
+              className="h-10 w-full rounded-xl bg-stone-50 pl-3 pr-10 text-sm ring-1 ring-stone-200 focus:outline-none focus:ring-2 focus:ring-forest-500"
             >
               <option value="">Unassigned</option>
               {welcomeTeam.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
@@ -303,13 +303,13 @@ function PanelBody({ v }: { v: Visitor }) {
                 className="h-10 w-full rounded-xl bg-white px-3 text-sm ring-1 ring-stone-200 focus:outline-none focus:ring-2 focus:ring-forest-500"
               />
               <div className="flex gap-2">
-                <select value={taskDue} onChange={(e) => setTaskDue(e.target.value)} className="h-9 flex-1 rounded-xl bg-white px-2 text-sm ring-1 ring-stone-200">
+                <select value={taskDue} onChange={(e) => setTaskDue(e.target.value)} className="h-9 flex-1 rounded-xl bg-white pl-2.5 pr-9 text-sm ring-1 ring-stone-200">
                   <option value="0">Today</option>
                   <option value="1">Tomorrow</option>
                   <option value="3">In 3 days</option>
                   <option value="7">Next week</option>
                 </select>
-                <select value={taskWho} onChange={(e) => setTaskWho(e.target.value)} className="h-9 flex-1 rounded-xl bg-white px-2 text-sm ring-1 ring-stone-200">
+                <select value={taskWho} onChange={(e) => setTaskWho(e.target.value)} className="h-9 flex-1 rounded-xl bg-white pl-2.5 pr-9 text-sm ring-1 ring-stone-200">
                   {welcomeTeam.map((s) => <option key={s.id} value={s.id}>{s.name.split(" ")[0]}</option>)}
                 </select>
                 <Button size="sm" type="submit" disabled={!taskTitle.trim()}>Add</Button>
