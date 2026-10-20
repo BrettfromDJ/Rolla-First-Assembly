@@ -1,7 +1,7 @@
 import { portraits } from "./images";
 import { daysAgo, daysFromNow, nextDow } from "./utils";
 import { baptismDates } from "./data";
-import type { Activity, BaptismAge, BaptismRegistration, FollowUps, InterestId, Note, Stage, Task, Visitor, FollowStatus, Rsvp } from "./types";
+import type { Activity, BaptismAge, BaptismRegistration, FollowUps, KidInfo, KidsRegistration, PickupPerson, InterestId, Note, Stage, Task, Visitor, FollowStatus, Rsvp } from "./types";
 
 const emptyF: FollowUps = { vibes: [], groupSize: null, faithStage: null, ageGroups: [], homeTopics: [], serveAreas: [] };
 
@@ -37,7 +37,17 @@ function v(input: {
     classAttended?: boolean;
     pastorContacted?: boolean;
   };
+  kids?: {
+    // [first name, age in months, gender, grade id, medical notes?, nickname?]
+    list: [string, number, "M" | "F", string, string?, string?][];
+    service: "9:00" | "10:30";
+    daysAgo: number;
+    second?: string; // second guardian's first name
+    pickup?: PickupPerson[];
+    school?: string;
+  };
 }): Visitor {
+  const phone = `(573) 555-0${100 + n}`.slice(0, 14);
   const email = `${input.first}.${input.last}`.toLowerCase().replace(/[^a-z.]/g, "") + "@example.com";
   const rsvps: Rsvp[] = (input.rsvps ?? []).map((r) => ({ id: id("rsvp"), offeringId: r.offeringId, itemId: r.itemId, createdAt: daysAgo(r.daysAgo) }));
   const notes: Note[] = (input.notes ?? []).map((x) => ({ id: id("note"), authorId: x.by, body: x.body, createdAt: daysAgo(x.daysAgo, 14) }));
@@ -75,13 +85,34 @@ function v(input: {
     const d = date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
     input.activity.push({ kind: "baptism", label: `Registered${b.first ? ` ${b.first}` : ""} for baptism on ${d} (${b.service} service)`, daysAgo: b.daysAgo, hour: 20 });
   }
+  let kids: KidsRegistration | null = null;
+  if (input.kids) {
+    const k = input.kids;
+    const date = nextDow(0, k.service === "9:00" ? 9 : 10, k.service === "9:00" ? 0 : 30);
+    const list: KidInfo[] = k.list.map(([first, months, gender, grade, medical, nickname]) => {
+      const b = new Date();
+      b.setMonth(b.getMonth() - months, 10);
+      return { firstName: first, lastName: input.last, nickname, birthdate: b.toLocaleDateString("en-CA"), gender, grade, school: months >= 60 ? k.school : undefined, medicalNotes: medical };
+    });
+    kids = {
+      parent: { firstName: input.first, lastName: input.last, phone, email },
+      secondGuardian: k.second ? { firstName: k.second, lastName: input.last, phone: "(573) 555-0177" } : undefined,
+      kids: list,
+      pickup: k.pickup ?? [],
+      date: date.toISOString(),
+      service: k.service,
+      createdAt: daysAgo(k.daysAgo),
+    };
+    const d = date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+    input.activity.push({ kind: "kids", label: `Pre-registered ${list.map((x) => x.firstName).join(" & ")} for Kids First (${d}, ${k.service})`, daysAgo: k.daysAgo, hour: 19 });
+  }
   const activity: Activity[] = input.activity.map((a) => ({ id: id("act"), kind: a.kind, label: a.label, at: daysAgo(a.daysAgo, a.hour ?? 11) }));
   return {
     id: id("v"),
     firstName: input.first,
     lastName: input.last,
     email,
-    phone: `(573) 555-0${100 + n}`.slice(0, 14),
+    phone,
     photo: input.photo,
     firstVisit: daysAgo(input.visitedDaysAgo, 9),
     source: input.source,
@@ -104,6 +135,7 @@ function v(input: {
         }
       : null,
     baptism,
+    kids,
     notes,
     tasks,
     activity: activity.sort((a, b) => +new Date(b.at) - +new Date(a.at)),
@@ -140,7 +172,8 @@ export function buildSeedVisitors(): Visitor[] {
     }),
     v({
       first: "Lucia", last: "Alvarado",
-      baptism: { slot: 0, service: "10:30", age: "child", first: "Mateo", guests: 8, daysAgo: 0 }, visitedDaysAgo: 0, source: "Plan a visit", household: "2 adults · 2 kids",
+      baptism: { slot: 0, service: "10:30", age: "child", first: "Mateo", guests: 8, daysAgo: 0 },
+      kids: { list: [["Mateo", 92, "M", "2"], ["Isabel", 52, "F", "prek", "Dairy allergy", "Isa"]], service: "9:00", daysAgo: 0, second: "Diego", school: "Harry S. Truman Elementary", pickup: [{ name: "Rosa Alvarado", relationship: "Grandma", phone: "(573) 555-0190" }] }, visitedDaysAgo: 0, source: "Plan a visit", household: "2 adults · 2 kids",
       interests: ["family", "people"], f: { ageGroups: ["babies", "elementary"], vibes: ["food"] },
       stage: "Planning a visit", assignee: "micah", status: "Needs follow-up",
       plannedSunday: { service: "9:00", kids: 2 },
@@ -162,12 +195,14 @@ export function buildSeedVisitors(): Visitor[] {
     }),
     v({
       first: "Marcus", last: "Odum", photo: portraits.v4, visitedDaysAgo: 4, source: "Connect card",
+      kids: { list: [["Jayden", 126, "M", "5", "Asthma, inhaler in backpack", "Jay"]], service: "10:30", daysAgo: 3, school: "Mark Twain Elementary" },
       interests: ["serve"], f: { serveAreas: ["outreach", "behind"] },
       stage: "First-time visitor", assignee: null, status: "Needs follow-up",
       activity: [{ kind: "visit", label: "Attended the 9:00 service", daysAgo: 4 }],
     }),
     v({
       first: "Hannah", last: "Brooks",
+      kids: { list: [["Ava", 8, "F", "infant"], ["Owen", 40, "M", "p3"]], service: "10:30", daysAgo: 10, second: "Tyler", pickup: [{ name: "Carol Brooks", relationship: "Grandma" }] },
       baptism: { slot: 0, service: "10:30", story: "I grew up around church but never made it my own. This year, through my Trail & Table group, I finally did.", share: true, guests: 6, daysAgo: 9, pastorContacted: true }, visitedDaysAgo: 31, source: "Plan a visit",
       interests: ["people", "home"], f: { vibes: ["outdoors", "food"], groupSize: "either", homeTopics: ["story"] },
       stage: "Connected", assignee: "amber", status: "Contacted",
@@ -224,6 +259,7 @@ export function buildSeedVisitors(): Visitor[] {
     }),
     v({
       first: "Noah", last: "Patel", visitedDaysAgo: 6, source: "Connect card",
+      kids: { list: [["Arya", 16, "F", "p1", "Peanut and tree nut allergy (EpiPen in diaper bag)"]], service: "9:00", daysAgo: 5 },
       interests: ["people"], f: { vibes: ["food", "outdoors"], groupSize: "large" },
       stage: "First-time visitor", assignee: "gannon", status: "Needs follow-up",
       tasks: [{ title: "Invite Noah to Pizza in the Park", dueIn: -1, who: "gannon" }],

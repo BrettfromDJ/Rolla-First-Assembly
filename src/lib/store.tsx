@@ -53,7 +53,7 @@ const freshProfile = (): Profile => ({
 const freshOverlay = (): VisitorOverlay => ({ notes: [], tasks: [], activity: [] });
 
 /** Bump when the sample data changes, so saved demos pick up the new examples. */
-const SEED_VERSION = 2;
+const SEED_VERSION = 3;
 
 interface State {
   profile: Profile;
