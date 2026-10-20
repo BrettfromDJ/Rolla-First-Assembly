@@ -96,6 +96,8 @@
     text-rendering: optimizeLegibility;
   }
   html {
+    /* Never fake a bold serif: the editorial faces ship one weight. */
+    font-synthesis-weight: none;
     color-scheme: dark;
     background: var(--color-ink);
   }

@@ -35,7 +35,7 @@ export function ClosingScroll({ photo }: { photo: string }) {
         <motion.p style={{ x: left }} className={cn(mori, "whitespace-nowrap text-[8.47cqw] leading-none tracking-[-0.05em] text-[#dcd2c5]")}>
           {line(
             <>
-              Come <span className="font-editorial italic tracking-[-0.03em]">worship</span> with us.
+              Come <span className="font-editorial font-normal italic tracking-[-0.03em]">worship</span> with us.
             </>,
           )}
         </motion.p>
