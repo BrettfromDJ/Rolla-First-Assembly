@@ -20,6 +20,7 @@ import {
   FlaskConical,
   Droplets,
   Baby,
+  BarChart3,
 } from "lucide-react";
 import { Logo } from "@/components/ui/logo";
 import { Avatar } from "@/components/ui/avatar";
@@ -27,13 +28,14 @@ import { InterestIcon, interestTone } from "@/components/ui/interest-icon";
 import { VisitorPanel } from "./visitor-panel";
 import { BaptismsView } from "./baptisms";
 import { MembersView } from "./members";
+import { AttendanceView } from "./attendance";
 import { interests as interestList, interestShort, staffById, welcomeTeam } from "@/lib/data";
 import { useStore } from "@/lib/store";
 import type { InterestId, Stage, Visitor } from "@/lib/types";
 import { cn, formatDate, formatShortDay, greeting, relativeDay } from "@/lib/utils";
 import { ACTING_AS, fullName, isRecent, needsAttention, nextAction, rsvpInfo, stageStyle, stages } from "./helpers";
 
-type Tab = "visitors" | "members" | "baptisms";
+type Tab = "visitors" | "members" | "baptisms" | "attendance";
 type View = "all" | "attention" | "mine" | "new" | "planning" | "requests" | "rsvps";
 
 const views: { id: View; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
@@ -53,7 +55,7 @@ export function Dashboard() {
   };
   useEffect(() => {
     const h = location.hash.slice(1);
-    if (h === "baptisms" || h === "members") setTabState(h);
+    if (h === "baptisms" || h === "members" || h === "attendance") setTabState(h);
   }, []);
   const [query, setQuery] = useState("");
   const [stage, setStage] = useState<Stage | "">("");
@@ -144,6 +146,13 @@ export function Dashboard() {
           ))}
           <p className="px-3 pb-2 pt-6 text-[11px] font-semibold uppercase tracking-[0.12em] text-stone-400">Ministry</p>
           <button
+            onClick={() => setTab("attendance")}
+            className={cn("flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm transition", tab === "attendance" ? "bg-stone-100 font-medium text-stone-900" : "text-stone-600 hover:bg-stone-50")}
+          >
+            <BarChart3 className="size-4 text-stone-400" />
+            <span className="flex-1 text-left">Attendance</span>
+          </button>
+          <button
             onClick={() => setTab("members")}
             className={cn("flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm transition", tab === "members" ? "bg-stone-100 font-medium text-stone-900" : "text-stone-600 hover:bg-stone-50")}
           >
@@ -179,7 +188,7 @@ export function Dashboard() {
         <header className="sticky top-0 z-20 border-b border-stone-200/70 bg-stone-50/85 backdrop-blur-xl">
           <div className="flex h-16 items-center gap-4 px-5 md:px-8">
             <div className="lg:hidden"><Logo /></div>
-            <div className="relative ml-auto w-full max-w-sm">
+            <div className={cn("relative ml-auto w-full max-w-sm", tab === "attendance" && "invisible")}>
               <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-stone-400" />
               <input
                 value={query}
@@ -196,25 +205,36 @@ export function Dashboard() {
         </header>
 
         <div className="px-5 pt-6 md:px-8">
-          <div role="tablist" aria-label="Dashboard sections" className="flex gap-1 border-b border-stone-200/70">
+          <div className="border-b border-stone-200/70">
+          <div role="tablist" aria-label="Dashboard sections" className="no-scrollbar -mb-px flex gap-1 overflow-x-auto overflow-y-hidden">
             {([
               ["visitors", "Visitors", Users],
               ["members", "Members", Baby],
               ["baptisms", "Baptisms", Droplets],
+              ["attendance", "Attendance", BarChart3],
             ] as const).map(([id, label, Icon]) => (
               <button
                 key={id}
                 role="tab"
                 aria-selected={tab === id}
                 onClick={() => setTab(id)}
-                className={cn("-mb-px flex items-center gap-2 border-b-2 px-3 pb-3 pt-1 text-sm transition", tab === id ? "border-forest-700 font-medium text-stone-900" : "border-transparent text-stone-500 hover:text-stone-800")}
+                className={cn("flex shrink-0 items-center gap-2 whitespace-nowrap border-b-2 px-2.5 pb-3 pt-1 text-sm transition sm:px-3", tab === id ? "border-forest-700 font-medium text-stone-900" : "border-transparent text-stone-500 hover:text-stone-800")}
               >
                 <Icon className="size-4" /> {label}
               </button>
             ))}
           </div>
+          </div>
         </div>
-        {tab === "members" ? (
+        {tab === "attendance" ? (
+          <div className="px-5 pt-8 md:px-8">
+            <div className="mb-6">
+              <p className="text-sm text-stone-500">Ministry</p>
+              <h1 className="mt-1 text-[28px] font-semibold tracking-[-0.02em]">Attendance</h1>
+            </div>
+            <AttendanceView />
+          </div>
+        ) : tab === "members" ? (
           <div className="px-5 pt-8 md:px-8">
             <div className="mb-6">
               <p className="text-sm text-stone-500">People</p>

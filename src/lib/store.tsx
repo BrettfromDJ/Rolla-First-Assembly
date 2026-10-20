@@ -3,9 +3,11 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { getOffering } from "./data";
 import { buildSeedVisitors } from "./seed";
+import { buildSeedAttendance } from "./attendance";
 import { uid } from "./utils";
 import type {
   Activity,
+  AttendanceRecord,
   BaptismRegistration,
   KidsRegistration,
   FollowStatus,
@@ -59,10 +61,11 @@ interface State {
   profile: Profile;
   visitors: Visitor[];
   overlay: VisitorOverlay;
+  attendance: AttendanceRecord[];
   seedVersion?: number;
 }
 
-const freshState = (): State => ({ profile: freshProfile(), visitors: buildSeedVisitors(), overlay: freshOverlay(), seedVersion: SEED_VERSION });
+const freshState = (): State => ({ profile: freshProfile(), visitors: buildSeedVisitors(), overlay: freshOverlay(), attendance: buildSeedAttendance(), seedVersion: SEED_VERSION });
 
 export type VisitorPatch = Partial<Pick<Visitor, "stage" | "assigneeId" | "status">>;
 
@@ -88,6 +91,9 @@ interface Store extends State {
   addTask: (id: string, task: Omit<Task, "id" | "createdAt" | "done">) => void;
   toggleTask: (id: string, taskId: string) => void;
   patchBaptism: (id: string, patch: Pick<BaptismRegistration, "classAttended" | "pastorContacted" | "baptized">, label: string) => void;
+  /** Adds or replaces the count for one service on one date. */
+  saveAttendance: (r: Omit<AttendanceRecord, "id" | "updatedAt">) => void;
+  deleteAttendance: (id: string) => void;
 }
 
 const Ctx = createContext<Store | null>(null);
@@ -184,6 +190,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
           // Older saves get the latest sample visitors; the visitor's own profile is kept.
           visitors: parsed.visitors?.length && parsed.seedVersion === SEED_VERSION ? parsed.visitors : buildSeedVisitors(),
           overlay: { ...freshOverlay(), ...parsed.overlay },
+          attendance: parsed.attendance ?? buildSeedAttendance(),
           seedVersion: SEED_VERSION,
         });
       }
@@ -267,6 +274,15 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         },
       };
     });
+  }, []);
+
+  const saveAttendance = useCallback((r: Omit<AttendanceRecord, "id" | "updatedAt">) => {
+    const rec: AttendanceRecord = { ...r, id: `att_${r.date}_${r.service}`, updatedAt: new Date().toISOString() };
+    setState((s) => ({ ...s, attendance: [...s.attendance.filter((a) => a.id !== rec.id), rec] }));
+  }, []);
+
+  const deleteAttendance = useCallback((id: string) => {
+    setState((s) => ({ ...s, attendance: s.attendance.filter((a) => a.id !== id) }));
   }, []);
 
   const cancelKids = useCallback(() => {
@@ -412,6 +428,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     addTask,
     toggleTask,
     patchBaptism,
+    saveAttendance,
+    deleteAttendance,
   };
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;

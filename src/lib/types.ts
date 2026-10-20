@@ -234,3 +234,28 @@ export interface VisitorOverlay {
   tasks: Task[];
   activity: Activity[];
 }
+
+/* ---------- Attendance (counted by hand, entered by staff) ---------- */
+
+export type AttendanceService = "9:00" | "10:30" | "wed";
+
+/** Headcounts per area. Any area left blank wasn't counted; it's not the same as zero. */
+export interface AttendanceCounts {
+  auditorium?: number; // adults (and students on Sundays, who sit with their families)
+  nursery?: number;
+  preschool?: number;
+  elementary?: number;
+  students?: number; // Wednesday youth room
+}
+
+export interface AttendanceRecord {
+  id: string;
+  date: string; // YYYY-MM-DD, local
+  service: AttendanceService;
+  counts: AttendanceCounts;
+  firstTime?: number; // first-time guests (already included in the counts)
+  online?: number; // livestream views, tracked separately from in-person
+  note?: string;
+  enteredBy: string; // staff id
+  updatedAt: string;
+}
