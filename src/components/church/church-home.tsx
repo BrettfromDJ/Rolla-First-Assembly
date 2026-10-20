@@ -62,9 +62,14 @@ function Masked({ mask, layers, className }: { mask: string; layers: Layer[]; cl
   );
 }
 
+/** 62px circle (cream or blue) holding the supplied 38px arrow. */
 function Arrow({ tone }: { tone: "cream" | "blue" }) {
-  // eslint-disable-next-line @next/next/no-img-element
-  return <img src={A(`arrow-${tone}.svg`)} alt="" width={62} height={62} className="shrink-0 transition duration-300 group-hover:rotate-45" />;
+  return (
+    <span className={cn("flex size-[62px] shrink-0 items-center justify-center rounded-full", tone === "cream" ? "bg-[#dcd2c5]" : "bg-[#0285ff]")}>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={A("arrow.svg")} alt="" width={38} height={38} className="transition duration-300 group-hover:rotate-45" />
+    </span>
+  );
 }
 
 /** Headline italics use PP Editorial New; everything else is PP Mori. */
@@ -123,7 +128,7 @@ export function ChurchHome() {
 
           <div className="relative lg:mt-[200px]">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={A("r-mark.svg")} alt="" width={253} height={232} className="pointer-events-none absolute left-[37%] top-[-142px] z-10 hidden lg:block" />
+            <img src={A("r-mark.svg")} alt="" width={254} height={233} className="pointer-events-none absolute left-[37%] top-[-142px] z-10 hidden lg:block" />
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={A("hero-main.jpg")}
