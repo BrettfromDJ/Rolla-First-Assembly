@@ -213,12 +213,25 @@ function PanelBody({ v }: { v: Visitor }) {
                 <li className="rounded-2xl bg-stone-50 px-4 py-3 text-sm">
                   <div className="flex items-center gap-3">
                     <Baby className="size-4 text-forest-500" />
-                    <span className="flex-1 text-stone-800">Kids First · {v.kids.kids.map((k) => `${k.firstName} (${kidGradeLabel(k.group)})`).join(", ")}</span>
+                    <span className="flex-1 text-stone-800">Kids First · {v.kids.kids.length} {v.kids.kids.length === 1 ? "child" : "kids"}</span>
                     <span className="text-stone-500">{formatShortDay(v.kids.date)} · {v.kids.service}</span>
                   </div>
-                  {v.kids.kids.some((k) => k.allergies) && (
-                    <p className="mt-1.5 pl-7 text-xs text-clay">Allergies: {v.kids.kids.filter((k) => k.allergies).map((k) => `${k.firstName}: ${k.allergies}`).join(" · ")}</p>
-                  )}
+                  <ul className="mt-2 space-y-1.5 pl-7 text-xs text-stone-600">
+                    {v.kids.kids.map((k, i) => (
+                      <li key={i}>
+                        <span className="font-medium text-stone-800">{k.firstName}{k.nickname ? ` "${k.nickname}"` : ""} {k.lastName}</span>
+                        {" · "}{kidGradeLabel(k.grade)} · {k.gender === "F" ? "Girl" : k.gender === "M" ? "Boy" : "—"} · Born {new Date(`${k.birthdate}T12:00:00`).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                        {k.school ? ` · ${k.school}` : ""}
+                        {k.medicalNotes && <span className="block text-clay">Medical: {k.medicalNotes}</span>}
+                      </li>
+                    ))}
+                  </ul>
+                  <p className="mt-2 pl-7 text-xs text-stone-500">
+                    Parent: {v.kids.parent.firstName} {v.kids.parent.lastName} · {v.kids.parent.phone} · {v.kids.parent.email}
+                    {v.kids.secondGuardian && <span className="block">Also: {v.kids.secondGuardian.firstName} {v.kids.secondGuardian.lastName}{v.kids.secondGuardian.phone ? ` · ${v.kids.secondGuardian.phone}` : ""}</span>}
+                    {v.kids.pickup.length > 0 && <span className="block">Can pick up: {v.kids.pickup.map((p) => `${p.name}${p.relationship ? ` (${p.relationship})` : ""}`).join(", ")}</span>}
+                    {v.kids.emergency && <span className="block">Emergency: {v.kids.emergency.name} · {v.kids.emergency.phone}</span>}
+                  </p>
                   {v.kids.notes && <p className="mt-1.5 pl-7 text-xs text-stone-500">Note: {v.kids.notes}</p>}
                 </li>
               )}

@@ -642,16 +642,31 @@ export const kidsGroups = [
   { id: "students", label: "Students", ages: "6th – 12th grade", room: "Youth room (upstairs)", blurb: "Wednesday nights at 6:30 PM with Pastor Gannon. Sundays, students sit with their families in the service." },
 ] as const;
 
-/** Options for "which group" when a parent pre-registers a child (students meet separately). */
+/**
+ * Grade choices for pre-registration, matching Planning Center's grade list
+ * (including its newer Infant / Preschool 1–3 options). Students (6th+) meet Wednesdays.
+ */
 export const kidGradeOptions = [
-  { id: "nursery", label: "Nursery (birth–2)", group: "nursery" },
-  { id: "preschool", label: "Preschool (3–5)", group: "preschool" },
-  { id: "k", label: "Kindergarten", group: "elementary" },
-  { id: "1", label: "1st grade", group: "elementary" },
-  { id: "2", label: "2nd grade", group: "elementary" },
-  { id: "3", label: "3rd grade", group: "elementary" },
-  { id: "4", label: "4th grade", group: "elementary" },
-  { id: "5", label: "5th grade", group: "elementary" },
+  { id: "infant", label: "Infant", hint: "Under 1", group: "nursery" },
+  { id: "p1", label: "Preschool 1", hint: "Age 1", group: "nursery" },
+  { id: "p2", label: "Preschool 2", hint: "Age 2", group: "nursery" },
+  { id: "p3", label: "Preschool 3", hint: "Age 3", group: "preschool" },
+  { id: "prek", label: "Pre-K", hint: "Age 4", group: "preschool" },
+  { id: "k", label: "Kindergarten", hint: "", group: "elementary" },
+  { id: "1", label: "1st grade", hint: "", group: "elementary" },
+  { id: "2", label: "2nd grade", hint: "", group: "elementary" },
+  { id: "3", label: "3rd grade", hint: "", group: "elementary" },
+  { id: "4", label: "4th grade", hint: "", group: "elementary" },
+  { id: "5", label: "5th grade", hint: "", group: "elementary" },
 ] as const;
+
+/** Suggests a preschool grade from a birthdate (school-age grades depend on cutoffs, so those are left to the parent). */
+export function suggestGrade(birthdate: string, today = new Date()): string | null {
+  const b = new Date(`${birthdate}T12:00:00`);
+  if (Number.isNaN(+b)) return null;
+  let age = today.getFullYear() - b.getFullYear();
+  if (today.getMonth() < b.getMonth() || (today.getMonth() === b.getMonth() && today.getDate() < b.getDate())) age--;
+  return ["infant", "p1", "p2", "p3", "prek"][age] ?? null;
+}
 
 export const kidGradeLabel = (id: string) => kidGradeOptions.find((g) => g.id === id)?.label ?? id;

@@ -174,7 +174,13 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       if (raw) {
         const parsed = JSON.parse(raw) as State;
         setState({
-          profile: { ...freshProfile(), ...parsed.profile, followUps: { ...emptyFollowUps(), ...parsed.profile?.followUps } },
+          profile: {
+            ...freshProfile(),
+            ...parsed.profile,
+            followUps: { ...emptyFollowUps(), ...parsed.profile?.followUps },
+            // Kids pre-registrations saved before the Planning Center fields existed are dropped.
+            kids: parsed.profile?.kids?.parent ? parsed.profile.kids : null,
+          },
           // Older saves get the latest sample visitors; the visitor's own profile is kept.
           visitors: parsed.visitors?.length && parsed.seedVersion === SEED_VERSION ? parsed.visitors : buildSeedVisitors(),
           overlay: { ...freshOverlay(), ...parsed.overlay },
@@ -250,14 +256,13 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
 
   const saveKids = useCallback((reg: Omit<KidsRegistration, "createdAt">) => {
     setState((s) => {
-      const isEmail = reg.contact.includes("@");
       return {
         ...s,
         profile: {
           ...s.profile,
-          firstName: s.profile.firstName || reg.parentName.split(" ")[0],
-          email: isEmail ? s.profile.email || reg.contact : s.profile.email,
-          phone: !isEmail ? s.profile.phone || reg.contact : s.profile.phone,
+          firstName: s.profile.firstName || reg.parent.firstName,
+          email: s.profile.email || reg.parent.email,
+          phone: s.profile.phone || reg.parent.phone,
           kids: { ...reg, createdAt: new Date().toISOString() },
         },
       };

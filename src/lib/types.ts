@@ -51,17 +51,40 @@ export interface Profile {
   createdAt: string;
 }
 
+/**
+ * Kids First pre-registration. Fields mirror what Planning Center People / Check-Ins
+ * stores, so a family can later be sent there as a household with a person per member.
+ */
 export interface KidInfo {
   firstName: string;
   lastName: string;
-  group: string; // KidsGroup id, e.g. "nursery" | "preschool" | "k" | "1"…"5"
-  allergies?: string;
+  nickname?: string;
+  birthdate: string; // YYYY-MM-DD
+  gender: "M" | "F" | "";
+  grade: string; // kidGradeOptions id, e.g. "infant" | "prek" | "k" | "1"…"5"
+  school?: string;
+  medicalNotes?: string; // allergies + medical notes; prints on the name tag
+}
+
+export interface Guardian {
+  firstName: string;
+  lastName: string;
+  phone: string; // mobile, used for check-in texts
+  email?: string;
+}
+
+export interface PickupPerson {
+  name: string;
+  relationship?: string;
+  phone?: string;
 }
 
 export interface KidsRegistration {
-  parentName: string;
-  contact: string;
+  parent: Guardian & { email: string };
+  secondGuardian?: Guardian;
   kids: KidInfo[];
+  pickup: PickupPerson[]; // other trusted adults allowed to pick up
+  emergency?: { name: string; phone: string };
   date: string; // ISO of their first Sunday (service start)
   service: ServiceTime;
   notes?: string;

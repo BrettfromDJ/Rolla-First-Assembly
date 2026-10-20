@@ -330,10 +330,10 @@ export function KidsPage() {
                 <ul className="mt-4 flex flex-wrap gap-3">
                   {reg.kids.map((k, i) => (
                     <li key={i} className="rounded-[20px] bg-[#dcd2c5]/[0.06] px-5 py-3">
-                      <p className={cn(mori, "text-[18px]")}>{k.firstName} {k.lastName}</p>
+                      <p className={cn(mori, "text-[18px]")}>{k.nickname || k.firstName} {k.lastName}</p>
                       <p className="text-[14px] text-stone-500">
-                        {kidGradeLabel(k.group)}
-                        {k.allergies ? ` · Allergies: ${k.allergies}` : ""}
+                        {kidGradeLabel(k.grade)}
+                        {k.medicalNotes ? ` · ${k.medicalNotes}` : ""}
                       </p>
                     </li>
                   ))}
