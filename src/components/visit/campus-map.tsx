@@ -10,12 +10,12 @@ import { cn } from "@/lib/utils";
  * N Oak St & E 17th St. North is up.
  */
 const stops = [
-  { n: 1, icon: Car, title: "Park in any lot", body: "Lots north of the building (across 17th St), south of the building, and across Oak St are all yours.", x: 448, y: 545 },
-  { n: 2, icon: DoorOpen, title: "Come in the main entrance", body: "On the west side of the building, facing Oak St. The welcome team will be right inside to say hi.", x: 334, y: 296 },
-  { n: 3, icon: Coffee, title: "Grab a coffee in the gym", body: "Head downstairs to the gym. Coffee, tea, and pastries are always free.", x: 508, y: 362 },
-  { n: 4, icon: Sprout, title: "Check in the kids", body: "Kids meet downstairs, right below the auditorium. Look for the blue Kids Welcome desk.", x: 510, y: 316 },
-  { n: 5, icon: Armchair, title: "Find a seat in the auditorium", body: "Doors open 10 minutes before. Sit anywhere. Really.", x: 510, y: 270 },
-  { n: 6, icon: Users, title: "Students, head upstairs", body: "The youth room is upstairs, right above the gym. 6th–12th graders meet there on Wednesday nights.", x: 508, y: 414 },
+  { n: 1, icon: Car, title: "Park in any lot", body: "Lots north of the building (across 17th St), south of the building, and across Oak St are all yours.", x: 448, y: 598 },
+  { n: 2, icon: DoorOpen, title: "Come in the main entrance", body: "On the west side of the building, facing Oak St. The welcome team will be right inside to say hi.", x: 328, y: 308 },
+  { n: 3, icon: Coffee, title: "Grab a coffee in the gym", body: "Head downstairs to the gym. Coffee, tea, and pastries are always free.", x: 520, y: 450 },
+  { n: 4, icon: Sprout, title: "Check in the kids", body: "Kids meet downstairs, right below the auditorium. Look for the blue Kids Welcome desk.", x: 546, y: 332 },
+  { n: 5, icon: Armchair, title: "Find a seat in the auditorium", body: "Doors open 10 minutes before. Sit anywhere. Really.", x: 546, y: 290 },
+  { n: 6, icon: Users, title: "Students, head upstairs", body: "The youth room is upstairs, right above the gym. 6th–12th graders meet there on Wednesday nights.", x: 548, y: 486 },
 ];
 
 const C = {
@@ -70,6 +70,7 @@ function Wing({
   floors,
   activeFloor,
   gap = 30,
+  titleSize,
 }: {
   d: string;
   x: number;
@@ -78,6 +79,7 @@ function Wing({
   floors: { label: string; level: string; arrow: string }[];
   activeFloor: number | null;
   gap?: number;
+  titleSize?: number;
 }) {
   const hot = activeFloor !== null;
   return (
@@ -88,7 +90,7 @@ function Wing({
         const dim = hot && !on;
         return (
           <g key={f.label} style={{ transition: "opacity 0.3s" }} opacity={dim ? 0.45 : 1}>
-            <text x={x} y={y + i * gap} fontSize={i === 0 ? 11 : 10} fontWeight="700" fontFamily="var(--font-sans)" fill={on ? "#8cc4ff" : C.cream} letterSpacing="1.3">
+            <text x={x} y={y + i * gap} fontSize={titleSize ?? (i === 0 ? 11 : 10)} fontWeight="700" fontFamily="var(--font-sans)" fill={on ? "#8cc4ff" : C.cream} letterSpacing="1.3">
               {f.arrow} {f.label}
             </text>
             <text x={x} y={y + i * gap + 12} fontSize="8.5" fontFamily="var(--font-sans)" fill={C.dim}>
@@ -113,13 +115,12 @@ export function CampusMap() {
           {/* Neighborhood context */}
           {[
             [160, 340, 76, 44], [70, 470, 60, 50], [190, 545, 70, 70], [80, 600, 60, 60], [150, 650, 50, 40],
-            [560, 250, 40, 34], [575, 380, 30, 60],
           ].map(([x, y, w, h], i) => (
             <rect key={i} x={x} y={y} width={w} height={h} rx="3" fill={C.house} />
           ))}
           {[
             [70, 60, 22], [120, 60, 16], [230, 120, 12], [72, 300, 16], [125, 360, 18], [250, 470, 14], [240, 640, 18],
-            [560, 300, 20], [575, 460, 22], [565, 600, 18], [520, 60, 18],
+            [596, 320, 10], [596, 470, 12], [580, 640, 14], [520, 60, 18],
           ].map(([x, y, r], i) => (
             <circle key={i} cx={x} cy={y} r={r} fill={C.tree} />
           ))}
@@ -137,22 +138,22 @@ export function CampusMap() {
           <Lot x={78} y={86} w={188} h={92} label="NORTHWEST LOT" />
           <Lot x={342} y={40} w={182} h={138} rows={3} label="NORTH LOT" />
           <Lot x={70} y={244} w={198} h={84} label="WEST LOT" />
-          <Lot x={345} y={470} w={207} h={192} rows={4} label="SOUTH LOT" />
+          <Lot x={345} y={528} w={207} h={140} rows={3} label="SOUTH LOT" />
 
           {/* Walking routes to the entrance */}
           <g fill="none" stroke={C.blue} strokeWidth="2.5" strokeDasharray="1 8" strokeLinecap="round" opacity="0.9">
-            <path d="M430 178 V 238 H 334 V 296" />
-            <path d="M268 286 H 334" />
-            <path d="M420 470 V 456 H 334 V 296" />
+            <path d="M430 178 V 238 H 328 V 308" />
+            <path d="M268 308 H 328" />
+            <path d="M420 528 V 518 H 328 V 308" />
           </g>
 
           {/* Building */}
-          <path d="M351 242 H532 V452 H497 V466 H437 V398 H354 V340 H351 Z" fill={C.building} stroke={C.edge} strokeWidth="1.5" />
-          {/* East–west wing: auditorium, with kids directly below */}
+          <path d="M340 266 H456 V242 H487 V256 H572 V512 H523 V498 H492 V362 H340 Z" fill={C.building} stroke={C.edge} strokeWidth="1.5" />
+          {/* Long east–west wing: auditorium, with kids directly below */}
           <Wing
-            d="M392 248 H526 V336 H392 Z"
-            x={400}
-            y={266}
+            d="M344 270 H459 V246 H484 V260 H568 V358 H344 Z"
+            x={376}
+            y={292}
             fill="#0f1f38"
             floors={[
               { label: "AUDITORIUM", level: "Main floor", arrow: "" },
@@ -160,22 +161,22 @@ export function CampusMap() {
             ]}
             activeFloor={active === 5 ? 0 : active === 4 ? 1 : null}
           />
-          {/* North–south wing: gym, with the youth room directly above */}
+          {/* Narrow north–south wing on the east side: gym, with the youth room directly above */}
           <Wing
-            d="M358 342 H526 V446 H493 V460 H441 V394 H358 Z"
-            x={366}
-            y={355}
-            gap={22}
+            d="M496 362 H568 V508 H526 V494 H496 Z"
+            x={503}
+            y={382}
+            gap={26}
+            titleSize={10}
             fill="#1a1a14"
             floors={[
-              { label: "GYM · COFFEE", level: "Downstairs", arrow: "" },
-              { label: "YOUTH", level: "Upstairs · above", arrow: "↑" },
+              { label: "GYM", level: "Downstairs", arrow: "" },
+              { label: "YOUTH", level: "Upstairs", arrow: "↑" },
             ]}
             activeFloor={active === 3 ? 0 : active === 6 ? 1 : null}
           />
-          <text x="358" y="262" fontSize="9" fontWeight="600" fontFamily="var(--font-sans)" fill={C.cream} letterSpacing="1">ENTRY</text>
           {/* Main doors on the Oak St side */}
-          <rect x="347" y="280" width="8" height="34" rx="4" fill={C.blue} />
+          <rect x="336" y="291" width="8" height="34" rx="4" fill={C.blue} />
 
           {/* North arrow */}
           <g transform="translate(578 76)">
