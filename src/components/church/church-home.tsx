@@ -80,12 +80,12 @@ export function ChurchHome() {
               <img src={A("underline.svg")} alt="" width={202} height={11} className="mt-[14px]" />
             </Rise>
             <Rise load delay={0.6} y={16}>
-            <Link
-              href="#mission"
+            <PlanVisitLink
+              plannedLabel="SEE YOUR PLAN"
               className={cn(mori, "mt-[33px] flex h-[67px] w-[289px] items-center justify-center rounded-[80px] border-[3px] border-[#0285ff] text-[16px] leading-none tracking-[-0.05em] text-[#0285ff] transition hover:bg-[#0285ff] hover:text-black")}
             >
-              SEE OUR MISSION
-            </Link>
+              PLAN YOUR VISIT
+            </PlanVisitLink>
             </Rise>
           </div>
 

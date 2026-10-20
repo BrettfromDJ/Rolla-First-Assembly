@@ -13,7 +13,7 @@ import { cn, formatTime, relativeDay } from "@/lib/utils";
 const mori = "font-mori font-semibold";
 
 /** Opens the visit-planning sheet in place, so visitors never leave the homepage. */
-export function PlanVisitLink({ className, children }: { className?: string; children: React.ReactNode }) {
+export function PlanVisitLink({ className, children, plannedLabel }: { className?: string; children: React.ReactNode; plannedLabel?: React.ReactNode }) {
   const [open, setOpen] = useState(false);
   const { profile, hydrated } = useStore();
   const planned = hydrated && profile.visitPlan;
@@ -21,7 +21,11 @@ export function PlanVisitLink({ className, children }: { className?: string; chi
     <>
       {planned ? (
         <Link href="/me" className={className}>
-          You&apos;re on the list, see your plan <ArrowRight className="size-4" />
+          {plannedLabel ?? (
+            <>
+              You&apos;re on the list, see your plan <ArrowRight className="size-4" />
+            </>
+          )}
         </Link>
       ) : (
         <button type="button" onClick={() => setOpen(true)} className={className}>
