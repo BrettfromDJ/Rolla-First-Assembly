@@ -22,6 +22,7 @@ import {
   Baby,
   BarChart3,
   HandHeart,
+  UsersRound,
 } from "lucide-react";
 import { Logo } from "@/components/ui/logo";
 import { Avatar } from "@/components/ui/avatar";
@@ -31,13 +32,14 @@ import { BaptismsView } from "./baptisms";
 import { MembersView } from "./members";
 import { AttendanceView } from "./attendance";
 import { PrayerView } from "./prayer";
+import { VolunteersView } from "./volunteers";
 import { interests as interestList, interestShort, staffById, welcomeTeam } from "@/lib/data";
 import { useStore } from "@/lib/store";
 import type { InterestId, Stage, Visitor } from "@/lib/types";
 import { cn, formatDate, formatShortDay, greeting, relativeDay } from "@/lib/utils";
 import { ACTING_AS, fullName, isRecent, needsAttention, nextAction, rsvpInfo, stageStyle, stages } from "./helpers";
 
-type Tab = "visitors" | "members" | "baptisms" | "attendance" | "prayer";
+type Tab = "visitors" | "members" | "baptisms" | "attendance" | "prayer" | "volunteers";
 type View = "all" | "attention" | "mine" | "new" | "planning" | "requests" | "rsvps";
 
 const views: { id: View; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
@@ -57,7 +59,7 @@ export function Dashboard() {
   };
   useEffect(() => {
     const h = location.hash.slice(1);
-    if (h === "baptisms" || h === "members" || h === "attendance" || h === "prayer") setTabState(h);
+    if (h === "baptisms" || h === "members" || h === "attendance" || h === "prayer" || h === "volunteers") setTabState(h);
   }, []);
   const [query, setQuery] = useState("");
   const [stage, setStage] = useState<Stage | "">("");
@@ -165,6 +167,16 @@ export function Dashboard() {
             )}
           </button>
           <button
+            onClick={() => setTab("volunteers")}
+            className={cn("flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm transition", tab === "volunteers" ? "bg-stone-100 font-medium text-stone-900" : "text-stone-600 hover:bg-stone-50")}
+          >
+            <UsersRound className="size-4 text-stone-400" />
+            <span className="flex-1 text-left">Volunteers</span>
+            {hydrated && store.serve.some((v) => v.status === "new") && (
+              <span className="rounded-full bg-forest-700 px-1.5 text-xs font-medium tabular-nums text-ink">{store.serve.filter((v) => v.status === "new").length}</span>
+            )}
+          </button>
+          <button
             onClick={() => setTab("members")}
             className={cn("flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm transition", tab === "members" ? "bg-stone-100 font-medium text-stone-900" : "text-stone-600 hover:bg-stone-50")}
           >
@@ -225,6 +237,7 @@ export function Dashboard() {
               ["baptisms", "Baptisms", Droplets],
               ["attendance", "Attendance", BarChart3],
               ["prayer", "Prayer", HandHeart],
+              ["volunteers", "Volunteers", UsersRound],
             ] as const).map(([id, label, Icon]) => (
               <button
                 key={id}
@@ -239,7 +252,15 @@ export function Dashboard() {
           </div>
           </div>
         </div>
-        {tab === "prayer" ? (
+        {tab === "volunteers" ? (
+          <div className="px-5 pt-8 md:px-8">
+            <div className="mb-6">
+              <p className="text-sm text-stone-500">Ministry</p>
+              <h1 className="mt-1 text-[28px] font-semibold tracking-[-0.02em]">Volunteers</h1>
+            </div>
+            <VolunteersView query={query} />
+          </div>
+        ) : tab === "prayer" ? (
           <div className="px-5 pt-8 md:px-8">
             <div className="mb-6">
               <p className="text-sm text-stone-500">Ministry</p>

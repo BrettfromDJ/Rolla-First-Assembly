@@ -59,6 +59,7 @@ export function SiteFooter() {
             <Link href="/baptism" className={cn(mori, "block text-[#0285ff] hover:underline")}>Get baptized</Link>
             <Link href="/kids" className={cn(mori, "block text-[#0285ff] hover:underline")}>Kids First</Link>
             <Link href="/prayer" className={cn(mori, "block text-[#0285ff] hover:underline")}>Prayer requests</Link>
+            <Link href="/serve" className={cn(mori, "block text-[#0285ff] hover:underline")}>Serve on a team</Link>
           </div>
         </div>
       </div>

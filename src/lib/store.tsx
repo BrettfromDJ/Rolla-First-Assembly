@@ -5,11 +5,13 @@ import { getOffering } from "./data";
 import { buildSeedVisitors } from "./seed";
 import { buildSeedAttendance } from "./attendance";
 import { buildSeedPrayers } from "./prayer";
+import { buildSeedServe } from "./serve";
 import { uid } from "./utils";
 import type {
   Activity,
   AttendanceRecord,
   PrayerRequest,
+  ServeSignup,
   BaptismRegistration,
   KidsRegistration,
   FollowStatus,
@@ -67,10 +69,11 @@ interface State {
   prayers: PrayerRequest[];
   prayed: string[]; // prayer ids this browser has prayed for
   sermonNotes: Record<string, string>; // the visitor's own notes, by sermon id
+  serve: ServeSignup[];
   seedVersion?: number;
 }
 
-const freshState = (): State => ({ profile: freshProfile(), visitors: buildSeedVisitors(), overlay: freshOverlay(), attendance: buildSeedAttendance(), prayers: buildSeedPrayers(), prayed: [], sermonNotes: {}, seedVersion: SEED_VERSION });
+const freshState = (): State => ({ profile: freshProfile(), visitors: buildSeedVisitors(), overlay: freshOverlay(), attendance: buildSeedAttendance(), prayers: buildSeedPrayers(), prayed: [], sermonNotes: {}, serve: buildSeedServe(), seedVersion: SEED_VERSION });
 
 export type VisitorPatch = Partial<Pick<Visitor, "stage" | "assigneeId" | "status">>;
 
@@ -109,6 +112,11 @@ interface Store extends State {
   addPrayerNote: (id: string, body: string, authorId: string) => void;
   /* sermons */
   saveSermonNote: (sermonId: string, text: string) => void;
+  /* serving */
+  submitServe: (s: Omit<ServeSignup, "id" | "status" | "notes" | "createdAt" | "isYou">) => void;
+  cancelMyServe: (id: string) => void;
+  patchServe: (id: string, patch: Partial<Pick<ServeSignup, "status" | "backgroundCheck" | "shadowDate">>) => void;
+  addServeNote: (id: string, body: string, authorId: string) => void;
 }
 
 const Ctx = createContext<Store | null>(null);
@@ -209,6 +217,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
           prayers: parsed.prayers ?? buildSeedPrayers(),
           prayed: parsed.prayed ?? [],
           sermonNotes: parsed.sermonNotes ?? {},
+          serve: parsed.serve ?? buildSeedServe(),
           seedVersion: SEED_VERSION,
         });
       }
@@ -354,6 +363,36 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
 
   const saveSermonNote = useCallback((sermonId: string, text: string) => {
     setState((s) => ({ ...s, sermonNotes: { ...s.sermonNotes, [sermonId]: text } }));
+  }, []);
+
+  const submitServe = useCallback((sv: Omit<ServeSignup, "id" | "status" | "notes" | "createdAt" | "isYou">) => {
+    const rec: ServeSignup = { ...sv, id: uid("sv"), status: "new", notes: [], isYou: true, createdAt: new Date().toISOString() };
+    setState((s) => ({
+      ...s,
+      // Signing up again for the same team replaces the earlier sign-up.
+      serve: [rec, ...s.serve.filter((x) => !(x.isYou && x.teamId === sv.teamId))],
+      profile: {
+        ...s.profile,
+        firstName: s.profile.firstName || sv.firstName,
+        email: s.profile.email || sv.email,
+        phone: s.profile.phone || sv.phone,
+      },
+    }));
+  }, []);
+
+  const cancelMyServe = useCallback((id: string) => {
+    setState((s) => ({ ...s, serve: s.serve.filter((x) => !(x.id === id && x.isYou)) }));
+  }, []);
+
+  const patchServe = useCallback((id: string, patch: Partial<Pick<ServeSignup, "status" | "backgroundCheck" | "shadowDate">>) => {
+    setState((s) => ({ ...s, serve: s.serve.map((x) => (x.id === id ? { ...x, ...patch } : x)) }));
+  }, []);
+
+  const addServeNote = useCallback((id: string, body: string, authorId: string) => {
+    setState((s) => ({
+      ...s,
+      serve: s.serve.map((x) => (x.id === id ? { ...x, notes: [{ id: uid("note"), body, authorId, createdAt: new Date().toISOString() }, ...x.notes] } : x)),
+    }));
   }, []);
 
   const cancelKids = useCallback(() => {
@@ -508,6 +547,10 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     patchPrayer,
     addPrayerNote,
     saveSermonNote,
+    submitServe,
+    cancelMyServe,
+    patchServe,
+    addServeNote,
   };
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;

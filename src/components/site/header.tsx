@@ -99,7 +99,7 @@ export function SiteHeader() {
             className="overflow-hidden min-[1360px]:hidden"
           >
             <ul className="mt-6 border-t border-[#dcd2c5]/15">
-              {[...siteNav, { href: "/me", label: "My Rolla First" }].map((n) => (
+              {[...siteNav, { href: "/serve", label: "Serve" }, { href: "/me", label: "My Rolla First" }].map((n) => (
                 <li key={n.label} className="border-b border-[#dcd2c5]/15">
                   <Link href={n.href} className={cn(mori, "flex items-center justify-between py-4 text-[28px] leading-none tracking-[-0.05em] text-[#dcd2c5]")}>
                     {n.label}

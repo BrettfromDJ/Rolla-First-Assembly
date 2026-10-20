@@ -284,3 +284,31 @@ export interface PrayerRequest {
   isYou?: boolean; // submitted from this browser
   createdAt: string;
 }
+
+/* ---------- Serving (volunteer teams) ---------- */
+
+export type ServeTime = "9:00" | "10:30" | "wed" | "weekday" | "saturday";
+export type ServeFrequency = "weekly" | "biweekly" | "monthly" | "events";
+export type ServeStatus = "new" | "contacted" | "shadowing" | "serving" | "not-now";
+export type BackgroundCheck = "needed" | "sent" | "cleared";
+
+export interface ServeSignup {
+  id: string;
+  teamId: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  teen: boolean; // under 18 (needs a parent's OK, and some teams have age limits)
+  roles: string[];
+  times: ServeTime[];
+  frequency: ServeFrequency;
+  experience?: string;
+  shadowFirst: boolean;
+  status: ServeStatus;
+  backgroundCheck?: BackgroundCheck; // only for teams that require one
+  shadowDate?: string; // YYYY-MM-DD
+  notes: Note[];
+  isYou?: boolean;
+  createdAt: string;
+}

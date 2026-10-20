@@ -498,6 +498,7 @@ export function buildOfferings(): Offering[] {
         { id: "t-care", title: "Prayer & Care", meta: "Flexible", location: "Prayer room & meals", leader: "Ruth Alvarez", description: "Pray with people after services or bring meals to families in need.", tags: ["care"] },
       ],
       matchKeys: ["hospitality", "kids", "production", "care", "behind", "serving"],
+      href: "/serve",
     },
     {
       id: "outreach",

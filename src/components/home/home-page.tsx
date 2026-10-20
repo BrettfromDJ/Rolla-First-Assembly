@@ -152,7 +152,7 @@ export function HomePage() {
               { href: "/events?area=groups", label: "Find a Group", sub: "40+ groups across town", icon: Users },
               { href: "/events?area=events", label: "Events", sub: "What's coming up", icon: CalendarDays },
               { href: "/events?area=faith", label: "Grow in Faith", sub: "Classes & studies", icon: BookOpen },
-              { href: "/events?area=serve", label: "Serve", sub: "Make a difference", icon: HandHeart },
+              { href: "/serve", label: "Serve", sub: "Find your team", icon: HandHeart },
             ].map((t, k) => {
               const blue = k === 0;
               return (
