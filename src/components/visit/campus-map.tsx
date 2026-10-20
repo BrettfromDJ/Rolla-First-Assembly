@@ -12,10 +12,10 @@ import { cn } from "@/lib/utils";
 const stops = [
   { n: 1, icon: Car, title: "Park in any lot", body: "Lots north of the building (across 17th St), south of the building, and across Oak St are all yours.", x: 448, y: 545 },
   { n: 2, icon: DoorOpen, title: "Come in the main entrance", body: "On the west side of the building, facing Oak St. The welcome team will be right inside to say hi.", x: 334, y: 296 },
-  { n: 3, icon: Coffee, title: "Grab a coffee in the gym", body: "Head downstairs to the gym. Coffee, tea, and pastries are always free.", x: 442, y: 380 },
-  { n: 4, icon: Sprout, title: "Check in the kids", body: "The kids area is downstairs too. Look for the blue Kids Welcome desk.", x: 510, y: 318 },
-  { n: 5, icon: Armchair, title: "Find a seat in the auditorium", body: "Doors open 10 minutes before. Sit anywhere. Really.", x: 510, y: 272 },
-  { n: 6, icon: Users, title: "Students, head upstairs", body: "6th–12th graders meet in the youth room upstairs on Wednesday nights.", x: 497, y: 424 },
+  { n: 3, icon: Coffee, title: "Grab a coffee in the gym", body: "Head downstairs to the gym. Coffee, tea, and pastries are always free.", x: 508, y: 362 },
+  { n: 4, icon: Sprout, title: "Check in the kids", body: "Kids meet downstairs, right below the auditorium. Look for the blue Kids Welcome desk.", x: 510, y: 316 },
+  { n: 5, icon: Armchair, title: "Find a seat in the auditorium", body: "Doors open 10 minutes before. Sit anywhere. Really.", x: 510, y: 270 },
+  { n: 6, icon: Users, title: "Students, head upstairs", body: "The youth room is upstairs, right above the gym. 6th–12th graders meet there on Wednesday nights.", x: 508, y: 414 },
 ];
 
 const C = {
@@ -58,18 +58,45 @@ function Lot({ x, y, w, h, rows = 2, label }: { x: number; y: number; w: number;
   );
 }
 
-function Zone({ x, y, w, h, fill, title, sub }: { x: number; y: number; w: number; h: number; fill: string; title: string; sub?: string }) {
+/**
+ * One wing of the building. Each wing has two floors stacked on top of each
+ * other, so we label both and highlight whichever floor the visitor picked.
+ */
+function Wing({
+  d,
+  x,
+  y,
+  fill,
+  floors,
+  activeFloor,
+  gap = 30,
+}: {
+  d: string;
+  x: number;
+  y: number;
+  fill: string;
+  floors: { label: string; level: string; arrow: string }[];
+  activeFloor: number | null;
+  gap?: number;
+}) {
+  const hot = activeFloor !== null;
   return (
     <g>
-      <rect x={x} y={y} width={w} height={h} rx="4" fill={fill} />
-      <text x={x + 8} y={y + 15} fontSize="9.5" fontWeight="600" fontFamily="var(--font-sans)" fill={C.cream} letterSpacing="1.2">
-        {title}
-      </text>
-      {sub && (
-        <text x={x + 8} y={y + 27} fontSize="8.5" fontFamily="var(--font-sans)" fill={C.dim}>
-          {sub}
-        </text>
-      )}
+      <path d={d} fill={fill} stroke={hot ? C.blue : "transparent"} strokeWidth="1.5" style={{ transition: "stroke 0.3s" }} />
+      {floors.map((f, i) => {
+        const on = activeFloor === i;
+        const dim = hot && !on;
+        return (
+          <g key={f.label} style={{ transition: "opacity 0.3s" }} opacity={dim ? 0.45 : 1}>
+            <text x={x} y={y + i * gap} fontSize={i === 0 ? 11 : 10} fontWeight="700" fontFamily="var(--font-sans)" fill={on ? "#8cc4ff" : C.cream} letterSpacing="1.3">
+              {f.arrow} {f.label}
+            </text>
+            <text x={x} y={y + i * gap + 12} fontSize="8.5" fontFamily="var(--font-sans)" fill={C.dim}>
+              {f.level}
+            </text>
+          </g>
+        );
+      })}
     </g>
   );
 }
@@ -80,7 +107,7 @@ export function CampusMap() {
   return (
     <div className="grid gap-8 lg:grid-cols-[1.2fr_1fr] lg:gap-12">
       <div className="relative overflow-hidden rounded-[32px] bg-ink-2 ring-1 ring-stone-200/60">
-        <svg viewBox="40 40 560 640" className="h-auto w-full" role="img" aria-label="Map of the church campus at N Oak St and E 17th St, showing parking lots, the main entrance, gym, kids area, auditorium, and youth room">
+        <svg viewBox="40 40 560 640" className="h-auto w-full" role="img" aria-label="Map of the church campus at N Oak St and E 17th St. The east–west wing holds the auditorium with the kids area downstairs below it. The north–south wing holds the gym with the youth room upstairs above it. Parking lots are north, south, and across Oak St.">
           <rect x="0" y="0" width="800" height="720" fill={C.ground} />
 
           {/* Neighborhood context */}
@@ -121,10 +148,31 @@ export function CampusMap() {
 
           {/* Building */}
           <path d="M351 242 H532 V452 H497 V466 H437 V398 H354 V340 H351 Z" fill={C.building} stroke={C.edge} strokeWidth="1.5" />
-          <Zone x={395} y={248} w={131} h={48} fill="#0f1f38" title="AUDITORIUM" />
-          <Zone x={395} y={300} w={131} h={36} fill="#13231b" title="KIDS" sub="downstairs" />
-          <Zone x={358} y={342} w={104} h={52} fill="#262013" title="GYM · COFFEE" sub="downstairs" />
-          <Zone x={467} y={342} w={59} h={104} fill="#1c1626" title="YOUTH" sub="upstairs" />
+          {/* East–west wing: auditorium, with kids directly below */}
+          <Wing
+            d="M392 248 H526 V336 H392 Z"
+            x={400}
+            y={266}
+            fill="#0f1f38"
+            floors={[
+              { label: "AUDITORIUM", level: "Main floor", arrow: "" },
+              { label: "KIDS", level: "Downstairs · below", arrow: "↓" },
+            ]}
+            activeFloor={active === 5 ? 0 : active === 4 ? 1 : null}
+          />
+          {/* North–south wing: gym, with the youth room directly above */}
+          <Wing
+            d="M358 342 H526 V446 H493 V460 H441 V394 H358 Z"
+            x={366}
+            y={355}
+            gap={22}
+            fill="#1a1a14"
+            floors={[
+              { label: "GYM · COFFEE", level: "Downstairs", arrow: "" },
+              { label: "YOUTH", level: "Upstairs · above", arrow: "↑" },
+            ]}
+            activeFloor={active === 3 ? 0 : active === 6 ? 1 : null}
+          />
           <text x="358" y="262" fontSize="9" fontWeight="600" fontFamily="var(--font-sans)" fill={C.cream} letterSpacing="1">ENTRY</text>
           {/* Main doors on the Oak St side */}
           <rect x="347" y="280" width="8" height="34" rx="4" fill={C.blue} />
