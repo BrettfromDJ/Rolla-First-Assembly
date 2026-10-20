@@ -117,7 +117,7 @@ export function ChurchHome() {
             </h1>
             <p className={cn(mori, "mt-[28px] text-[16px] uppercase leading-[1.1] tracking-[-0.03em]")}>Belong. Believe. Become.</p>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={A("underline.svg")} alt="" width={202} height={11} className="mt-[17px]" />
+            <img src={A("underline.svg")} alt="" width={202} height={11} className="mt-[14px]" />
             <Link
               href="#mission"
               className={cn(mori, "mt-[33px] flex h-[67px] w-[289px] items-center justify-center rounded-[80px] border-[3px] border-[#0285ff] text-[16px] leading-none tracking-[-0.05em] text-[#0285ff] transition hover:bg-[#0285ff] hover:text-black")}
@@ -249,7 +249,7 @@ export function ChurchHome() {
 
         {/* Pastors & leadership */}
         <section aria-labelledby="pastors" className="mt-[106px]">
-          <div className="grid gap-6 md:grid-cols-[536px_1fr]">
+          <div className="grid gap-6 md:grid-cols-[536px_1fr] md:gap-x-0">
             <h2 id="pastors" className={cn(mori, "text-[clamp(48px,5.7vw,82px)] leading-[0.9] tracking-[-0.05em] text-[#0285ff]")}>
               <Ed>Pastors</Ed> &amp;
               <br />
