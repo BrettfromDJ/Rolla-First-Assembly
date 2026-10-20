@@ -18,6 +18,7 @@ export const siteNav = [
   { href: "/kids", label: "Kids" },
   { href: "/events", label: "Events" },
   { href: "/baptism", label: "Baptism" },
+  { href: "/prayer", label: "Prayer" },
   { href: churchLinks.sermons, label: "Sermons" },
   { href: churchLinks.give, label: "Giving" },
 ];
@@ -35,11 +36,11 @@ export function SiteHeader() {
   return (
     <header className="relative z-40 mx-auto max-w-[1440px] px-5 pt-6 md:px-[60px] md:pt-[42px]">
       <div className="flex items-center justify-between gap-6">
-        <div className="flex items-center gap-[59px]">
+        <div className="flex items-center gap-[40px] min-[1500px]:gap-[59px]">
           <Link href="/" aria-label="Rolla First home" className="text-[#dcd2c5]">
             <Logo className="h-[16px] w-auto fill-[#dcd2c5]" />
           </Link>
-          <nav aria-label="Main" className="hidden items-center gap-[32px] min-[1360px]:flex">
+          <nav aria-label="Main" className="hidden items-center gap-[24px] min-[1360px]:flex min-[1500px]:gap-[32px]">
             {siteNav.map((n) => {
               const active = n.href.startsWith("/") && n.href !== "/#mission" && path.startsWith(n.href);
               return (

@@ -4,10 +4,12 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 import { getOffering } from "./data";
 import { buildSeedVisitors } from "./seed";
 import { buildSeedAttendance } from "./attendance";
+import { buildSeedPrayers } from "./prayer";
 import { uid } from "./utils";
 import type {
   Activity,
   AttendanceRecord,
+  PrayerRequest,
   BaptismRegistration,
   KidsRegistration,
   FollowStatus,
@@ -62,10 +64,12 @@ interface State {
   visitors: Visitor[];
   overlay: VisitorOverlay;
   attendance: AttendanceRecord[];
+  prayers: PrayerRequest[];
+  prayed: string[]; // prayer ids this browser has prayed for
   seedVersion?: number;
 }
 
-const freshState = (): State => ({ profile: freshProfile(), visitors: buildSeedVisitors(), overlay: freshOverlay(), attendance: buildSeedAttendance(), seedVersion: SEED_VERSION });
+const freshState = (): State => ({ profile: freshProfile(), visitors: buildSeedVisitors(), overlay: freshOverlay(), attendance: buildSeedAttendance(), prayers: buildSeedPrayers(), prayed: [], seedVersion: SEED_VERSION });
 
 export type VisitorPatch = Partial<Pick<Visitor, "stage" | "assigneeId" | "status">>;
 
@@ -94,6 +98,14 @@ interface Store extends State {
   /** Adds or replaces the count for one service on one date. */
   saveAttendance: (r: Omit<AttendanceRecord, "id" | "updatedAt">) => void;
   deleteAttendance: (id: string) => void;
+  /* prayer */
+  submitPrayer: (r: Pick<PrayerRequest, "name" | "anonymous" | "contact" | "wantsContact" | "category" | "body" | "visibility">) => string;
+  prayFor: (id: string) => void;
+  /** The requester adds an update, optionally marking it answered. */
+  updateMyPrayer: (id: string, body: string, answered: boolean) => void;
+  removeMyPrayer: (id: string) => void;
+  patchPrayer: (id: string, patch: Partial<Pick<PrayerRequest, "status" | "wallApproved" | "assigneeId" | "contacted" | "visibility" | "update">>) => void;
+  addPrayerNote: (id: string, body: string, authorId: string) => void;
 }
 
 const Ctx = createContext<Store | null>(null);
@@ -191,6 +203,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
           visitors: parsed.visitors?.length && parsed.seedVersion === SEED_VERSION ? parsed.visitors : buildSeedVisitors(),
           overlay: { ...freshOverlay(), ...parsed.overlay },
           attendance: parsed.attendance ?? buildSeedAttendance(),
+          prayers: parsed.prayers ?? buildSeedPrayers(),
+          prayed: parsed.prayed ?? [],
           seedVersion: SEED_VERSION,
         });
       }
@@ -284,6 +298,55 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const deleteAttendance = useCallback((id: string) => {
     setState((s) => ({ ...s, attendance: s.attendance.filter((a) => a.id !== id) }));
   }, []);
+
+  const editPrayer = useCallback((id: string, fn: (p: PrayerRequest) => Partial<PrayerRequest>) => {
+    setState((s) => ({ ...s, prayers: s.prayers.map((p) => (p.id === id ? { ...p, ...fn(p) } : p)) }));
+  }, []);
+
+  const submitPrayer = useCallback((r: Pick<PrayerRequest, "name" | "anonymous" | "contact" | "wantsContact" | "category" | "body" | "visibility">) => {
+    const id = uid("pr");
+    const req: PrayerRequest = { ...r, id, status: "new", prayedCount: 0, notes: [], assigneeId: null, isYou: true, createdAt: new Date().toISOString() };
+    setState((s) => ({
+      ...s,
+      prayers: [req, ...s.prayers],
+      profile: {
+        ...s.profile,
+        firstName: s.profile.firstName || r.name.trim().split(/\s+/)[0] || "",
+        email: s.profile.email || (r.contact?.includes("@") ? r.contact : ""),
+        phone: s.profile.phone || (r.contact && !r.contact.includes("@") ? r.contact : ""),
+      },
+    }));
+    return id;
+  }, []);
+
+  const prayFor = useCallback((id: string) => {
+    setState((s) =>
+      s.prayed.includes(id)
+        ? s
+        : { ...s, prayed: [...s.prayed, id], prayers: s.prayers.map((p) => (p.id === id ? { ...p, prayedCount: p.prayedCount + 1 } : p)) },
+    );
+  }, []);
+
+  const updateMyPrayer = useCallback(
+    (id: string, body: string, answered: boolean) =>
+      editPrayer(id, (p) => ({ update: { body, at: new Date().toISOString(), by: "requester" }, status: answered ? "answered" : p.status })),
+    [editPrayer],
+  );
+
+  const removeMyPrayer = useCallback((id: string) => {
+    setState((s) => ({ ...s, prayers: s.prayers.filter((p) => !(p.id === id && p.isYou)) }));
+  }, []);
+
+  const patchPrayer = useCallback(
+    (id: string, patch: Partial<Pick<PrayerRequest, "status" | "wallApproved" | "assigneeId" | "contacted" | "visibility" | "update">>) => editPrayer(id, () => patch),
+    [editPrayer],
+  );
+
+  const addPrayerNote = useCallback(
+    (id: string, body: string, authorId: string) =>
+      editPrayer(id, (p) => ({ notes: [{ id: uid("note"), body, authorId, createdAt: new Date().toISOString() }, ...p.notes] })),
+    [editPrayer],
+  );
 
   const cancelKids = useCallback(() => {
     setState((s) => ({ ...s, profile: { ...s.profile, kids: null } }));
@@ -430,6 +493,12 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     patchBaptism,
     saveAttendance,
     deleteAttendance,
+    submitPrayer,
+    prayFor,
+    updateMyPrayer,
+    removeMyPrayer,
+    patchPrayer,
+    addPrayerNote,
   };
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;

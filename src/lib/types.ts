@@ -259,3 +259,30 @@ export interface AttendanceRecord {
   enteredBy: string; // staff id
   updatedAt: string;
 }
+
+/* ---------- Prayer requests ---------- */
+
+export type PrayerCategory = "health" | "family" | "grief" | "work" | "faith" | "relationships" | "praise" | "other";
+/** Who can see it: pastors only, the prayer team, or the public prayer wall (after staff approve it). */
+export type PrayerVisibility = "pastors" | "team" | "wall";
+export type PrayerStatus = "new" | "praying" | "answered" | "archived";
+
+export interface PrayerRequest {
+  id: string;
+  name: string; // may be blank when anonymous
+  anonymous: boolean; // hide the name everywhere except from pastors
+  contact?: string;
+  wantsContact: boolean; // asked for someone to reach out
+  category: PrayerCategory;
+  body: string;
+  visibility: PrayerVisibility;
+  wallApproved?: boolean; // staff approved it for the public wall
+  status: PrayerStatus;
+  prayedCount: number;
+  update?: { body: string; at: string; by: "requester" | string }; // answered-prayer or progress update
+  assigneeId?: string | null;
+  contacted?: boolean;
+  notes: Note[];
+  isYou?: boolean; // submitted from this browser
+  createdAt: string;
+}

@@ -21,6 +21,7 @@ import {
   Droplets,
   Baby,
   BarChart3,
+  HandHeart,
 } from "lucide-react";
 import { Logo } from "@/components/ui/logo";
 import { Avatar } from "@/components/ui/avatar";
@@ -29,13 +30,14 @@ import { VisitorPanel } from "./visitor-panel";
 import { BaptismsView } from "./baptisms";
 import { MembersView } from "./members";
 import { AttendanceView } from "./attendance";
+import { PrayerView } from "./prayer";
 import { interests as interestList, interestShort, staffById, welcomeTeam } from "@/lib/data";
 import { useStore } from "@/lib/store";
 import type { InterestId, Stage, Visitor } from "@/lib/types";
 import { cn, formatDate, formatShortDay, greeting, relativeDay } from "@/lib/utils";
 import { ACTING_AS, fullName, isRecent, needsAttention, nextAction, rsvpInfo, stageStyle, stages } from "./helpers";
 
-type Tab = "visitors" | "members" | "baptisms" | "attendance";
+type Tab = "visitors" | "members" | "baptisms" | "attendance" | "prayer";
 type View = "all" | "attention" | "mine" | "new" | "planning" | "requests" | "rsvps";
 
 const views: { id: View; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
@@ -55,7 +57,7 @@ export function Dashboard() {
   };
   useEffect(() => {
     const h = location.hash.slice(1);
-    if (h === "baptisms" || h === "members" || h === "attendance") setTabState(h);
+    if (h === "baptisms" || h === "members" || h === "attendance" || h === "prayer") setTabState(h);
   }, []);
   const [query, setQuery] = useState("");
   const [stage, setStage] = useState<Stage | "">("");
@@ -124,7 +126,7 @@ export function Dashboard() {
               <button
                 key={x.id}
                 onClick={() => { setView(x.id); setTab("visitors"); }}
-                className={cn("flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm transition", view === x.id ? "bg-stone-100 font-medium text-stone-900" : "text-stone-600 hover:bg-stone-50")}
+                className={cn("flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm transition", tab === "visitors" && view === x.id ? "bg-stone-100 font-medium text-stone-900" : "text-stone-600 hover:bg-stone-50")}
               >
                 <x.icon className="size-4 text-stone-400" />
                 <span className="flex-1 text-left">{x.label}</span>
@@ -137,7 +139,7 @@ export function Dashboard() {
             <button
               key={s}
               onClick={() => { setStage(stage === s ? "" : s); setView("all"); setTab("visitors"); }}
-              className={cn("flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm transition", stage === s ? "bg-stone-100 font-medium text-stone-900" : "text-stone-600 hover:bg-stone-50")}
+              className={cn("flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm transition", tab === "visitors" && stage === s ? "bg-stone-100 font-medium text-stone-900" : "text-stone-600 hover:bg-stone-50")}
             >
               <span className={cn("size-2 rounded-full", stageStyle[s].dot)} />
               <span className="flex-1 text-left">{s}</span>
@@ -151,6 +153,16 @@ export function Dashboard() {
           >
             <BarChart3 className="size-4 text-stone-400" />
             <span className="flex-1 text-left">Attendance</span>
+          </button>
+          <button
+            onClick={() => setTab("prayer")}
+            className={cn("flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm transition", tab === "prayer" ? "bg-stone-100 font-medium text-stone-900" : "text-stone-600 hover:bg-stone-50")}
+          >
+            <HandHeart className="size-4 text-stone-400" />
+            <span className="flex-1 text-left">Prayer requests</span>
+            {hydrated && store.prayers.some((p) => p.status === "new") && (
+              <span className="rounded-full bg-forest-700 px-1.5 text-xs font-medium tabular-nums text-ink">{store.prayers.filter((p) => p.status === "new").length}</span>
+            )}
           </button>
           <button
             onClick={() => setTab("members")}
@@ -193,8 +205,8 @@ export function Dashboard() {
               <input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder={`Search ${tab === "members" ? "members & kids" : tab}`}
-                aria-label={`Search ${tab === "members" ? "members & kids" : tab}`}
+                placeholder={`Search ${tab === "members" ? "members & kids" : tab === "prayer" ? "prayer requests" : tab}`}
+                aria-label={`Search ${tab === "members" ? "members & kids" : tab === "prayer" ? "prayer requests" : tab}`}
                 className="h-10 w-full rounded-full bg-white pl-10 pr-4 text-sm ring-1 ring-stone-200 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-forest-500"
               />
             </div>
@@ -212,6 +224,7 @@ export function Dashboard() {
               ["members", "Members", Baby],
               ["baptisms", "Baptisms", Droplets],
               ["attendance", "Attendance", BarChart3],
+              ["prayer", "Prayer", HandHeart],
             ] as const).map(([id, label, Icon]) => (
               <button
                 key={id}
@@ -226,7 +239,15 @@ export function Dashboard() {
           </div>
           </div>
         </div>
-        {tab === "attendance" ? (
+        {tab === "prayer" ? (
+          <div className="px-5 pt-8 md:px-8">
+            <div className="mb-6">
+              <p className="text-sm text-stone-500">Ministry</p>
+              <h1 className="mt-1 text-[28px] font-semibold tracking-[-0.02em]">Prayer requests</h1>
+            </div>
+            <PrayerView query={query} />
+          </div>
+        ) : tab === "attendance" ? (
           <div className="px-5 pt-8 md:px-8">
             <div className="mb-6">
               <p className="text-sm text-stone-500">Ministry</p>
