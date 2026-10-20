@@ -46,6 +46,24 @@ export interface Profile {
   skippedContact: boolean;
   visitPlan: VisitPlan | null;
   rsvps: Rsvp[];
+  baptism: BaptismRegistration | null;
+  createdAt: string;
+}
+
+export type BaptismAge = "adult" | "student" | "child";
+
+export interface BaptismRegistration {
+  firstName: string;
+  lastName: string;
+  contact: string;
+  age: BaptismAge;
+  parentName?: string;
+  date: string; // ISO of the baptism Sunday (service start)
+  service: ServiceTime;
+  classDate: string; // ISO of the class they'll attend
+  story?: string;
+  okToShare: boolean;
+  guests: number;
   createdAt: string;
 }
 
@@ -100,6 +118,7 @@ export interface Offering {
   items?: SubItem[];
   itemsTitle?: string;
   matchKeys?: string[]; // follow-up answers that boost this
+  href?: string; // set when the offering has its own page (e.g. /baptism)
 }
 
 /* ---------- Admin ---------- */
@@ -131,7 +150,7 @@ export interface Task {
 
 export interface Activity {
   id: string;
-  kind: "visit" | "plan" | "onboarding" | "rsvp" | "contacted" | "assigned" | "note" | "task" | "stage" | "join" | "question";
+  kind: "visit" | "plan" | "baptism" | "onboarding" | "rsvp" | "contacted" | "assigned" | "note" | "task" | "stage" | "join" | "question";
   label: string;
   at: string;
 }
@@ -152,6 +171,7 @@ export interface Visitor {
   status: FollowStatus;
   rsvps: Rsvp[];
   visitPlan?: VisitPlan | null;
+  baptism?: BaptismRegistration | null;
   household?: string;
   notes: Note[];
   tasks: Task[];

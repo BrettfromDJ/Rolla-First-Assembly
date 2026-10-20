@@ -55,11 +55,11 @@ export function PathCard({
   );
 }
 
-export function Faq() {
+export function Faq({ items = faqs }: { items?: { q: string; a: string }[] }) {
   const [open, setOpen] = useState<number | null>(0);
   return (
     <ul className="divide-y divide-stone-200 border-y border-stone-200">
-      {faqs.map((f, i) => {
+      {items.map((f, i) => {
         const isOpen = open === i;
         return (
           <li key={f.q}>

@@ -16,6 +16,7 @@ export const siteNav = [
   { href: "/#mission", label: "Mission" },
   { href: "/visit", label: "New here" },
   { href: "/events", label: "Events" },
+  { href: "/baptism", label: "Baptism" },
   { href: churchLinks.sermons, label: "Sermons" },
   { href: churchLinks.give, label: "Giving" },
 ];
@@ -37,7 +38,7 @@ export function SiteHeader() {
           <Link href="/" aria-label="Rolla First home" className="text-[#dcd2c5]">
             <Logo className="h-[16px] w-auto fill-[#dcd2c5]" />
           </Link>
-          <nav aria-label="Main" className="hidden items-center gap-[32px] lg:flex">
+          <nav aria-label="Main" className="hidden items-center gap-[32px] min-[1360px]:flex">
             {siteNav.map((n) => {
               const active = n.href.startsWith("/") && n.href !== "/#mission" && path.startsWith(n.href);
               return (
@@ -47,7 +48,7 @@ export function SiteHeader() {
                   aria-current={active ? "page" : undefined}
                   className={cn(
                     mori,
-                    "relative text-[22px] leading-none tracking-[-0.05em] transition after:absolute after:-bottom-1.5 after:left-0 after:h-[2px] after:w-full after:origin-left after:bg-[#0285ff] after:transition-transform after:duration-500 hover:text-[#0285ff] hover:after:scale-x-100",
+                    "relative whitespace-nowrap text-[22px] leading-none tracking-[-0.05em] transition after:absolute after:-bottom-1.5 after:left-0 after:h-[2px] after:w-full after:origin-left after:bg-[#0285ff] after:transition-transform after:duration-500 hover:text-[#0285ff] hover:after:scale-x-100",
                     active ? "text-[#0285ff] after:scale-x-100" : "text-[#dcd2c5] after:scale-x-0",
                   )}
                 >
@@ -62,7 +63,7 @@ export function SiteHeader() {
           {hasProfile && (
             <Link
               href="/me"
-              className={cn(mori, "hidden h-[44px] items-center gap-2 rounded-[80px] border-2 border-[#dcd2c5]/40 pl-1.5 pr-5 text-[15px] leading-none tracking-[-0.03em] text-[#dcd2c5] transition hover:border-[#dcd2c5] sm:flex md:h-[57px] md:pl-2")}
+              className={cn(mori, "hidden h-[44px] shrink-0 items-center gap-2 whitespace-nowrap rounded-[80px] border-2 border-[#dcd2c5]/40 pl-1.5 pr-5 text-[15px] leading-none tracking-[-0.03em] text-[#dcd2c5] transition hover:border-[#dcd2c5] sm:flex md:h-[57px] md:pl-2")}
             >
               <span className="flex size-8 items-center justify-center rounded-full bg-[#0285ff] text-[13px] text-black md:size-10">{(name || "Y")[0].toUpperCase()}</span>
               {name ? `Hi, ${name}` : "My Rolla First"}
@@ -70,7 +71,7 @@ export function SiteHeader() {
           )}
           <Link
             href="/events"
-            className={cn(mori, "hidden h-[44px] items-center rounded-[80px] bg-[#0285ff] px-6 text-[14px] uppercase leading-none tracking-[-0.05em] text-black transition hover:brightness-110 sm:flex md:h-[57px] md:px-8 md:text-[16px]")}
+            className={cn(mori, "hidden h-[44px] shrink-0 items-center whitespace-nowrap rounded-[80px] bg-[#0285ff] px-6 text-[14px] uppercase leading-none tracking-[-0.05em] text-black transition hover:brightness-110 sm:flex md:h-[57px] md:px-8 md:text-[16px]")}
           >
             Upcoming events
           </Link>
@@ -78,7 +79,7 @@ export function SiteHeader() {
             onClick={() => setOpen((o) => !o)}
             aria-expanded={open}
             aria-label={open ? "Close menu" : "Open menu"}
-            className="flex size-11 items-center justify-center rounded-full border-2 border-[#dcd2c5]/40 text-[#dcd2c5] lg:hidden"
+            className="flex size-11 shrink-0 items-center justify-center rounded-full border-2 border-[#dcd2c5]/40 text-[#dcd2c5] min-[1360px]:hidden"
           >
             {open ? <X className="size-5" /> : <Menu className="size-5" />}
           </button>
@@ -93,7 +94,7 @@ export function SiteHeader() {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-            className="overflow-hidden lg:hidden"
+            className="overflow-hidden min-[1360px]:hidden"
           >
             <ul className="mt-6 border-t border-[#dcd2c5]/15">
               {[...siteNav, { href: "/me", label: "My Rolla First" }].map((n) => (

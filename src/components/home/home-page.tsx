@@ -60,6 +60,7 @@ export function HomePage() {
   }
 
   const name = profile.firstName || profile.visitPlan?.firstName;
+  const baptismNext = !!profile.baptism && new Date(profile.baptism.date).getTime() > Date.now() - 3 * 3600_000;
   const nextPlan = plans.find((p) => p.date && new Date(p.date) > new Date()) ?? plans[0];
   const personalized = profile.onboardingComplete || profile.interests.length > 0;
 
@@ -85,7 +86,18 @@ export function HomePage() {
         <section className="mx-auto max-w-7xl px-5 md:px-8" aria-labelledby="next-step">
           <h2 id="next-step" className="mb-4 text-sm font-medium text-stone-500">Your next step</h2>
           <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.8, ease }}>
-            {nextPlan ? (
+            {baptismNext ? (
+              <NextStepCard
+                href="/baptism"
+                image="/home/hero-main.jpg"
+                tone="forest"
+                eyebrow={`${relativeDay(profile.baptism!.date)} · ${profile.baptism!.service} AM`}
+                title={profile.baptism!.age === "child" ? `${profile.baptism!.firstName}'s baptism` : "Your baptism"}
+                body={`Baptism Class ${formatDay(profile.baptism!.classDate)} at noon in the Gym. Bring a change of clothes.`}
+                cta="View details"
+                badge="You're registered"
+              />
+            ) : nextPlan ? (
               <NextStepCard
                 href={`/events/${nextPlan.o.id}`}
                 image={nextPlan.o.image}
@@ -177,7 +189,7 @@ export function HomePage() {
             <h2 id="plans" className="text-sm font-medium text-stone-500">Your plans</h2>
             {plans.length > 0 && <span className="text-sm text-stone-400">{plans.length} saved</span>}
           </div>
-          {plans.length === 0 && !profile.visitPlan ? (
+          {plans.length === 0 && !profile.visitPlan && !profile.baptism ? (
             <div className="flex flex-col items-start gap-4 rounded-[28px] border border-dashed border-stone-300 p-8 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-center gap-4">
                 <span className="flex size-12 items-center justify-center rounded-2xl bg-white text-stone-400 ring-1 ring-stone-200"><CalendarDays className="size-5" /></span>
@@ -190,6 +202,15 @@ export function HomePage() {
             </div>
           ) : (
             <ul className="divide-y divide-stone-200/70 overflow-hidden rounded-[28px] bg-white ring-1 ring-stone-200/60">
+              {profile.baptism && (
+                <PlanRow
+                  href="/baptism"
+                  date={profile.baptism.date}
+                  title={profile.baptism.age === "child" ? `${profile.baptism.firstName}'s baptism` : "Baptism"}
+                  meta={`${profile.baptism.service} AM · Class ${formatShortDay(profile.baptism.classDate)} at noon`}
+                  status="Registered"
+                />
+              )}
               {profile.visitPlan && (
                 <PlanRow href="/visit" date={profile.visitPlan.date} title="Sunday service" meta={`${profile.visitPlan.service} AM · ${church.address}`} status="Planned" />
               )}

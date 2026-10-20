@@ -6,6 +6,7 @@ import { buildSeedVisitors } from "./seed";
 import { uid } from "./utils";
 import type {
   Activity,
+  BaptismRegistration,
   FollowStatus,
   FollowUps,
   Note,
@@ -42,6 +43,7 @@ const freshProfile = (): Profile => ({
   onboardingCompletedAt: null,
   skippedContact: false,
   visitPlan: null,
+  baptism: null,
   rsvps: [],
   createdAt: new Date().toISOString(),
 });
@@ -64,6 +66,8 @@ interface Store extends State {
   allVisitors: Visitor[];
   updateProfile: (p: Partial<Profile>) => void;
   savePlan: (plan: Omit<VisitPlan, "createdAt">) => void;
+  saveBaptism: (reg: Omit<BaptismRegistration, "createdAt">) => void;
+  cancelBaptism: () => void;
   addRsvp: (r: { offeringId: string; itemId?: string; message?: string }) => Rsvp;
   cancelRsvp: (id: string) => void;
   hasRsvp: (offeringId: string, itemId?: string) => Rsvp | undefined;
@@ -101,12 +105,17 @@ function rsvpLabel(r: Rsvp) {
 const kidsLabel = (n: number) => (n > 0 ? `${n} kid${n === 1 ? "" : "s"}` : "kids");
 
 function profileToVisitor(p: Profile, o: VisitorOverlay): Visitor | null {
-  const touched = p.firstName || p.interests.length || p.visitPlan || p.rsvps.length || p.onboardingComplete;
+  const touched = p.firstName || p.interests.length || p.visitPlan || p.rsvps.length || p.onboardingComplete || p.baptism;
   if (!touched) return null;
   const activity: Activity[] = [...o.activity];
   if (p.visitPlan) {
     const kids = p.visitPlan.bringingKids ? ` · bringing ${kidsLabel(p.visitPlan.kidsCount)}` : "";
     activity.push({ id: "you_plan", kind: "plan", label: `Planned a visit for the ${p.visitPlan.service} service${kids}`, at: p.visitPlan.createdAt });
+  }
+  if (p.baptism) {
+    const d = new Date(p.baptism.date).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+    const who = p.baptism.age === "child" ? ` for ${p.baptism.firstName}` : "";
+    activity.push({ id: "you_baptism", kind: "baptism", label: `Registered${who} for baptism on ${d} (${p.baptism.service} service)`, at: p.baptism.createdAt });
   }
   if (p.path === "visited") activity.push({ id: "you_visit", kind: "visit", label: "Visited a Sunday service", at: p.createdAt });
   if (p.onboardingCompletedAt) activity.push({ id: "you_onb", kind: "onboarding", label: "Completed onboarding", at: p.onboardingCompletedAt });
@@ -131,6 +140,7 @@ function profileToVisitor(p: Profile, o: VisitorOverlay): Visitor | null {
     status: o.status ?? "Needs follow-up",
     rsvps: p.rsvps,
     visitPlan: p.visitPlan,
+    baptism: p.baptism,
     household: p.visitPlan?.bringingKids ? `Bringing ${kidsLabel(p.visitPlan.kidsCount)}` : undefined,
     notes: o.notes,
     tasks: o.tasks,
@@ -201,6 +211,28 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         },
       };
     });
+  }, []);
+
+  const saveBaptism = useCallback((reg: Omit<BaptismRegistration, "createdAt">) => {
+    setState((s) => {
+      const isEmail = reg.contact.includes("@");
+      // A parent registering a child keeps their own name on the profile.
+      const selfName = reg.age === "child" ? reg.parentName?.split(" ")[0] ?? "" : reg.firstName;
+      return {
+        ...s,
+        profile: {
+          ...s.profile,
+          firstName: s.profile.firstName || selfName,
+          email: isEmail ? s.profile.email || reg.contact : s.profile.email,
+          phone: !isEmail ? s.profile.phone || reg.contact : s.profile.phone,
+          baptism: { ...reg, createdAt: new Date().toISOString() },
+        },
+      };
+    });
+  }, []);
+
+  const cancelBaptism = useCallback(() => {
+    setState((s) => ({ ...s, profile: { ...s.profile, baptism: null } }));
   }, []);
 
   const addRsvp = useCallback((r: { offeringId: string; itemId?: string; message?: string }) => {
@@ -306,6 +338,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     allVisitors,
     updateProfile,
     savePlan,
+    saveBaptism,
+    cancelBaptism,
     addRsvp,
     cancelRsvp,
     hasRsvp,

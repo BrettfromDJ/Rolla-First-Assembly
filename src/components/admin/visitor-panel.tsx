@@ -18,6 +18,7 @@ import {
   UserPlus,
   Users,
   ArrowRightLeft,
+  Droplets,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Sheet } from "@/components/ui/sheet";
@@ -43,6 +44,7 @@ import { ACTING_AS, fullName, rsvpInfo, stageStyle, stages } from "./helpers";
 const actIcon: Record<Activity["kind"], React.ComponentType<{ className?: string }>> = {
   visit: Footprints,
   plan: CalendarDays,
+  baptism: Droplets,
   onboarding: Sparkles,
   rsvp: CalendarCheck,
   join: Users,
@@ -195,13 +197,28 @@ function PanelBody({ v }: { v: Visitor }) {
         </Section>
 
         <Section title="Event registrations">
-          {v.visitPlan || v.rsvps.length ? (
+          {v.visitPlan || v.rsvps.length || v.baptism ? (
             <ul className="space-y-2">
               {v.visitPlan && (
                 <li className="flex items-center gap-3 rounded-2xl bg-sky-soft/50 px-4 py-3 text-sm">
                   <CalendarDays className="size-4 text-sky" />
                   <span className="flex-1 text-stone-800">Sunday service · {v.visitPlan.service} AM{v.visitPlan.bringingKids ? ` · ${v.visitPlan.kidsCount || ""} kid${v.visitPlan.kidsCount === 1 ? "" : "s"}` : ""}</span>
                   <span className="text-stone-500">{formatShortDay(v.visitPlan.date)}</span>
+                </li>
+              )}
+              {v.baptism && (
+                <li className="rounded-2xl bg-forest-50 px-4 py-3 text-sm ring-1 ring-forest-700/40">
+                  <div className="flex items-center gap-3">
+                    <Droplets className="size-4 text-forest-500" />
+                    <span className="flex-1 text-stone-800">
+                      Baptism{v.baptism.age === "child" ? ` · ${v.baptism.firstName} (child, parent ${v.baptism.parentName})` : v.baptism.age === "student" ? " · student" : ""}
+                    </span>
+                    <span className="text-stone-500">{formatShortDay(v.baptism.date)} · {v.baptism.service}</span>
+                  </div>
+                  <p className="mt-1.5 pl-7 text-xs text-stone-500">
+                    Class {formatShortDay(v.baptism.classDate)} · {v.baptism.guests ? `${v.baptism.guests} guest${v.baptism.guests === 1 ? "" : "s"}` : "No guests listed"} · {v.baptism.okToShare ? "OK to share story" : "Keep story private"}
+                  </p>
+                  {v.baptism.story && <p className="mt-2 rounded-xl bg-white p-3 text-stone-600 ring-1 ring-stone-200/70">&ldquo;{v.baptism.story}&rdquo;</p>}
                 </li>
               )}
               {v.rsvps.map((r) => {

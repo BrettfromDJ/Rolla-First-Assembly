@@ -54,7 +54,11 @@ export function WelcomeBackBar() {
 
   let line: string | null = null;
   let href = "/me";
-  if (next) {
+  const bap = profile.baptism && new Date(profile.baptism.date).getTime() > now - 3 * 3600_000 ? profile.baptism : null;
+  if (bap && (!next || +new Date(bap.date) <= +new Date(next.date!))) {
+    line = `${bap.age === "child" ? `${bap.firstName}'s baptism` : "Your baptism"}, ${relativeDay(bap.date)} at ${bap.service} AM`;
+    href = "/baptism";
+  } else if (next) {
     line = `${next.title}, ${relativeDay(next.date!)} at ${formatTime(next.date!)}`;
     href = `/events/${next.o.id}`;
   } else if (profile.visitPlan && new Date(profile.visitPlan.date).getTime() > now - 3 * 3600_000) {

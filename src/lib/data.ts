@@ -548,6 +548,30 @@ export function buildOfferings(): Offering[] {
       confirmBody: "Someone from our team will meet you at the coffee bar in the gym at 8:15 with an apron and a smile.",
       matchKeys: ["hospitality", "serving", "coffee", "behind"],
     },
+    {
+      id: "baptism",
+      title: "Baptism",
+      tag: "Monthly",
+      kind: "class",
+      area: "faith",
+      interests: ["faith", "home"],
+      image: "/home/hero-main.jpg",
+      summary: "Take the next step. A public way of saying, \"I'm following Jesus.\"",
+      description: ["Baptism Sundays happen once a month during both services, with a short class the Sunday before."],
+      schedule: "Second Sunday of every month",
+      date: baptismDates(1)[0]?.date.toISOString(),
+      durationMin: 70,
+      location: "Rolla First · Auditorium",
+      expect: ["A short class the Sunday before", "A pastor beside you the whole time", "Seats saved for your family"],
+      hostIds: ["lance"],
+      cta: "Learn more",
+      action: "Register",
+      actionKind: "signup",
+      confirmTitle: "You're registered!",
+      confirmBody: "Pastor Lance will reach out this week.",
+      matchKeys: ["deeper", "returning", "membership", "exploring"],
+      href: "/baptism",
+    },
   ];
 }
 
@@ -571,3 +595,39 @@ export const faqs = [
   { q: "I'm not sure what I believe. Is that okay?", a: "Absolutely. Lots of people here are asking questions. You're welcome exactly as you are." },
   { q: "Where do I park?", a: "Anywhere you like. We have lots north of the building across 17th St, south of the building, and across Oak St. Then head to the main entrance on Oak St." },
 ];
+
+/* ---------- Baptism ---------- */
+
+/**
+ * Baptism Sundays are the second Sunday of each month, during both services.
+ * The Baptism Class is the Sunday before, at noon in the Gym.
+ * Change the rule here and every date on the site follows.
+ */
+export const baptism = {
+  rule: "Second Sunday of every month",
+  classTime: "12:00 PM",
+  classMinutes: 45,
+  classLocation: "The Gym (downstairs)",
+  hostId: "lance",
+};
+
+function secondSunday(year: number, month: number) {
+  const d = new Date(year, month, 1);
+  d.setDate(1 + ((7 - d.getDay()) % 7) + 7);
+  return d;
+}
+
+/** Upcoming baptism Sundays, skipping any whose class has already passed. */
+export function baptismDates(count = 3, from = new Date()) {
+  const out: { date: Date; classDate: Date }[] = [];
+  for (let m = 0; out.length < count && m < 24; m++) {
+    const sunday = secondSunday(from.getFullYear(), from.getMonth() + m);
+    const classDate = new Date(sunday);
+    classDate.setDate(classDate.getDate() - 7);
+    classDate.setHours(12, 0, 0, 0);
+    if (classDate.getTime() < from.getTime()) continue;
+    sunday.setHours(9, 0, 0, 0);
+    out.push({ date: sunday, classDate });
+  }
+  return out;
+}

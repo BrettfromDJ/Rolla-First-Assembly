@@ -56,6 +56,7 @@ export function SiteFooter() {
             <a href={`tel:${church.phone.replace(/\D/g, "")}`} className={cn(mori, "block hover:text-[#0285ff]")}>{church.phone}</a>
             <a href={`mailto:${church.email}`} className={cn(mori, "block hover:text-[#0285ff]")}>{church.email}</a>
             <Link href="/visit" className={cn(mori, "block text-[#0285ff] hover:underline")}>Plan your first visit</Link>
+            <Link href="/baptism" className={cn(mori, "block text-[#0285ff] hover:underline")}>Get baptized</Link>
           </div>
         </div>
       </div>

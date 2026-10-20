@@ -23,7 +23,7 @@ function useJoined(o: Offering) {
 export function FeatureCard({ o, reason }: { o: Offering; reason?: string }) {
   const joined = useJoined(o);
   return (
-    <Link href={`/events/${o.id}`} className="group grid overflow-hidden rounded-[32px] bg-white shadow-soft ring-1 ring-stone-200/60 transition duration-300 hover:shadow-lift md:grid-cols-[1.15fr_1fr]">
+    <Link href={o.href ?? `/events/${o.id}`} className="group grid overflow-hidden rounded-[32px] bg-white shadow-soft ring-1 ring-stone-200/60 transition duration-300 hover:shadow-lift md:grid-cols-[1.15fr_1fr]">
       <Photo src={o.image} alt="" tone={toneFor(o)} className="aspect-[4/3] md:aspect-auto md:min-h-[380px]" imgClassName="group-hover:scale-[1.03]">
         <span className="absolute left-4 top-4 rounded-full bg-white/95 px-3 py-1 text-xs font-medium text-stone-800 backdrop-blur">{o.tag}</span>
       </Photo>
@@ -50,7 +50,7 @@ export function FeatureCard({ o, reason }: { o: Offering; reason?: string }) {
 export function OfferingCard({ o, reason, className }: { o: Offering; reason?: string; className?: string }) {
   const joined = useJoined(o);
   return (
-    <Link href={`/events/${o.id}`} className={cn("group flex flex-col overflow-hidden rounded-[28px] bg-white shadow-soft ring-1 ring-stone-200/60 transition duration-300 hover:shadow-lift", className)}>
+    <Link href={o.href ?? `/events/${o.id}`} className={cn("group flex flex-col overflow-hidden rounded-[28px] bg-white shadow-soft ring-1 ring-stone-200/60 transition duration-300 hover:shadow-lift", className)}>
       <Photo src={o.image} alt="" tone={toneFor(o)} className="aspect-[16/10]" imgClassName="group-hover:scale-[1.03]">
         <span className="absolute left-4 top-4 rounded-full bg-white/95 px-3 py-1 text-xs font-medium text-stone-800 backdrop-blur">{o.tag}</span>
       </Photo>
@@ -75,7 +75,7 @@ export function OfferingCard({ o, reason, className }: { o: Offering; reason?: s
 export function OfferingRow({ o }: { o: Offering }) {
   const joined = useJoined(o);
   return (
-    <Link href={`/events/${o.id}`} className="group flex min-w-0 items-center gap-4 rounded-3xl p-2 pr-4 transition hover:bg-white">
+    <Link href={o.href ?? `/events/${o.id}`} className="group flex min-w-0 items-center gap-4 rounded-3xl p-2 pr-4 transition hover:bg-white">
       <Photo src={o.image} alt="" tone={toneFor(o)} className="size-20 shrink-0 rounded-2xl" />
       <div className="min-w-0 flex-1">
         <p className="text-xs text-stone-500">{o.tag}</p>
