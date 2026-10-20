@@ -40,7 +40,7 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
     <header
       className={cn(
         "fixed inset-x-0 top-0 z-40 transition-[background-color,box-shadow,backdrop-filter] duration-300",
-        light ? "bg-transparent" : "bg-paper/85 shadow-[0_1px_0_rgb(0_0_0/0.05)] backdrop-blur-xl",
+        light ? "bg-transparent" : "bg-ink/80 shadow-[0_1px_0_rgb(255_255_255/0.06)] backdrop-blur-xl",
       )}
     >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 md:h-18 md:px-8">
@@ -76,7 +76,7 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
         <div className="flex items-center gap-2">
           {onboarded ? (
             <Link href="/home" className="hidden items-center gap-2 rounded-full py-1 pl-1 pr-4 text-sm font-medium ring-1 ring-stone-900/10 transition hover:ring-stone-900/20 md:flex">
-              <Avatar name={profile.firstName || "You"} className="size-8 bg-forest-700 text-paper" />
+              <Avatar name={profile.firstName || "You"} className="size-8 bg-forest-700 text-ink" />
               <span className={light ? "text-paper" : "text-stone-800"}>{profile.firstName || "My Gather"}</span>
             </Link>
           ) : (
@@ -105,7 +105,7 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-            className="overflow-hidden bg-paper md:hidden"
+            className="overflow-hidden bg-ink md:hidden"
           >
             <div className="space-y-1 px-5 pb-6 pt-2">
               {[...nav, { href: "/connect", label: "Get connected" }].map((n) => (

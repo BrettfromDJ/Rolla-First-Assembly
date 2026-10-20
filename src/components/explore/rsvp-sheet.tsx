@@ -79,7 +79,7 @@ export function RsvpSheet({
               initial={{ scale: 0.5, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ type: "spring", damping: 12, stiffness: 220, delay: 0.05 }}
-              className="mx-auto flex size-16 items-center justify-center rounded-full bg-forest-700 text-paper"
+              className="mx-auto flex size-16 items-center justify-center rounded-full bg-forest-700 text-ink"
             >
               <Check className="size-7" strokeWidth={2.5} />
             </motion.div>
@@ -157,7 +157,7 @@ export function RsvpSheet({
             ) : (
               <div className="flex items-center justify-between gap-4 rounded-2xl bg-white p-4 ring-1 ring-stone-200">
                 <div className="flex items-center gap-3">
-                  <Avatar name={profile.firstName} className="bg-forest-700 text-paper" />
+                  <Avatar name={profile.firstName} className="bg-forest-700 text-ink" />
                   <div className="text-sm">
                     <p className="font-medium text-stone-900">{offering.actionKind === "join" ? "Requesting" : "Saving a spot"} for {profile.firstName}</p>
                     <p className="text-stone-500">{profile.email || profile.phone}</p>

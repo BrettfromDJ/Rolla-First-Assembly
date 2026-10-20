@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   icons: { icon: "/icon.svg" },
 };
 
-export const viewport: Viewport = { themeColor: "#f7f4ee", width: "device-width", initialScale: 1 };
+export const viewport: Viewport = { themeColor: "#0e0e0e", width: "device-width", initialScale: 1 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -21,6 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-dvh font-sans">
         <StoreProvider>
           {children}
+          <div className="grain-wrap" aria-hidden><div className="grain" /></div>
           <PrototypeSwitcher />
           <Toaster />
         </StoreProvider>

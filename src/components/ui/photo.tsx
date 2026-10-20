@@ -4,11 +4,11 @@ import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 const tones = {
-  forest: "from-forest-700 via-forest-600 to-forest-800",
-  sage: "from-sage via-forest-300 to-forest-500",
-  honey: "from-honey-soft via-honey to-clay",
-  clay: "from-clay-soft via-clay to-forest-800",
-  sand: "from-paper-2 via-sand to-stone-300",
+  forest: "from-forest-700 via-forest-200 to-forest-950",
+  sage: "from-forest-200 via-forest-100 to-forest-950",
+  honey: "from-forest-600 via-forest-900 to-black",
+  clay: "from-stone-300 via-forest-100 to-black",
+  sand: "from-stone-200 via-stone-100 to-ink",
 } as const;
 
 export type Tone = keyof typeof tones;

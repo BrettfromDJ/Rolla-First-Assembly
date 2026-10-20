@@ -5,10 +5,10 @@ import { cn } from "@/lib/utils";
 const icons = { people: Users, home: House, faith: Compass, family: Sprout, serve: HandHeart };
 
 export const interestTone: Record<InterestId, string> = {
-  people: "bg-honey-soft text-[#8a6416]",
+  people: "bg-honey-soft text-honey",
   home: "bg-forest-100 text-forest-700",
-  faith: "bg-sky-soft text-[#2f5361]",
-  family: "bg-clay-soft text-[#8a432a]",
+  faith: "bg-sky-soft text-sky",
+  family: "bg-clay-soft text-clay",
   serve: "bg-sage-soft text-forest-600",
 };
 

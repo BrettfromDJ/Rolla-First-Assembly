@@ -2,49 +2,57 @@
 
 @theme {
   --font-sans: "Inter Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-display: "Instrument Serif", ui-serif, Georgia, "Times New Roman", serif;
+  --font-serif: "Instrument Serif", ui-serif, Georgia, "Times New Roman", serif;
 
-  /* Forest — the core brand color */
-  --color-forest-50: #eef3ef;
-  --color-forest-100: #d6e3da;
-  --color-forest-200: #afc8b6;
-  --color-forest-300: #7fa78b;
-  --color-forest-400: #4f8162;
-  --color-forest-500: #336548;
-  --color-forest-600: #255039;
-  --color-forest-700: #1e412f;
-  --color-forest-800: #183425;
-  --color-forest-900: #11261b;
-  --color-forest-950: #0a1811;
+  /* "forest" is now the brand blue: 400–700 are the electric accent, 800–950 near-black panels, 50–200 deep navy tints */
+  --color-forest-50: #0c1626;
+  --color-forest-100: #0f1f38;
+  --color-forest-200: #173361;
+  --color-forest-300: #8cc4ff;
+  --color-forest-400: #4aa3ff;
+  --color-forest-500: #2b93ff;
+  --color-forest-600: #1688ff;
+  --color-forest-700: #0a7cff;
+  --color-forest-800: #151515;
+  --color-forest-900: #101010;
+  --color-forest-950: #070707;
 
-  /* Warm off-white paper */
-  --color-paper: #f7f4ee;
-  --color-paper-2: #f0ebe2;
-  --color-sand: #e6dfd2;
+  /* Ink: the page itself */
+  --color-ink: #0e0e0e;
+  --color-ink-2: #141414;
 
-  /* Soft neutral gray (warm) */
-  --color-stone-50: #fafaf8;
-  --color-stone-100: #f2f1ed;
-  --color-stone-200: #e4e2dc;
-  --color-stone-300: #cdcac2;
-  --color-stone-400: #a9a59b;
-  --color-stone-500: #85817a;
-  --color-stone-600: #67645e;
-  --color-stone-700: #4c4a45;
-  --color-stone-800: #33322e;
-  --color-stone-900: #1f1e1b;
+  /* Cream: primary type on dark (kept under the old "paper" name) */
+  --color-paper: #ebe4d8;
+  --color-paper-2: #1b1b1b;
+  --color-sand: #1d1d1d;
 
-  /* Accents */
-  --color-clay: #c4704b;
-  --color-clay-soft: #f3dfd3;
-  --color-honey: #e3b75a;
-  --color-honey-soft: #f7ecd2;
-  --color-sage: #a8bba4;
-  --color-sage-soft: #e3eadf;
-  --color-sky-soft: #dfe7ea;
+  /* Neutral scale, inverted for a dark UI: 50 = darkest surface, 900 = cream */
+  --color-stone-50: #121212;
+  --color-stone-100: #1c1c1c;
+  --color-stone-200: #2a2a2a;
+  --color-stone-300: #3b3b3a;
+  --color-stone-400: #77736c;
+  --color-stone-500: #9a958c;
+  --color-stone-600: #b3ada3;
+  --color-stone-700: #c9c3b8;
+  --color-stone-800: #dcd5c9;
+  --color-stone-900: #ebe4d8;
 
-  --shadow-soft: 0 1px 2px rgb(20 30 24 / 0.04), 0 8px 24px -12px rgb(20 30 24 / 0.12);
-  --shadow-lift: 0 2px 4px rgb(20 30 24 / 0.04), 0 24px 48px -20px rgb(20 30 24 / 0.22);
+  --color-white: #171717;
+  --color-black: #000000;
+
+  /* Accents, tuned for dark */
+  --color-clay: #ff8a5c;
+  --color-clay-soft: #2a1912;
+  --color-honey: #f2c75c;
+  --color-honey-soft: #262013;
+  --color-sage: #7fd1a8;
+  --color-sage-soft: #13231b;
+  --color-sky: #8fc3e6;
+  --color-sky-soft: #112029;
+
+  --shadow-soft: 0 1px 0 rgb(255 255 255 / 0.03) inset, 0 12px 30px -16px rgb(0 0 0 / 0.8);
+  --shadow-lift: 0 1px 0 rgb(255 255 255 / 0.05) inset, 0 30px 60px -24px rgb(0 0 0 / 0.9);
 
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
 
@@ -61,14 +69,18 @@
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
   }
+  html {
+    color-scheme: dark;
+    background: var(--color-ink);
+  }
   body {
-    background: var(--color-paper);
+    background: var(--color-ink);
     color: var(--color-stone-900);
     font-feature-settings: "ss01", "cv11";
   }
   ::selection {
-    background: var(--color-forest-200);
-    color: var(--color-forest-900);
+    background: var(--color-forest-700);
+    color: var(--color-ink);
   }
   :focus-visible {
     outline: 2px solid var(--color-forest-500);
@@ -81,10 +93,26 @@
   }
 }
 
+/* Headlines: heavy, tight grotesk. Italic words switch to an expressive serif. */
 @utility font-display {
-  font-family: var(--font-display);
-  font-weight: 400;
-  letter-spacing: -0.01em;
+  font-family: var(--font-sans);
+  font-weight: 650;
+  letter-spacing: -0.045em;
+  & em,
+  & i,
+  & .italic {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-style: italic;
+    letter-spacing: -0.02em;
+  }
+}
+
+@utility eyebrow {
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
 }
 
 @utility text-balance {
@@ -104,5 +132,51 @@
   *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* ---------- Animated film grain over everything ---------- */
+.grain-wrap {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  overflow: hidden;
+}
+.grain {
+  position: absolute;
+  inset: -50%;
+  opacity: 0.09;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1.4 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain 0.9s steps(6) infinite;
+}
+
+@keyframes grain {
+  0% { transform: translate(0, 0); }
+  17% { transform: translate(-5%, -8%); }
+  33% { transform: translate(-12%, 4%); }
+  50% { transform: translate(7%, -11%); }
+  67% { transform: translate(-3%, 12%); }
+  83% { transform: translate(10%, 5%); }
+  100% { transform: translate(0, 0); }
+}
+
+/* Slow scrolling headline marquee */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.marquee {
+  animation: marquee 38s linear infinite;
+}
+.marquee-reverse {
+  animation: marquee 44s linear infinite reverse;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grain,
+  .marquee,
+  .marquee-reverse {
+    animation: none;
   }
 }

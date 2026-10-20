@@ -21,7 +21,7 @@ export function SiteFooter() {
           <p className="text-xs font-medium uppercase tracking-[0.14em] text-paper/40">Find us</p>
           <p>{church.address}</p>
           <p className="text-paper/60">{church.city}</p>
-          <a href={church.mapsUrl} target="_blank" rel="noreferrer" className="inline-block text-honey underline-offset-4 hover:underline">
+          <a href={church.mapsUrl} target="_blank" rel="noreferrer" className="inline-block text-forest-500 underline-offset-4 hover:underline">
             Get directions
           </a>
         </div>

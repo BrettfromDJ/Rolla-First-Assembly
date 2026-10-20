@@ -90,11 +90,11 @@ function PanelBody({ v }: { v: Visitor }) {
       {/* Header */}
       <div className="border-b border-stone-100 px-6 pb-5 pt-6">
         <div className="flex items-start gap-4 pr-10">
-          <Avatar name={fullName(v)} src={v.photo} className={cn("size-14 text-base", v.isYou && "bg-forest-700 text-paper")} />
+          <Avatar name={fullName(v)} src={v.photo} className={cn("size-14 text-base", v.isYou && "bg-forest-700 text-ink")} />
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
               <h2 className="truncate text-xl font-semibold text-stone-900">{fullName(v)}</h2>
-              {v.isYou && <span className="rounded-full bg-honey-soft px-2 py-0.5 text-[11px] font-semibold text-[#7a5a17]">You · live demo</span>}
+              {v.isYou && <span className="rounded-full bg-honey-soft px-2 py-0.5 text-[11px] font-semibold text-honey">You · live demo</span>}
             </div>
             <p className="mt-0.5 text-sm text-stone-500">
               {v.source} · First visit {formatDate(v.firstVisit)}
@@ -199,7 +199,7 @@ function PanelBody({ v }: { v: Visitor }) {
             <ul className="space-y-2">
               {v.visitPlan && (
                 <li className="flex items-center gap-3 rounded-2xl bg-sky-soft/50 px-4 py-3 text-sm">
-                  <CalendarDays className="size-4 text-[#2f5361]" />
+                  <CalendarDays className="size-4 text-sky" />
                   <span className="flex-1 text-stone-800">Sunday service · {v.visitPlan.service} AM{v.visitPlan.bringingKids ? ` · ${v.visitPlan.kidsCount || ""} kid${v.visitPlan.kidsCount === 1 ? "" : "s"}` : ""}</span>
                   <span className="text-stone-500">{formatShortDay(v.visitPlan.date)}</span>
                 </li>
@@ -229,7 +229,7 @@ function PanelBody({ v }: { v: Visitor }) {
         <Section
           title="Follow-up tasks"
           action={
-            <button onClick={() => setShowTask((s) => !s)} className="inline-flex items-center gap-1 text-xs font-medium text-forest-600 hover:text-forest-800">
+            <button onClick={() => setShowTask((s) => !s)} className="inline-flex items-center gap-1 text-xs font-medium text-forest-600 hover:text-forest-300">
               <Plus className="size-3.5" /> New task
             </button>
           }
@@ -279,7 +279,7 @@ function PanelBody({ v }: { v: Visitor }) {
                       aria-pressed={t.done}
                     >
                       <span className={cn("flex size-5 shrink-0 items-center justify-center rounded-full ring-1 transition", t.done ? "bg-forest-600 ring-forest-600" : "ring-stone-300")}>
-                        {t.done && <Check className="size-3 text-paper" strokeWidth={3} />}
+                        {t.done && <Check className="size-3 text-ink" strokeWidth={3} />}
                       </span>
                       <span className={cn("flex-1", t.done ? "text-stone-400 line-through" : "text-stone-800")}>{t.title}</span>
                       <span className={cn("text-xs", overdue ? "font-medium text-clay" : "text-stone-400")}>

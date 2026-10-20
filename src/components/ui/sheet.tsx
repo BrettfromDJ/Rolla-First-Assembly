@@ -35,7 +35,7 @@ export function Sheet({
           <D.Portal forceMount>
             <D.Overlay asChild forceMount>
               <motion.div
-                className="fixed inset-0 z-50 bg-forest-950/40 backdrop-blur-[2px]"
+                className="fixed inset-0 z-50 bg-black/70 backdrop-blur-[2px]"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
@@ -46,7 +46,7 @@ export function Sheet({
               {side === "right" ? (
                 <motion.div
                   className={cn(
-                    "fixed inset-y-0 right-0 z-50 flex w-full max-w-[560px] flex-col bg-white shadow-2xl focus:outline-none",
+                    "fixed inset-y-0 right-0 z-50 flex w-full max-w-[560px] flex-col bg-ink-2 shadow-2xl ring-1 ring-stone-200 focus:outline-none",
                     className,
                   )}
                   initial={{ x: "100%" }}
@@ -60,7 +60,7 @@ export function Sheet({
               ) : (
                 <motion.div
                   className={cn(
-                    "fixed inset-x-0 bottom-0 z-50 max-h-[92dvh] overflow-y-auto rounded-t-[28px] bg-paper shadow-2xl focus:outline-none",
+                    "fixed inset-x-0 bottom-0 z-50 max-h-[92dvh] overflow-y-auto rounded-t-[28px] bg-ink-2 shadow-2xl ring-1 ring-stone-200 focus:outline-none",
                     "sm:inset-auto sm:left-1/2 sm:top-1/2 sm:w-[min(560px,calc(100vw-48px))] sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-[28px]",
                     className,
                   )}
@@ -94,7 +94,7 @@ function Header({ title, description, hideTitle, floating }: { title: string; de
       <D.Close
         className={cn(
           "absolute right-4 top-4 z-10 flex size-9 items-center justify-center rounded-full text-stone-600 transition hover:bg-stone-900/5",
-          floating && "bg-white/80 shadow-sm backdrop-blur",
+          floating && "bg-stone-100 ring-1 ring-stone-200",
         )}
         aria-label="Close"
       >

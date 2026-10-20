@@ -88,7 +88,7 @@ export function ConnectFlow() {
   const pane = panel[step] ?? panel.interests;
 
   return (
-    <div className={cn("min-h-dvh", isResults ? "bg-paper" : "bg-paper lg:grid lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]")}>
+    <div className={cn("min-h-dvh", isResults ? "bg-ink" : "bg-ink lg:grid lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]")}>
       {/* Immersive photo panel */}
       {!isResults && (
         <aside className="sticky top-0 hidden h-dvh p-3 lg:block">
@@ -114,7 +114,7 @@ export function ConnectFlow() {
 
       <div className="relative flex min-h-dvh flex-col">
         {/* Top bar */}
-        <header className={cn("sticky top-0 z-30 bg-paper/90 backdrop-blur-xl", isResults && "border-b border-stone-200/60")}>
+        <header className={cn("sticky top-0 z-30 bg-ink/85 backdrop-blur-xl", isResults && "border-b border-stone-200/60")}>
           <div className={cn("mx-auto flex h-16 items-center gap-4 px-5 md:px-8", isResults ? "max-w-7xl" : "max-w-2xl")}>
             {isResults ? (
               <Link href="/new" aria-label="Gather home"><Logo /></Link>
@@ -196,7 +196,7 @@ function StepShell({ eyebrow, title, body, children, footer }: { eyebrow?: strin
         {body && <p className="mt-4 max-w-lg text-[17px] leading-relaxed text-stone-500">{body}</p>}
         <div className="mt-9">{children}</div>
       </div>
-      <div className="sticky bottom-0 z-20 border-t border-stone-200/60 bg-paper/90 backdrop-blur-xl">
+      <div className="sticky bottom-0 z-20 border-t border-stone-200/60 bg-ink/85 backdrop-blur-xl">
         <div className="mx-auto flex max-w-2xl items-center justify-between gap-4 px-5 py-4 md:px-8">{footer}</div>
       </div>
     </>

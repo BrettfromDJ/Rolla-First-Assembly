@@ -34,42 +34,62 @@ export function Landing() {
       <SiteHeader overlay />
       <main>
         {/* ---------- Hero ---------- */}
-        <section className="relative flex min-h-[100svh] flex-col bg-forest-900 text-paper">
-          <Photo src={img.heroFriends} alt="Friends laughing together outdoors" className="absolute inset-0" tone="forest" priority imgClassName="scale-[1.02]" />
-          <div aria-hidden className="absolute inset-0 bg-[linear-gradient(180deg,rgb(10_24_17/0.55)_0%,rgb(10_24_17/0.15)_35%,rgb(10_24_17/0.55)_65%,rgb(10_24_17/0.92)_100%)]" />
+        <section className="relative overflow-hidden pt-24 md:pt-28">
+          <h1 className="sr-only">New here? You&apos;re in the right place.</h1>
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease }}
+            className="eyebrow relative z-10 mx-auto flex w-fit items-center gap-2 text-stone-500"
+          >
+            <span className="size-1.5 rounded-full bg-forest-600" /> Sundays at 9 &amp; 11 · Rolla, MO
+          </motion.p>
 
-          <div className="relative mx-auto flex w-full max-w-7xl flex-1 flex-col justify-end px-5 pb-8 pt-28 md:px-8 md:pb-12">
-            <motion.p
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease }}
-              className="mb-6 inline-flex w-fit items-center gap-2 rounded-full bg-paper/10 px-3 py-1.5 text-[13px] text-paper/90 ring-1 ring-paper/15 backdrop-blur-md"
+          {/* Oval photo with giant headlines drifting across it */}
+          <div className="relative mt-6 flex h-[min(78svh,760px)] min-h-[440px] items-center justify-center">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.92 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1.2, ease }}
+              className="absolute h-full w-[min(78vw,560px)]"
             >
-              <span className="size-1.5 rounded-full bg-honey" /> Sundays at 9 &amp; 11 · Rolla, MO
-            </motion.p>
-            <motion.h1
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, ease, delay: 0.05 }}
-              className="max-w-5xl font-display text-[clamp(3.25rem,9vw,8.5rem)] leading-[0.92] tracking-[-0.025em] text-balance"
-            >
-              New here? <span className="italic text-paper/75">You&apos;re in the right place.</span>
-            </motion.h1>
+              <Photo
+                src={img.heroFriends}
+                alt="Friends laughing together"
+                tone="forest"
+                priority
+                className="h-full w-full rounded-[50%]"
+                imgClassName="grayscale contrast-[1.15] brightness-90"
+              >
+                <div aria-hidden className="absolute inset-0 bg-forest-700/25 mix-blend-color" />
+                <div aria-hidden className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-ink/50" />
+              </Photo>
+            </motion.div>
+
+            <div aria-hidden className="pointer-events-none relative z-10 w-full select-none space-y-1 md:space-y-3">
+              <motion.div initial={{ opacity: 0, x: 60 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 1.2, ease, delay: 0.15 }} className="-rotate-[3deg]">
+                <Marquee className="text-paper">
+                  New here? <em>You&apos;re</em> in the right place.
+                </Marquee>
+              </motion.div>
+              <motion.div initial={{ opacity: 0, x: -60 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 1.2, ease, delay: 0.3 }} className="-rotate-[3deg]">
+                <Marquee className="text-forest-600" reverse>
+                  There&apos;s a place <em>for you</em> here.
+                </Marquee>
+              </motion.div>
+            </div>
+          </div>
+
+          <div className="mx-auto grid max-w-7xl gap-4 px-5 pb-16 pt-12 md:grid-cols-12 md:px-8 md:pb-24 md:pt-16">
             <motion.p
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.9, ease, delay: 0.2 }}
-              className="mt-6 max-w-xl text-lg leading-relaxed text-paper/80 md:text-xl"
+              transition={{ duration: 0.9, ease, delay: 0.4 }}
+              className="text-xl leading-snug text-stone-700 md:col-span-4 md:pr-6 md:text-2xl"
             >
-              Whether you&apos;re exploring faith, looking for community, or just checking things out, we&apos;re glad you&apos;re here.
+              Whether you&apos;re exploring faith, looking for community, or just checking things out, <span className="font-serif italic text-paper">we&apos;re glad you&apos;re here.</span>
             </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.9, ease, delay: 0.35 }}
-              className="mt-10 grid gap-3 md:mt-14 md:grid-cols-2 md:gap-4"
-            >
+            <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, ease, delay: 0.5 }} className="md:col-span-4">
               <PathCard
                 onClick={() => choose("planning")}
                 eyebrow="Path one"
@@ -78,6 +98,8 @@ export function Landing() {
                 icon={<CalendarHeart className="size-5" />}
                 variant="light"
               />
+            </motion.div>
+            <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, ease, delay: 0.6 }} className="md:col-span-4">
               <PathCard
                 onClick={() => choose("visited")}
                 eyebrow="Path two"
@@ -113,7 +135,7 @@ export function Landing() {
         </section>
 
         {/* ---------- A glimpse of Sunday ---------- */}
-        <section className="bg-paper-2/60">
+        <section className="bg-ink-2">
           <div className="mx-auto max-w-7xl px-5 py-24 md:px-8 md:py-32">
             <Reveal>
               <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
@@ -150,7 +172,7 @@ export function Landing() {
                       ["10:10", "Linger, meet someone new"],
                     ].map(([t, l]) => (
                       <li key={t} className="flex items-baseline gap-5 border-b border-paper/10 pb-4 last:border-0 last:pb-0">
-                        <span className="w-12 font-mono text-sm tabular-nums text-honey">{t}</span>
+                        <span className="w-12 font-mono text-sm tabular-nums text-forest-500">{t}</span>
                         <span className="text-[17px]">{l}</span>
                       </li>
                     ))}
@@ -220,12 +242,12 @@ export function Landing() {
         {/* ---------- Contact ---------- */}
         <section className="px-5 pb-24 md:px-8 md:pb-32">
           <Reveal>
-            <div className="mx-auto flex max-w-7xl flex-col gap-10 overflow-hidden rounded-[36px] bg-honey-soft p-8 md:flex-row md:items-center md:justify-between md:p-16">
+            <div className="mx-auto flex max-w-7xl flex-col gap-10 overflow-hidden rounded-[36px] p-8 ring-2 ring-paper/85 md:flex-row md:items-center md:justify-between md:p-16">
               <div className="flex items-start gap-5">
-                <Avatar name={staffById.jamie.name} src={staffById.jamie.photo} className="size-16 ring-4 ring-white md:size-20" />
+                <Avatar name={staffById.jamie.name} src={staffById.jamie.photo} className="size-16 ring-4 ring-forest-700 md:size-20" />
                 <div>
                   <h2 className="font-display text-4xl leading-tight text-stone-900 md:text-5xl">Still wondering about something?</h2>
-                  <p className="mt-3 max-w-md text-[17px] text-stone-700">Jamie leads our welcome team and would love to help. Send a note. A real person will reply.</p>
+                  <p className="mt-3 max-w-md text-[17px] text-stone-600">Jamie leads our welcome team and would love to help. Send a note. A real person will reply.</p>
                 </div>
               </div>
               <div className="flex shrink-0 flex-col gap-3 sm:flex-row">
@@ -246,6 +268,25 @@ export function Landing() {
   );
 }
 
+function Marquee({ children, className, reverse }: { children: React.ReactNode; className?: string; reverse?: boolean }) {
+  const line = (
+    <span className="flex shrink-0 items-center gap-[0.4em] pr-[0.4em]">
+      {children}
+      <span className="inline-block size-[0.18em] rounded-full bg-current opacity-60" />
+    </span>
+  );
+  return (
+    <div className="overflow-hidden">
+      <div className={cn("flex w-max whitespace-nowrap font-display text-[clamp(3.5rem,11vw,10.5rem)] leading-[1.02]", reverse ? "marquee-reverse" : "marquee", className)}>
+        {line}
+        {line}
+        {line}
+        {line}
+      </div>
+    </div>
+  );
+}
+
 function PathCard({
   onClick,
   eyebrow,
@@ -261,38 +302,33 @@ function PathCard({
   icon: React.ReactNode;
   variant: "light" | "glass";
 }) {
+  const blue = variant === "light";
   return (
     <button
       onClick={onClick}
       className={cn(
-        "group relative flex items-center justify-between gap-6 overflow-hidden rounded-[28px] p-6 text-left transition duration-300 md:p-8",
-        variant === "light"
-          ? "bg-paper text-stone-900 hover:bg-white"
-          : "bg-paper/10 text-paper ring-1 ring-paper/20 backdrop-blur-xl hover:bg-paper/15",
+        "group relative flex h-full min-h-64 w-full flex-col justify-between gap-10 overflow-hidden p-7 text-left transition duration-300 md:min-h-80 md:p-8",
+        blue
+          ? "rounded-[44px] bg-forest-700 text-ink hover:bg-forest-500 md:rounded-[999px] md:items-center md:px-10 md:py-12 md:text-center"
+          : "rounded-[28px] text-paper ring-2 ring-paper/85 hover:bg-paper/[0.04]",
       )}
     >
-      <div className="flex items-start gap-5">
+      <span className={cn("flex items-center gap-2", blue && "md:flex-col")}>
+        <span className={cn("flex size-10 items-center justify-center rounded-full", blue ? "bg-ink/10" : "bg-paper/10 text-forest-500")}>{icon}</span>
+        <span className={cn("eyebrow", blue ? "text-ink/60" : "text-stone-500")}>{eyebrow}</span>
+      </span>
+      <span className={cn("block", blue && "md:flex md:flex-col md:items-center")}>
+        <span className={cn("block font-display text-[34px] leading-[0.98] md:text-[40px]", !blue && "pr-16")}>{title}</span>
+        <span className={cn("mt-3 block text-[15px]", blue ? "text-ink/70" : "text-stone-500")}>{body}</span>
         <span
           className={cn(
-            "mt-1 flex size-11 shrink-0 items-center justify-center rounded-2xl",
-            variant === "light" ? "bg-forest-700 text-paper" : "bg-paper/15 text-honey",
+            "mt-7 flex size-14 items-center justify-center rounded-full transition duration-300 group-hover:rotate-45",
+            blue ? "bg-paper text-ink" : "bg-forest-700 text-ink",
+            !blue && "absolute bottom-7 right-7 mt-0 md:bottom-8 md:right-8",
           )}
         >
-          {icon}
+          <ArrowUpRight className="size-6" strokeWidth={1.5} />
         </span>
-        <div>
-          <span className={cn("text-xs uppercase tracking-[0.14em]", variant === "light" ? "text-stone-400" : "text-paper/50")}>{eyebrow}</span>
-          <h2 className="mt-1 font-display text-[28px] leading-[1.05] md:text-[34px]">{title}</h2>
-          <p className={cn("mt-2 text-[15px]", variant === "light" ? "text-stone-600" : "text-paper/70")}>{body}</p>
-        </div>
-      </div>
-      <span
-        className={cn(
-          "flex size-12 shrink-0 items-center justify-center rounded-full transition duration-300 group-hover:translate-x-1",
-          variant === "light" ? "bg-stone-900/5 group-hover:bg-forest-700 group-hover:text-paper" : "bg-paper/10 group-hover:bg-paper group-hover:text-forest-900",
-        )}
-      >
-        <ArrowUpRight className="size-5 transition group-hover:rotate-45" />
       </span>
     </button>
   );

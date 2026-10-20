@@ -116,7 +116,7 @@ export function PlanVisitSheet({ open, onOpenChange }: { open: boolean; onOpenCh
                   {sundays.map((s, i) => {
                     const on = new Date(date).toDateString() === s.toDateString();
                     return (
-                      <button key={s.toISOString()} onClick={() => setDate(s.toISOString())} aria-pressed={on} className={cn("min-w-28 flex-1 rounded-2xl px-4 py-3 text-left ring-1 transition", on ? "bg-forest-700 text-paper ring-forest-700" : "bg-white ring-stone-200 hover:ring-stone-300")}>
+                      <button key={s.toISOString()} onClick={() => setDate(s.toISOString())} aria-pressed={on} className={cn("min-w-28 flex-1 rounded-2xl px-4 py-3 text-left ring-1 transition", on ? "bg-forest-700 text-ink ring-forest-700" : "bg-white ring-stone-200 hover:ring-stone-300")}>
                         <span className={cn("block text-xs", on ? "text-paper/70" : "text-stone-500")}>{i === 0 ? "This Sunday" : i === 1 ? "Next week" : "In 2 weeks"}</span>
                         <span className="mt-0.5 block font-medium">{s.toLocaleDateString("en-US", { month: "short", day: "numeric" })}</span>
                       </button>
@@ -131,7 +131,7 @@ export function PlanVisitSheet({ open, onOpenChange }: { open: boolean; onOpenCh
                         <span className="font-display text-5xl text-stone-900">{t}</span>
                         <span className="ml-1 text-sm text-stone-500">AM</span>
                         <span className="mt-2 block text-sm text-stone-500">{t === "9:00" ? "Quieter, great with little ones" : "Our fullest, most energetic"}</span>
-                        {on && <span className="absolute right-4 top-4 flex size-6 items-center justify-center rounded-full bg-forest-600 text-paper"><Check className="size-3.5" strokeWidth={3} /></span>}
+                        {on && <span className="absolute right-4 top-4 flex size-6 items-center justify-center rounded-full bg-forest-600 text-ink"><Check className="size-3.5" strokeWidth={3} /></span>}
                       </button>
                     );
                   })}
@@ -149,7 +149,7 @@ export function PlanVisitSheet({ open, onOpenChange }: { open: boolean; onOpenCh
                     { v: false, l: "Just me or us grown-ups" },
                   ].map((o) => (
                     <button key={String(o.v)} onClick={() => setKids(o.v)} aria-pressed={kids === o.v} className={cn("rounded-3xl p-5 text-left text-[15px] font-medium ring-1 transition", kids === o.v ? "bg-white ring-2 ring-forest-600" : "bg-white/60 ring-stone-200 hover:bg-white")}>
-                      <span className="mb-6 flex size-10 items-center justify-center rounded-2xl bg-paper-2 text-forest-700" aria-hidden>{o.v ? <Baby className="size-5" /> : <Coffee className="size-5" />}</span>
+                      <span className="mb-6 flex size-10 items-center justify-center rounded-2xl bg-stone-100 text-forest-700" aria-hidden>{o.v ? <Baby className="size-5" /> : <Coffee className="size-5" />}</span>
                       {o.l}
                     </button>
                   ))}
@@ -196,7 +196,7 @@ function Confirmation({ name, date, service, kids, onDone }: { name: string; dat
   const jamie = staffById.jamie;
   return (
     <div className="text-center">
-      <motion.div initial={{ scale: 0.6, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ type: "spring", damping: 14, stiffness: 200, delay: 0.1 }} className="mx-auto flex size-16 items-center justify-center rounded-full bg-forest-700 text-paper">
+      <motion.div initial={{ scale: 0.6, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ type: "spring", damping: 14, stiffness: 200, delay: 0.1 }} className="mx-auto flex size-16 items-center justify-center rounded-full bg-forest-700 text-ink">
         <Check className="size-7" strokeWidth={2.5} />
       </motion.div>
       <h2 className="mt-6 font-display text-[44px] leading-[1.02] text-stone-900">See you Sunday, {name.split(" ")[0]}!</h2>
@@ -208,7 +208,7 @@ function Confirmation({ name, date, service, kids, onDone }: { name: string; dat
             ["When", `${formatDay(date)} · ${service} AM`],
             ["Where", `${church.address}, ${church.city}`],
             ["Park", "Guest spots by the main entrance"],
-            ["Kids", kids ? `${kids} kid${kids > 1 ? "s" : ""}, name tags ready at the green desk` : "Just the grown-ups"],
+            ["Kids", kids ? `${kids} kid${kids > 1 ? "s" : ""}, name tags ready at the blue desk` : "Just the grown-ups"],
           ].map(([k, v]) => (
             <div key={k} className="flex gap-4 px-5 py-3.5 text-[15px]">
               <dt className="w-14 shrink-0 text-stone-400">{k}</dt>
@@ -218,7 +218,7 @@ function Confirmation({ name, date, service, kids, onDone }: { name: string; dat
         </dl>
         <div className="flex items-center gap-3 bg-forest-50 px-5 py-4">
           <Avatar name={jamie.name} src={jamie.photo} />
-          <p className="text-sm text-forest-800">Jamie will meet you at the welcome tent out front.</p>
+          <p className="text-sm text-forest-300">Jamie will meet you at the welcome tent out front.</p>
         </div>
       </div>
 

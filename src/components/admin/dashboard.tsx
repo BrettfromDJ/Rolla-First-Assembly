@@ -158,7 +158,7 @@ export function Dashboard() {
                 className="h-10 w-full rounded-full bg-white pl-10 pr-4 text-sm ring-1 ring-stone-200 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-forest-500"
               />
             </div>
-            <span className="hidden items-center gap-1.5 rounded-full bg-honey-soft px-3 py-1.5 text-xs font-medium text-[#7a5a17] md:inline-flex" title="Prototype: nothing is sent">
+            <span className="hidden items-center gap-1.5 rounded-full bg-honey-soft px-3 py-1.5 text-xs font-medium text-honey md:inline-flex" title="Prototype: nothing is sent">
               <FlaskConical className="size-3.5" /> Simulated · nothing is sent
             </span>
           </div>
@@ -174,7 +174,7 @@ export function Dashboard() {
             </div>
             {hydrated && store.you && (
               <button onClick={() => setSelectedId("you")} className="group flex items-center gap-3 rounded-2xl bg-white py-2 pl-2 pr-4 text-left ring-1 ring-honey/60 transition hover:ring-honey">
-                <Avatar name={store.you.firstName} className="size-9 bg-forest-700 text-paper" />
+                <Avatar name={store.you.firstName} className="size-9 bg-forest-700 text-ink" />
                 <span className="text-sm">
                   <span className="flex items-center gap-1.5 font-medium"><Sparkles className="size-3.5 text-honey" /> Your demo profile is here</span>
                   <span className="text-stone-500">{store.you.firstName} · {store.you.stage}</span>
@@ -245,7 +245,7 @@ export function Dashboard() {
                   <span className="flex size-12 items-center justify-center rounded-2xl bg-stone-100 text-stone-400"><LayoutGrid className="size-5" /></span>
                   <p className="mt-4 font-medium">No one matches those filters</p>
                   <p className="mt-1 text-sm text-stone-500">Try a different search, or clear filters to see everyone.</p>
-                  <button onClick={clear} className="mt-4 text-sm font-medium text-forest-600 hover:text-forest-800">Clear filters</button>
+                  <button onClick={clear} className="mt-4 text-sm font-medium text-forest-600 hover:text-forest-300">Clear filters</button>
                 </div>
               ) : (
                 <>
@@ -269,9 +269,9 @@ export function Dashboard() {
                     {filtered.map((v) => (
                       <li key={v.id}>
                         <button onClick={() => setSelectedId(v.id)} className="flex w-full items-center gap-3 p-4 text-left">
-                          <Avatar name={fullName(v)} src={v.photo} className={cn(v.isYou && "bg-forest-700 text-paper")} />
+                          <Avatar name={fullName(v)} src={v.photo} className={cn(v.isYou && "bg-forest-700 text-ink")} />
                           <div className="min-w-0 flex-1">
-                            <p className="truncate font-medium">{fullName(v)} {v.isYou && <span className="text-xs text-[#7a5a17]">· You</span>}</p>
+                            <p className="truncate font-medium">{fullName(v)} {v.isYou && <span className="text-xs text-honey">· You</span>}</p>
                             <p className="truncate text-xs text-stone-500">{nextAction(v).label}</p>
                           </div>
                           <StagePill s={v.stage} />
@@ -348,7 +348,7 @@ function Filter({ value, onChange, label, options }: { value: string; onChange: 
       aria-label={label}
       className={cn(
         "h-9 rounded-full px-3 pr-8 text-sm ring-1 transition focus:outline-none focus:ring-2 focus:ring-forest-500",
-        value ? "bg-forest-50 text-forest-800 ring-forest-200" : "bg-white text-stone-600 ring-stone-200",
+        value ? "bg-forest-50 text-forest-300 ring-forest-200" : "bg-white text-stone-600 ring-stone-200",
       )}
     >
       <option value="">{label}: All</option>
@@ -373,11 +373,11 @@ function Row({ v, onOpen }: { v: Visitor; onOpen: () => void }) {
     >
       <td className="py-3 pl-5 pr-4">
         <div className="flex items-center gap-3">
-          <Avatar name={fullName(v)} src={v.photo} className={cn(v.isYou && "bg-forest-700 text-paper")} />
+          <Avatar name={fullName(v)} src={v.photo} className={cn(v.isYou && "bg-forest-700 text-ink")} />
           <div className="min-w-0">
             <p className="flex items-center gap-2 font-medium text-stone-900">
               {fullName(v)}
-              {v.isYou && <span className="rounded-full bg-honey-soft px-1.5 py-0.5 text-[10px] font-semibold text-[#7a5a17]">YOU</span>}
+              {v.isYou && <span className="rounded-full bg-honey-soft px-1.5 py-0.5 text-[10px] font-semibold text-honey">YOU</span>}
             </p>
             <p className="max-w-[200px] truncate text-xs text-stone-400">{v.email || v.phone || "No contact info"}</p>
           </div>

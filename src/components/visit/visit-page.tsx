@@ -66,21 +66,21 @@ export function VisitPage() {
 
         {/* ---------- Service information ---------- */}
         <section id="service" className="scroll-mt-24 px-5 md:px-8">
-          <div className="mx-auto grid max-w-7xl gap-4 lg:grid-cols-12">
+          <div className="mx-auto grid max-w-7xl grid-cols-1 gap-4 lg:grid-cols-12 [&>*]:min-w-0">
             <Photo src={img.venue} alt="The warmly lit Gather auditorium" tone="forest" className="h-[300px] rounded-[32px] md:h-[460px] lg:col-span-7" priority />
             <div className="flex flex-col justify-between gap-8 rounded-[32px] bg-forest-800 p-7 text-paper md:p-10 lg:col-span-5">
               <div>
                 <p className="text-sm text-paper/60">Every Sunday</p>
-                <div className="mt-3 flex items-end gap-6">
+                <div className="mt-3 flex flex-wrap items-end gap-x-6 gap-y-2">
                   {church.services.map((t) => (
                     <div key={t}>
-                      <span className="font-display text-7xl leading-none md:text-8xl">{t}</span>
+                      <span className="font-display text-[56px] leading-none sm:text-7xl md:text-8xl">{t}</span>
                       <span className="ml-1 text-paper/60">AM</span>
                     </div>
                   ))}
                 </div>
                 <p className="mt-5 flex items-center gap-2 text-paper/80">
-                  <Clock className="size-4 text-honey" /> About 70 minutes. Both services are the same.
+                  <Clock className="size-4 text-forest-500" /> About 70 minutes. Both services are the same.
                 </p>
               </div>
               <div className="space-y-5 border-t border-paper/10 pt-6">
@@ -136,7 +136,7 @@ export function VisitPage() {
         </section>
 
         {/* ---------- Kids & families ---------- */}
-        <section id="kids" className="scroll-mt-24 bg-clay-soft/50">
+        <section id="kids" className="scroll-mt-24 bg-ink-2">
           <div className="mx-auto grid max-w-7xl gap-12 px-5 py-24 md:px-8 md:py-32 lg:grid-cols-2 lg:gap-20">
             <Reveal>
               <div className="relative">
@@ -152,7 +152,7 @@ export function VisitPage() {
             </Reveal>
             <div>
               <Reveal>
-                <p className="text-[13px] font-medium uppercase tracking-[0.16em] text-clay">Gather Kids</p>
+                <p className="text-[13px] font-medium uppercase tracking-[0.16em] text-forest-500">Gather Kids</p>
                 <h2 className="mt-5 font-display text-5xl leading-[1] tracking-[-0.02em] text-stone-900 md:text-6xl">Kids are the best part of Sunday.</h2>
                 <p className="mt-6 max-w-md text-[17px] leading-relaxed text-stone-600">
                   During both services, kids from birth through 5th grade have their own space to play, learn, and be known by name. Students in 6th–12th meet Wednesday nights.
@@ -172,12 +172,12 @@ export function VisitPage() {
                 <h3 className="mt-12 text-sm font-medium text-stone-900">Check-in takes about two minutes</h3>
                 <ol className="mt-5 space-y-5">
                   {[
-                    { icon: Tag, t: "Stop by the green Kids Welcome desk", b: "We'll set up a quick profile. It's one time only." },
+                    { icon: Tag, t: "Stop by the blue Kids Welcome desk", b: "We'll set up a quick profile. It's one time only." },
                     { icon: ShieldCheck, t: "Get matching security tags", b: "Only the adult with the matching tag can pick up your child." },
                     { icon: Smartphone, t: "We'll text you if needed", b: "Enjoy the service. If your kiddo needs you, you'll know right away." },
                   ].map((s) => (
                     <li key={s.t} className="flex gap-4">
-                      <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-white text-clay">
+                      <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-white text-forest-500">
                         <s.icon className="size-[18px]" strokeWidth={1.75} />
                       </span>
                       <div>
@@ -212,7 +212,7 @@ export function VisitPage() {
             {plan ? (
               <div className="grid gap-10 p-8 md:grid-cols-[1fr_auto] md:items-center md:p-14">
                 <div>
-                  <p className="flex items-center gap-2 text-sm text-honey"><CalendarCheck className="size-4" /> You&apos;re on the list</p>
+                  <p className="flex items-center gap-2 text-sm text-forest-500"><CalendarCheck className="size-4" /> You&apos;re on the list</p>
                   <h2 className="mt-4 font-display text-5xl leading-[1] md:text-6xl">See you {formatDay(plan.date).split(",")[0]}, {plan.firstName}.</h2>
                   <p className="mt-4 text-paper/70">
                     {formatDay(plan.date)} · {plan.service} AM{plan.bringingKids ? ` · Bringing ${plan.kidsCount} kid${plan.kidsCount === 1 ? "" : "s"}` : ""}

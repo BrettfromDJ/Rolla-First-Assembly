@@ -75,7 +75,7 @@ export function OfferingCard({ o, reason, className }: { o: Offering; reason?: s
 export function OfferingRow({ o }: { o: Offering }) {
   const joined = useJoined(o);
   return (
-    <Link href={`/explore/${o.id}`} className="group flex items-center gap-4 rounded-3xl p-2 pr-4 transition hover:bg-white">
+    <Link href={`/explore/${o.id}`} className="group flex min-w-0 items-center gap-4 rounded-3xl p-2 pr-4 transition hover:bg-white">
       <Photo src={o.image} alt="" tone={toneFor(o)} className="size-20 shrink-0 rounded-2xl" />
       <div className="min-w-0 flex-1">
         <p className="text-xs text-stone-500">{o.tag}</p>

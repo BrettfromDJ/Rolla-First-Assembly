@@ -134,7 +134,7 @@ export function DetailPage({ offering: o }: { offering: Offering }) {
                   </>
                 ) : main ? (
                   <>
-                    <div className="flex items-center gap-3 rounded-2xl bg-forest-50 p-4 text-forest-800">
+                    <div className="flex items-center gap-3 rounded-2xl bg-forest-50 p-4 text-forest-300">
                       <Check className="size-5" />
                       <span className="font-medium">{o.actionKind === "question" ? "Question sent" : o.actionKind === "join" ? "Request sent" : "You're going!"}</span>
                     </div>
@@ -171,7 +171,7 @@ export function DetailPage({ offering: o }: { offering: Offering }) {
                 <h2 className="font-display text-4xl text-stone-900">You might also like</h2>
                 <Link href="/explore" className="text-sm text-stone-500 hover:text-stone-900">See everything</Link>
               </div>
-              <div className="mt-6 grid gap-1 md:grid-cols-3">
+              <div className="mt-6 grid grid-cols-1 gap-1 md:grid-cols-3">
                 {related.map((r) => (
                   <OfferingRow key={r.id} o={r} />
                 ))}
@@ -183,7 +183,7 @@ export function DetailPage({ offering: o }: { offering: Offering }) {
       <SiteFooter />
       {/* Mobile sticky action */}
       {!o.items && !main && (
-        <div className="fixed inset-x-0 bottom-0 z-30 border-t border-stone-200/70 bg-paper/90 p-4 backdrop-blur-xl lg:hidden">
+        <div className="fixed inset-x-0 bottom-0 z-30 border-t border-stone-200/70 bg-ink/85 p-4 backdrop-blur-xl lg:hidden">
           <Button size="lg" className="w-full" onClick={() => open()}>{o.action} <ArrowRight /></Button>
         </div>
       )}
@@ -211,7 +211,7 @@ function ItemRow({ o, it, onAction }: { o: Offering; it: SubItem; onAction: () =
   return (
     <li id={`item-${it.id}`} className={cn("flex flex-col gap-5 rounded-3xl bg-white p-5 ring-1 transition sm:flex-row sm:items-center md:p-6", r ? "ring-2 ring-forest-500" : "ring-stone-200/70")}>
       {it.date && (
-        <div className="flex size-16 shrink-0 flex-col items-center justify-center rounded-2xl bg-paper-2 text-stone-900">
+        <div className="flex size-16 shrink-0 flex-col items-center justify-center rounded-2xl bg-stone-100 text-stone-900">
           <span className="text-[11px] font-medium uppercase tracking-wider text-clay">{new Date(it.date).toLocaleDateString("en-US", { month: "short" })}</span>
           <span className="font-display text-3xl leading-none">{new Date(it.date).getDate()}</span>
         </div>

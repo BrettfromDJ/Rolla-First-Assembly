@@ -8,12 +8,12 @@ export const buttonVariants = cva(
   {
     variants: {
       variant: {
-        primary: "bg-forest-700 text-paper shadow-[inset_0_1px_0_rgb(255_255_255/0.08)] hover:bg-forest-800",
-        secondary: "bg-white text-stone-900 ring-1 ring-stone-200 hover:ring-stone-300 hover:bg-stone-50",
-        ghost: "text-stone-700 hover:bg-stone-900/5",
-        light: "bg-paper text-forest-900 hover:bg-white",
+        primary: "bg-forest-700 text-ink hover:bg-forest-500",
+        secondary: "bg-transparent text-stone-900 ring-1 ring-stone-300 hover:ring-paper hover:bg-paper/5",
+        ghost: "text-stone-700 hover:bg-paper/5",
+        light: "bg-paper text-ink hover:bg-[#f7f1e7]",
         outlineLight: "text-paper ring-1 ring-paper/30 hover:bg-paper/10",
-        clay: "bg-clay text-white hover:bg-[#b5623f]",
+        clay: "bg-clay text-white hover:brightness-110",
         link: "rounded-md px-0 text-forest-700 underline-offset-4 hover:underline",
       },
       size: {

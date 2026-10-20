@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { cn, initials } from "@/lib/utils";
 
-const palette = ["bg-forest-100 text-forest-800", "bg-honey-soft text-[#7a5a17]", "bg-clay-soft text-[#7b3d22]", "bg-sage-soft text-forest-700", "bg-sky-soft text-[#2f4a55]"];
+const palette = ["bg-forest-100 text-forest-300", "bg-honey-soft text-honey", "bg-clay-soft text-clay", "bg-sage-soft text-forest-700", "bg-sky-soft text-sky"];
 
 export function Avatar({ name, src, className }: { name: string; src?: string; className?: string }) {
   const [failed, setFailed] = useState(false);

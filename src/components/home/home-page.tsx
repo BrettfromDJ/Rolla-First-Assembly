@@ -121,9 +121,9 @@ export function HomePage() {
             ) : null}
           </motion.div>
           {!personalized && (
-            <div className="mt-4 flex flex-col gap-4 rounded-3xl bg-honey-soft p-5 sm:flex-row sm:items-center sm:justify-between md:p-6">
+            <div className="mt-4 flex flex-col gap-4 rounded-3xl p-5 ring-1 ring-forest-700/60 bg-forest-50 sm:flex-row sm:items-center sm:justify-between md:p-6">
               <p className="flex items-center gap-3 text-stone-800">
-                <Sparkles className="size-5 shrink-0 text-[#8a6416]" /> Tell us a little about you, and we&apos;ll make this page yours.
+                <Sparkles className="size-5 shrink-0 text-forest-500" /> Tell us a little about you, and we&apos;ll make this page yours.
               </p>
               <Button asChild>
                 <Link href="/connect">Personalize <ArrowRight /></Link>
@@ -137,22 +137,37 @@ export function HomePage() {
           <h2 id="explore" className="mb-4 text-sm font-medium text-stone-500">Explore</h2>
           <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
             {[
-              { href: "/explore?area=groups", label: "Find a Group", sub: "40+ groups across town", icon: Users, cls: "bg-forest-800 text-paper", icls: "bg-paper/10 text-honey" },
-              { href: "/explore?area=events", label: "Events", sub: "What's coming up", icon: CalendarDays, cls: "bg-honey-soft text-stone-900", icls: "bg-white/70 text-[#8a6416]" },
-              { href: "/explore?area=faith", label: "Grow in Faith", sub: "Classes & studies", icon: BookOpen, cls: "bg-sky-soft text-stone-900", icls: "bg-white/70 text-[#2f5361]" },
-              { href: "/explore?area=serve", label: "Serve", sub: "Make a difference", icon: HandHeart, cls: "bg-clay-soft text-stone-900", icls: "bg-white/70 text-[#8a432a]" },
-            ].map((t) => (
-              <Link key={t.href} href={t.href} className={cn("group relative flex aspect-[5/4] flex-col justify-between overflow-hidden rounded-[28px] p-5 transition duration-300 hover:-translate-y-0.5 md:aspect-[4/3] md:p-6", t.cls)}>
-                <span className={cn("flex size-11 items-center justify-center rounded-2xl", t.icls)}>
-                  <t.icon className="size-5" strokeWidth={1.75} />
-                </span>
-                <span>
-                  <span className="block font-display text-[28px] leading-none md:text-4xl">{t.label}</span>
-                  <span className="mt-2 block text-sm opacity-60">{t.sub}</span>
-                </span>
-                <ArrowUpRight className="absolute right-5 top-5 size-5 opacity-40 transition group-hover:rotate-45 group-hover:opacity-100" />
-              </Link>
-            ))}
+              { href: "/explore?area=groups", label: "Find a Group", sub: "40+ groups across town", icon: Users },
+              { href: "/explore?area=events", label: "Events", sub: "What's coming up", icon: CalendarDays },
+              { href: "/explore?area=faith", label: "Grow in Faith", sub: "Classes & studies", icon: BookOpen },
+              { href: "/explore?area=serve", label: "Serve", sub: "Make a difference", icon: HandHeart },
+            ].map((t, k) => {
+              const blue = k === 0;
+              return (
+                <Link
+                  key={t.href}
+                  href={t.href}
+                  className={cn(
+                    "group relative flex aspect-[4/5] flex-col justify-between overflow-hidden p-5 transition duration-300 md:aspect-[4/3] md:p-6",
+                    blue ? "rounded-[999px] bg-forest-700 text-ink hover:bg-forest-500 items-center text-center md:rounded-[36px] md:items-start md:text-left" : "rounded-[28px] text-paper ring-2 ring-paper/80 hover:bg-paper/[0.04]",
+                  )}
+                >
+                  <t.icon className={cn("size-6", blue ? "text-ink/70 mt-4 md:mt-0" : "text-stone-500")} strokeWidth={1.5} />
+                  <span className={cn("block", !blue ? "pr-14" : "md:pr-14")}>
+                    <span className="block font-display text-[26px] leading-none md:text-[34px]">{t.label}</span>
+                    <span className={cn("mt-2 block text-sm", blue ? "text-ink/60" : "text-stone-500")}>{t.sub}</span>
+                  </span>
+                  <span
+                    className={cn(
+                      "flex size-12 items-center justify-center rounded-full transition duration-300 group-hover:rotate-45",
+                      blue ? "mb-2 bg-paper text-ink md:absolute md:bottom-6 md:right-6 md:mb-0" : "absolute bottom-5 right-5 bg-forest-700 text-ink md:bottom-6 md:right-6",
+                    )}
+                  >
+                    <ArrowUpRight className="size-5" strokeWidth={1.5} />
+                  </span>
+                </Link>
+              );
+            })}
           </div>
         </section>
 
@@ -264,7 +279,7 @@ function SundayChip() {
   const plan = profile.visitPlan;
   return (
     <div className="flex items-center gap-4 rounded-3xl bg-white p-4 pr-6 ring-1 ring-stone-200/70">
-      <span className="flex size-12 flex-col items-center justify-center rounded-2xl bg-forest-700 text-paper">
+      <span className="flex size-12 flex-col items-center justify-center rounded-2xl bg-forest-700 text-ink">
         <span className="text-[10px] uppercase tracking-wider text-paper/60">Sun</span>
         <span className="text-lg font-semibold leading-none">{plan ? new Date(plan.date).getDate() : "9·11"}</span>
       </span>
@@ -283,13 +298,13 @@ function NextStepCard(p: { href: string; image: string; tone: ReturnType<typeof 
       <div className="absolute inset-0 bg-gradient-to-r from-forest-950/85 via-forest-950/50 to-transparent" />
       <div className="relative flex min-h-[380px] flex-col justify-between gap-10 p-7 md:min-h-[420px] md:p-12">
         <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-paper/15 px-3 py-1.5 text-xs font-medium ring-1 ring-paper/20 backdrop-blur-md">
-          <Check className="size-3.5 text-honey" /> {p.badge}
+          <Check className="size-3.5 text-forest-500" /> {p.badge}
         </span>
         <div className="max-w-xl">
           <p className="text-sm text-paper/70">{p.eyebrow}</p>
           <h3 className="mt-2 font-display text-5xl leading-[0.98] md:text-7xl">{p.title}</h3>
           <p className="mt-4 max-w-md text-[17px] text-paper/80">{p.body}</p>
-          <span className="mt-8 inline-flex h-12 items-center gap-2 rounded-full bg-paper px-6 font-medium text-forest-900 transition group-hover:bg-white">
+          <span className="mt-8 inline-flex h-12 items-center gap-2 rounded-full bg-forest-700 px-6 font-medium text-ink transition group-hover:bg-forest-500">
             {p.cta} <ArrowRight className="size-4 transition group-hover:translate-x-0.5" />
           </span>
         </div>
@@ -302,7 +317,7 @@ function PlanRow({ href, date, title, meta, status }: { href: string; date?: str
   return (
     <li>
       <Link href={href} className="flex items-center gap-4 p-4 transition hover:bg-stone-50 md:px-6">
-        <span className="flex size-14 shrink-0 flex-col items-center justify-center rounded-2xl bg-paper-2">
+        <span className="flex size-14 shrink-0 flex-col items-center justify-center rounded-2xl bg-stone-100">
           {date ? (
             <>
               <span className="text-[10px] font-medium uppercase tracking-wider text-clay">{new Date(date).toLocaleDateString("en-US", { month: "short" })}</span>

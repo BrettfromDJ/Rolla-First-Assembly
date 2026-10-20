@@ -39,7 +39,7 @@ export function ChoiceCard({
       <span
         className={cn(
           "flex size-12 shrink-0 items-center justify-center rounded-2xl transition-colors duration-300",
-          selected ? "bg-forest-700 text-paper" : iconTone,
+          selected ? "bg-forest-700 text-ink" : iconTone,
         )}
       >
         {icon}
@@ -64,7 +64,7 @@ export function Tick({ on, className }: { on: boolean; className?: string }) {
       )}
     >
       <motion.span initial={false} animate={{ scale: on ? 1 : 0, opacity: on ? 1 : 0 }} transition={{ type: "spring", stiffness: 500, damping: 25 }}>
-        <Check className="size-3.5 text-paper" strokeWidth={3} />
+        <Check className="size-3.5 text-ink" strokeWidth={3} />
       </motion.span>
     </span>
   );
@@ -98,7 +98,7 @@ export function Pills({
             whileTap={{ scale: 0.96 }}
             className={cn(
               "inline-flex items-center gap-2 rounded-full px-5 py-3 text-[15px] ring-1 transition-colors duration-200",
-              on ? "bg-forest-700 text-paper ring-forest-700" : "bg-white text-stone-800 ring-stone-200 hover:ring-stone-300",
+              on ? "bg-forest-700 text-ink ring-forest-700" : "bg-white text-stone-800 ring-stone-200 hover:ring-stone-300",
             )}
           >
             <motion.span initial={false} animate={{ width: on ? 16 : 0, opacity: on ? 1 : 0 }} className="inline-flex overflow-hidden">

@@ -307,14 +307,14 @@ export function buildOfferings(): Offering[] {
       schedule: "Sundays · 9:00 & 11:00",
       date: sun(8, 45),
       durationMin: 85,
-      location: "Kids Wing · Follow the green signs",
+      location: "Kids Wing · Follow the blue signs",
       expect: ["A 2-minute check-in at the Kids Welcome desk", "A matching security tag for you and your child", "Age-specific rooms with trained leaders", "We'll text you if your child needs you"],
       hostIds: ["priya"],
       cta: "Plan for my kids",
       action: "Pre-register my kids",
       actionKind: "signup",
       confirmTitle: "You're pre-registered!",
-      confirmBody: "Priya and the Kids team will have name tags ready. Look for the green Kids Welcome desk when you arrive.",
+      confirmBody: "Priya and the Kids team will have name tags ready. Look for the blue Kids Welcome desk when you arrive.",
       itemsTitle: "Age groups",
       items: [
         { id: "k-nursery", title: "Nursery", meta: "Birth – 2 years", location: "Rooms 110–112", leader: "Ms. Carla", description: "Rocking chairs, soft toys, and very patient grown-ups." },
@@ -557,5 +557,5 @@ export const faqs = [
   { q: "Will I be singled out?", a: "Never. We won't ask you to stand up, raise your hand, or introduce yourself. Visit at your own pace." },
   { q: "Do I need to give money?", a: "No. Giving is for people who call Gather home. Guests are our guests." },
   { q: "I'm not sure what I believe. Is that okay?", a: "Absolutely. Lots of people here are asking questions. You're welcome exactly as you are." },
-  { q: "Where do I park?", a: "Guest parking is right by the main entrance off Larkspur Lane. Look for the green signs and a friendly wave." },
+  { q: "Where do I park?", a: "Guest parking is right by the main entrance off Larkspur Lane. Look for the blue signs and a friendly wave." },
 ];

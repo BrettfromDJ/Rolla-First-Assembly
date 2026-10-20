@@ -55,7 +55,7 @@ export function ExplorePage() {
                 onClick={() => router.replace(a.id === "all" ? "/explore" : `/explore?area=${a.id}`, { scroll: false })}
                 className={cn(
                   "shrink-0 rounded-full px-4 py-2 text-sm ring-1 transition",
-                  a.id === area ? "bg-forest-700 text-paper ring-forest-700" : "bg-white text-stone-700 ring-stone-200 hover:ring-stone-300",
+                  a.id === area ? "bg-forest-700 text-ink ring-forest-700" : "bg-white text-stone-700 ring-stone-200 hover:ring-stone-300",
                 )}
               >
                 {a.label}
