@@ -1,0 +1,108 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Instrument Serif", ui-serif, Georgia, "Times New Roman", serif;
+
+  /* Forest — the core brand color */
+  --color-forest-50: #eef3ef;
+  --color-forest-100: #d6e3da;
+  --color-forest-200: #afc8b6;
+  --color-forest-300: #7fa78b;
+  --color-forest-400: #4f8162;
+  --color-forest-500: #336548;
+  --color-forest-600: #255039;
+  --color-forest-700: #1e412f;
+  --color-forest-800: #183425;
+  --color-forest-900: #11261b;
+  --color-forest-950: #0a1811;
+
+  /* Warm off-white paper */
+  --color-paper: #f7f4ee;
+  --color-paper-2: #f0ebe2;
+  --color-sand: #e6dfd2;
+
+  /* Soft neutral gray (warm) */
+  --color-stone-50: #fafaf8;
+  --color-stone-100: #f2f1ed;
+  --color-stone-200: #e4e2dc;
+  --color-stone-300: #cdcac2;
+  --color-stone-400: #a9a59b;
+  --color-stone-500: #85817a;
+  --color-stone-600: #67645e;
+  --color-stone-700: #4c4a45;
+  --color-stone-800: #33322e;
+  --color-stone-900: #1f1e1b;
+
+  /* Accents */
+  --color-clay: #c4704b;
+  --color-clay-soft: #f3dfd3;
+  --color-honey: #e3b75a;
+  --color-honey-soft: #f7ecd2;
+  --color-sage: #a8bba4;
+  --color-sage-soft: #e3eadf;
+  --color-sky-soft: #dfe7ea;
+
+  --shadow-soft: 0 1px 2px rgb(20 30 24 / 0.04), 0 8px 24px -12px rgb(20 30 24 / 0.12);
+  --shadow-lift: 0 2px 4px rgb(20 30 24 / 0.04), 0 24px 48px -20px rgb(20 30 24 / 0.22);
+
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --animate-fade-up: fade-up 0.7s var(--ease-out-soft) both;
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    background: var(--color-paper);
+    color: var(--color-stone-900);
+    font-feature-settings: "ss01", "cv11";
+  }
+  ::selection {
+    background: var(--color-forest-200);
+    color: var(--color-forest-900);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-forest-500);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+@utility font-display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+@utility text-balance {
+  text-wrap: balance;
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
