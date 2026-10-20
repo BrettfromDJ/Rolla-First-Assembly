@@ -24,6 +24,7 @@ import {
   HandHeart,
   UsersRound,
   CalendarRange,
+  Sun,
 } from "lucide-react";
 import { Logo } from "@/components/ui/logo";
 import { Avatar } from "@/components/ui/avatar";
@@ -35,13 +36,14 @@ import { AttendanceView } from "./attendance";
 import { PrayerView } from "./prayer";
 import { VolunteersView } from "./volunteers";
 import { ScheduleView } from "./schedule";
+import { WeeklyView } from "./weekly";
 import { interests as interestList, interestShort, staffById, welcomeTeam } from "@/lib/data";
 import { useStore } from "@/lib/store";
 import type { InterestId, Stage, Visitor } from "@/lib/types";
 import { cn, formatDate, formatShortDay, greeting, relativeDay } from "@/lib/utils";
 import { ACTING_AS, fullName, isRecent, needsAttention, nextAction, rsvpInfo, stageStyle, stages } from "./helpers";
 
-type Tab = "visitors" | "members" | "baptisms" | "attendance" | "prayer" | "volunteers" | "schedule";
+type Tab = "week" | "visitors" | "members" | "baptisms" | "attendance" | "prayer" | "volunteers" | "schedule";
 type View = "all" | "attention" | "mine" | "new" | "planning" | "requests" | "rsvps";
 
 const views: { id: View; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
@@ -54,14 +56,14 @@ export function Dashboard() {
   const store = useStore();
   const { allVisitors, hydrated } = store;
   const [view, setView] = useState<View>("all");
-  const [tab, setTabState] = useState<Tab>("visitors");
+  const [tab, setTabState] = useState<Tab>("week");
   const setTab = (t: Tab) => {
     setTabState(t);
-    history.replaceState(null, "", t === "visitors" ? location.pathname : `#${t}`);
+    history.replaceState(null, "", t === "week" ? location.pathname : `#${t}`);
   };
   useEffect(() => {
     const h = location.hash.slice(1);
-    if (h === "baptisms" || h === "members" || h === "attendance" || h === "prayer" || h === "volunteers" || h === "schedule") setTabState(h);
+    if (h === "visitors" || h === "baptisms" || h === "members" || h === "attendance" || h === "prayer" || h === "volunteers" || h === "schedule") setTabState(h);
   }, []);
   const [query, setQuery] = useState("");
   const [stage, setStage] = useState<Stage | "">("");
@@ -123,6 +125,13 @@ export function Dashboard() {
           <p className="mt-2 text-xs text-stone-400">Welcome Team</p>
         </div>
         <nav className="mt-8 space-y-0.5" aria-label="Views">
+          <button
+            onClick={() => setTab("week")}
+            className={cn("mb-4 flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm transition", tab === "week" ? "bg-stone-100 font-medium text-stone-900" : "text-stone-600 hover:bg-stone-50")}
+          >
+            <Sun className="size-4 text-stone-400" />
+            <span className="flex-1 text-left">This week</span>
+          </button>
           <p className="px-3 pb-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-stone-400">People</p>
           {views.map((x) => {
             const count = x.id === "all" ? allVisitors.length : x.id === "attention" ? metrics.attention : allVisitors.filter((v) => v.assigneeId === ACTING_AS).length;
@@ -221,12 +230,12 @@ export function Dashboard() {
         <header className="sticky top-0 z-20 border-b border-stone-200/70 bg-stone-50/85 backdrop-blur-xl">
           <div className="flex h-16 items-center gap-4 px-5 md:px-8">
             <div className="lg:hidden"><Logo /></div>
-            <div className={cn("relative ml-auto w-full max-w-sm", tab === "attendance" && "invisible")}>
+            <div className={cn("relative ml-auto w-full max-w-sm", (tab === "attendance" || tab === "week") && "invisible")}>
               <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-stone-400" />
               <input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder={`Search ${tab === "members" ? "members & kids" : tab === "prayer" ? "prayer requests" : tab === "schedule" ? "volunteers" : tab}`}
+                placeholder={`Search ${tab === "week" ? "visitors" : tab === "members" ? "members & kids" : tab === "prayer" ? "prayer requests" : tab === "schedule" ? "volunteers" : tab}`}
                 aria-label={`Search ${tab === "members" ? "members & kids" : tab === "prayer" ? "prayer requests" : tab}`}
                 className="h-10 w-full rounded-full bg-white pl-10 pr-4 text-sm ring-1 ring-stone-200 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-forest-500"
               />
@@ -241,6 +250,7 @@ export function Dashboard() {
           <div className="border-b border-stone-200/70">
           <div role="tablist" aria-label="Dashboard sections" className="no-scrollbar -mb-px flex gap-1 overflow-x-auto overflow-y-hidden">
             {([
+              ["week", "This week", Sun],
               ["visitors", "Visitors", Users],
               ["members", "Members", Baby],
               ["baptisms", "Baptisms", Droplets],
@@ -262,7 +272,11 @@ export function Dashboard() {
           </div>
           </div>
         </div>
-        {tab === "schedule" ? (
+        {tab === "week" ? (
+          <div className="px-5 pt-8 md:px-8">
+            <WeeklyView go={setTab} openVisitor={setSelectedId} />
+          </div>
+        ) : tab === "schedule" ? (
           <div className="px-5 pt-8 md:px-8">
             <div className="mb-6">
               <p className="text-sm text-stone-500">Volunteers</p>
