@@ -43,9 +43,9 @@ export function BaptismPage() {
           <div>
             <p className={cn(mori, "text-[16px] uppercase leading-[1.1] tracking-[-0.03em] text-[#0285ff]")}>Baptism</p>
             <h1 className={cn(mori, "mt-4 text-[clamp(52px,8vw,124px)] leading-[0.92] tracking-[-0.05em]")}>
-              Take the <Ed>next</Ed>
+              Take the
               <br />
-              step.
+              <Ed>next</Ed> step.
             </h1>
             <p className="mt-6 max-w-lg text-lg leading-relaxed text-stone-600 md:text-xl">
               Baptism is a public way of saying, &ldquo;I&apos;m following Jesus.&rdquo; If you&apos;ve made that decision, we&apos;d love to celebrate it with you.
