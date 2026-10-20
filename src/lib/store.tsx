@@ -1,7 +1,8 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
-import { getOffering } from "./data";
+import { getOffering, registerCustomOfferings } from "./data";
+import { buildSeedEvents, slugify } from "./event-builder";
 import { buildSeedVisitors } from "./seed";
 import { buildSeedAttendance } from "./attendance";
 import { buildSeedPrayers } from "./prayer";
@@ -11,6 +12,8 @@ import { uid } from "./utils";
 import type {
   Activity,
   AttendanceRecord,
+  EventResponse,
+  Offering,
   Assignment,
   ScheduleSettings,
   Volunteer,
@@ -77,10 +80,15 @@ interface State {
   sermonNotes: Record<string, string>; // the visitor's own notes, by sermon id
   serve: ServeSignup[];
   schedule: { volunteers: Volunteer[]; assignments: Assignment[]; settings: ScheduleSettings };
+  events: Offering[]; // built by staff in the admin
+  responses: EventResponse[]; // RSVPs and sign-ups for those events
+  hiddenOfferings: string[]; // built-in events staff took off the site
   seedVersion?: number;
 }
 
-const freshState = (): State => ({ profile: freshProfile(), visitors: buildSeedVisitors(), overlay: freshOverlay(), attendance: buildSeedAttendance(), prayers: buildSeedPrayers(), prayed: [], sermonNotes: {}, serve: buildSeedServe(), schedule: { ...buildSeedSchedule(), settings: defaultScheduleSettings }, seedVersion: SEED_VERSION });
+const seedEvents = () => buildSeedEvents();
+
+const freshState = (): State => ({ profile: freshProfile(), visitors: buildSeedVisitors(), overlay: freshOverlay(), attendance: buildSeedAttendance(), prayers: buildSeedPrayers(), prayed: [], sermonNotes: {}, serve: buildSeedServe(), schedule: { ...buildSeedSchedule(), settings: defaultScheduleSettings }, ...seedEvents(), hiddenOfferings: [], seedVersion: SEED_VERSION });
 
 export type VisitorPatch = Partial<Pick<Visitor, "stage" | "assigneeId" | "status">>;
 
@@ -96,7 +104,7 @@ interface Store extends State {
   saveStudents: (reg: Omit<StudentsRegistration, "createdAt">) => void;
   cancelStudents: () => void;
   cancelKids: () => void;
-  addRsvp: (r: { offeringId: string; itemId?: string; message?: string }) => Rsvp;
+  addRsvp: (r: { offeringId: string; itemId?: string; message?: string; guests?: number; answer?: string }) => Rsvp;
   cancelRsvp: (id: string) => void;
   hasRsvp: (offeringId: string, itemId?: string) => Rsvp | undefined;
   completeOnboarding: () => void;
@@ -134,6 +142,12 @@ interface Store extends State {
   autoFillSunday: (date: string, teamId: string) => { filled: number; stretched: number };
   toggleBlockout: (volunteerId: string, date: string) => void;
   updateScheduleSettings: (patch: Partial<ScheduleSettings>) => void;
+  /* event builder */
+  /** Creates (when id is blank) or updates a staff event. Returns its id. */
+  saveEvent: (o: Offering) => string;
+  deleteEvent: (id: string) => void;
+  toggleHiddenOffering: (id: string) => void;
+  removeResponse: (id: string) => void;
 }
 
 const Ctx = createContext<Store | null>(null);
@@ -241,6 +255,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
           prayed: parsed.prayed ?? [],
           sermonNotes: parsed.sermonNotes ?? {},
           serve: parsed.serve ?? buildSeedServe(),
+          ...(parsed.events ? { events: parsed.events, responses: parsed.responses ?? [] } : seedEvents()),
+          hiddenOfferings: parsed.hiddenOfferings ?? [],
           schedule: parsed.schedule?.volunteers ? { ...parsed.schedule, settings: { ...defaultScheduleSettings, ...parsed.schedule.settings } } : { ...buildSeedSchedule(), settings: defaultScheduleSettings },
           seedVersion: SEED_VERSION,
         });
@@ -486,14 +502,48 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     setState((s) => ({ ...s, profile: { ...s.profile, baptism: null } }));
   }, []);
 
-  const addRsvp = useCallback((r: { offeringId: string; itemId?: string; message?: string }) => {
+  const addRsvp = useCallback((r: { offeringId: string; itemId?: string; message?: string; guests?: number; answer?: string }) => {
     const rsvp: Rsvp = { id: uid("rsvp"), ...r, createdAt: new Date().toISOString() };
-    setState((s) => ({ ...s, profile: { ...s.profile, rsvps: [...s.profile.rsvps, rsvp] } }));
+    setState((s) => {
+      const custom = s.events.some((e) => e.id === r.offeringId);
+      const response: EventResponse | null = custom
+        ? { id: `resp_${rsvp.id}`, eventId: r.offeringId, name: s.profile.firstName || "Guest", contact: s.profile.email || s.profile.phone, guests: r.guests ?? 0, answer: r.answer, message: r.message, isYou: true, createdAt: rsvp.createdAt }
+        : null;
+      return { ...s, profile: { ...s.profile, rsvps: [...s.profile.rsvps, rsvp] }, responses: response ? [...s.responses, response] : s.responses };
+    });
     return rsvp;
   }, []);
 
   const cancelRsvp = useCallback((id: string) => {
-    setState((s) => ({ ...s, profile: { ...s.profile, rsvps: s.profile.rsvps.filter((r) => r.id !== id) } }));
+    setState((s) => ({ ...s, profile: { ...s.profile, rsvps: s.profile.rsvps.filter((r) => r.id !== id) }, responses: s.responses.filter((x) => x.id !== `resp_${id}`) }));
+  }, []);
+
+  const eventsRef = useRef(state.events);
+  eventsRef.current = state.events;
+
+  const saveEvent = useCallback((o: Offering) => {
+    // New events get a readable id from the title (fall-festival, fall-festival-2, …), worked out before saving.
+    let id = o.id;
+    if (!id) {
+      const base = slugify(o.title);
+      id = base;
+      for (let n = 2; eventsRef.current.some((e) => e.id === id) || getOffering(id); n++) id = `${base}-${n}`;
+    }
+    const saved: Offering = { ...o, id, custom: true, updatedAt: new Date().toISOString() };
+    setState((s) => ({ ...s, events: s.events.some((e) => e.id === id) ? s.events.map((e) => (e.id === id ? saved : e)) : [saved, ...s.events] }));
+    return id;
+  }, []);
+
+  const deleteEvent = useCallback((id: string) => {
+    setState((s) => ({ ...s, events: s.events.filter((e) => e.id !== id), responses: s.responses.filter((r) => r.eventId !== id) }));
+  }, []);
+
+  const toggleHiddenOffering = useCallback((id: string) => {
+    setState((s) => ({ ...s, hiddenOfferings: s.hiddenOfferings.includes(id) ? s.hiddenOfferings.filter((x) => x !== id) : [...s.hiddenOfferings, id] }));
+  }, []);
+
+  const removeResponse = useCallback((id: string) => {
+    setState((s) => ({ ...s, responses: s.responses.filter((r) => r.id !== id) }));
   }, []);
 
   const completeOnboarding = useCallback(() => {
@@ -599,6 +649,9 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     [state.profile.rsvps],
   );
 
+  // Staff-built events join the shared offering list every page reads from.
+  registerCustomOfferings(state.events, state.hiddenOfferings);
+
   const value: Store = {
     ...state,
     hydrated,
@@ -642,6 +695,10 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     autoFillSunday,
     toggleBlockout,
     updateScheduleSettings,
+    saveEvent,
+    deleteEvent,
+    toggleHiddenOffering,
+    removeResponse,
   };
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;

@@ -579,14 +579,29 @@ export function buildOfferings(): Offering[] {
 
 let cached: { day: string; list: Offering[] } | null = null;
 
-export function getOfferings(): Offering[] {
+/* Events staff build in the admin live in the store; it registers them here so every page sees them. */
+let customOfferings: Offering[] = [];
+let hiddenOfferings = new Set<string>();
+export function registerCustomOfferings(list: Offering[], hidden: string[]) {
+  customOfferings = list;
+  hiddenOfferings = new Set(hidden);
+}
+
+/** The built-in offerings, before staff edits. */
+export function builtInOfferings(): Offering[] {
   const day = new Date().toDateString();
   if (!cached || cached.day !== day) cached = { day, list: buildOfferings() };
   return cached.list;
 }
 
+/** Everything visitors can see: published staff events first, then built-ins staff haven't hidden. */
+export function getOfferings(): Offering[] {
+  return [...customOfferings.filter((o) => o.status === "published"), ...builtInOfferings().filter((o) => !hiddenOfferings.has(o.id))];
+}
+
+/** Any single offering, including drafts and hidden ones (so links and staff previews still resolve). */
 export function getOffering(id: string): Offering | undefined {
-  return getOfferings().find((o) => o.id === id);
+  return customOfferings.find((o) => o.id === id) ?? builtInOfferings().find((o) => o.id === id);
 }
 
 export const faqs = [

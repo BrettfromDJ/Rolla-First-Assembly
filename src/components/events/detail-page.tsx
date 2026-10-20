@@ -12,6 +12,7 @@ import { Photo } from "@/components/ui/photo";
 import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/ui/avatar";
 import { RsvpSheet } from "./rsvp-sheet";
+import { headcount } from "@/lib/event-builder";
 import { OfferingRow, toneFor } from "./offering-cards";
 import { getOfferings, staffById } from "@/lib/data";
 import { useStore } from "@/lib/store";
@@ -22,7 +23,11 @@ const ease = [0.22, 1, 0.36, 1] as const;
 
 export function DetailPage({ offering: o }: { offering: Offering }) {
   const router = useRouter();
-  const { hasRsvp, cancelRsvp, hydrated } = useStore();
+  const { hasRsvp, cancelRsvp, hydrated, responses } = useStore();
+  const taken = o.custom ? headcount(responses.filter((r) => r.eventId === o.id)) : 0;
+  const left = o.capacity ? Math.max(0, o.capacity - taken) : undefined;
+  const closed = !!o.closesAt && hydrated && Date.now() > +new Date(o.closesAt);
+  const blocked = closed || left === 0;
   const [sheet, setSheet] = useState<{ open: boolean; item?: SubItem }>({ open: false });
   const hosts = o.hostIds.map((id) => staffById[id]).filter(Boolean);
   const main = hydrated ? hasRsvp(o.id) : undefined;
@@ -42,6 +47,12 @@ export function DetailPage({ offering: o }: { offering: Offering }) {
             <ArrowLeft className="size-4" /> Back
           </button>
         </div>
+
+        {o.status === "draft" && (
+          <div className="mx-auto max-w-7xl px-5 pt-4 md:px-8">
+            <p className="rounded-2xl bg-honey-soft px-4 py-3 text-sm text-honey">Draft preview. Visitors can&apos;t see this event until it&apos;s published in the admin.</p>
+          </div>
+        )}
 
         {/* Hero */}
         <section className="mx-auto max-w-7xl px-5 pt-4 md:px-8">
@@ -151,12 +162,19 @@ export function DetailPage({ offering: o }: { offering: Offering }) {
                       </Button>
                     )}
                   </>
+                ) : blocked ? (
+                  <div className="rounded-2xl bg-stone-100 p-4 text-center text-sm text-stone-600">
+                    {closed ? "Sign-ups for this event are closed." : "This event is full."} Questions? Call the church office.
+                  </div>
                 ) : (
                   <>
                     <Button size="lg" className="w-full" onClick={() => open()}>
                       {o.action} <ArrowRight />
                     </Button>
-                    <p className="pt-1 text-center text-xs text-stone-400">Free · No commitment</p>
+                    <p className="pt-1 text-center text-xs text-stone-400">
+                      {left !== undefined ? `${left} spot${left === 1 ? "" : "s"} left` : "Free · No commitment"}
+                      {o.closesAt ? ` · closes ${formatDay(o.closesAt)}` : ""}
+                    </p>
                   </>
                 )}
               </div>
@@ -182,7 +200,7 @@ export function DetailPage({ offering: o }: { offering: Offering }) {
       </main>
       <SiteFooter />
       {/* Mobile sticky action */}
-      {!o.items && !main && (
+      {!o.items && !main && !blocked && (
         <div className="fixed inset-x-0 bottom-0 z-30 border-t border-stone-200/70 bg-ink/85 p-4 backdrop-blur-xl lg:hidden">
           <Button size="lg" className="w-full" onClick={() => open()}>{o.action} <ArrowRight /></Button>
         </div>

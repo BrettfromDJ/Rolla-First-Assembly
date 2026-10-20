@@ -24,14 +24,15 @@ export function EventsPage() {
   const router = useRouter();
   const area = (params.get("area") as ExploreArea | null) ?? "all";
   const current = areas.find((a) => a.id === area) ?? areas[0];
-  const { hydrated } = useStore();
+  const { hydrated, events, hiddenOfferings } = useStore();
 
   const list = useMemo(() => {
     const all = getOfferings();
     if (area === "all") return all;
     // Groups also surface studies; events include anything with a date.
     return all.filter((o) => o.area === area || (area === "groups" && o.kind === "group") || (area === "events" && o.kind === "event"));
-  }, [area]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [area, events, hiddenOfferings]);
 
   return (
     <>

@@ -29,6 +29,8 @@ export interface Rsvp {
   offeringId: string;
   itemId?: string;
   message?: string;
+  guests?: number; // extra people coming along (staff-built events)
+  answer?: string; // answer to the event's own question
   createdAt: string;
 }
 
@@ -183,6 +185,29 @@ export interface Offering {
   itemsTitle?: string;
   matchKeys?: string[]; // follow-up answers that boost this
   href?: string; // set when the offering has its own page (e.g. /baptism)
+  /* Set on events staff build in the admin Event builder */
+  custom?: boolean;
+  status?: "draft" | "published";
+  capacity?: number; // total people, guests included
+  allowGuests?: boolean;
+  question?: string; // one extra question on the RSVP form
+  questionRequired?: boolean;
+  closesAt?: string; // ISO, when sign-ups close
+  createdBy?: string;
+  updatedAt?: string;
+}
+
+/** Someone who RSVP'd or signed up for a staff-built event. */
+export interface EventResponse {
+  id: string;
+  eventId: string;
+  name: string;
+  contact: string;
+  guests: number;
+  answer?: string;
+  message?: string;
+  isYou?: boolean;
+  createdAt: string;
 }
 
 /* ---------- Admin ---------- */

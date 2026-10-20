@@ -3,13 +3,14 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { motion } from "motion/react";
-import { ArrowRight, CalendarPlus, Check, Pencil } from "lucide-react";
+import { ArrowRight, CalendarPlus, Check, Minus, Pencil, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { Sheet } from "@/components/ui/sheet";
 import { Field, Textarea } from "@/components/ui/field";
 import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/ui/avatar";
 import { staffById } from "@/lib/data";
+import { headcount } from "@/lib/event-builder";
 import { useStore } from "@/lib/store";
 import type { Offering, SubItem } from "@/lib/types";
 import { downloadIcs, formatDay, formatTime, isEmail, isPhone } from "@/lib/utils";
@@ -25,13 +26,15 @@ export function RsvpSheet({
   offering: Offering;
   item?: SubItem;
 }) {
-  const { profile, updateProfile, addRsvp } = useStore();
+  const { profile, updateProfile, addRsvp, responses } = useStore();
   const known = !!profile.firstName && !!(profile.email || profile.phone);
   const [editing, setEditing] = useState(!known);
   const [name, setName] = useState(profile.firstName);
   const [contact, setContact] = useState(profile.email || profile.phone);
   const [message, setMessage] = useState("");
-  const [errors, setErrors] = useState<{ name?: string; contact?: string; message?: string }>({});
+  const [guests, setGuests] = useState(0);
+  const [answer, setAnswer] = useState("");
+  const [errors, setErrors] = useState<{ name?: string; contact?: string; message?: string; answer?: string }>({});
   const [done, setDone] = useState(false);
 
   useEffect(() => {
@@ -39,6 +42,8 @@ export function RsvpSheet({
     setDone(false);
     setErrors({});
     setMessage("");
+    setGuests(0);
+    setAnswer("");
     setName(profile.firstName);
     setContact(profile.email || profile.phone);
     setEditing(!(profile.firstName && (profile.email || profile.phone)));
@@ -51,6 +56,10 @@ export function RsvpSheet({
   const location = item?.location ?? offering.location;
   const host = staffById[offering.hostIds[0]];
   const isQuestion = offering.actionKind === "question";
+  // Staff-built events can take guests, ask one question, and cap how many people come.
+  const left = offering.capacity ? offering.capacity - headcount(responses.filter((r) => r.eventId === offering.id)) : undefined;
+  const maxGuests = Math.max(0, Math.min(10, (left ?? 11) - 1));
+  const askGuests = !!offering.custom && !!offering.allowGuests && offering.actionKind !== "join";
 
   const submit = (e?: React.FormEvent) => {
     e?.preventDefault();
@@ -60,13 +69,14 @@ export function RsvpSheet({
       if (!isEmail(contact) && !isPhone(contact)) err.contact = "Add an email or phone so we can reach you.";
     }
     if (isQuestion && !message.trim()) err.message = "What would you like to ask?";
+    if (offering.question && offering.questionRequired && !answer.trim()) err.answer = "Please answer this one.";
     setErrors(err);
     if (Object.keys(err).length) return;
     if (editing) {
       const c = contact.trim();
       updateProfile({ firstName: name.trim(), ...(c.includes("@") ? { email: c } : { phone: c }) });
     }
-    addRsvp({ offeringId: offering.id, itemId: item?.id, message: message.trim() || undefined });
+    addRsvp({ offeringId: offering.id, itemId: item?.id, message: message.trim() || undefined, guests: askGuests ? guests : undefined, answer: answer.trim() || undefined });
     setDone(true);
   };
 
@@ -169,9 +179,35 @@ export function RsvpSheet({
               </div>
             )}
 
+            {askGuests && (
+              <div className="flex items-center justify-between gap-4 rounded-2xl bg-white p-4 ring-1 ring-stone-200">
+                <div>
+                  <p className="text-sm font-medium text-stone-900">Bringing anyone?</p>
+                  <p className="text-sm text-stone-500">{guests ? `You + ${guests} = ${guests + 1} people` : "Just you"}</p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <button type="button" onClick={() => setGuests((g) => Math.max(0, g - 1))} disabled={guests <= 0} aria-label="Fewer guests" className="flex size-10 items-center justify-center rounded-full ring-1 ring-stone-200 disabled:opacity-30"><Minus className="size-4" /></button>
+                  <span className="w-5 text-center text-lg font-medium tabular-nums" aria-live="polite">{guests}</span>
+                  <button type="button" onClick={() => setGuests((g) => Math.min(maxGuests, g + 1))} disabled={guests >= maxGuests} aria-label="More guests" className="flex size-10 items-center justify-center rounded-full ring-1 ring-stone-200 disabled:opacity-30"><Plus className="size-4" /></button>
+                </div>
+              </div>
+            )}
+
+            {offering.question && (
+              <Field
+                label={offering.question}
+                optional={!offering.questionRequired}
+                value={answer}
+                onChange={(e) => { setAnswer(e.target.value); setErrors((x) => ({ ...x, answer: undefined })); }}
+                error={errors.answer}
+                autoComplete="off"
+              />
+            )}
+
             <Button type="submit" size="lg" className="w-full">
               {offering.action} <ArrowRight />
             </Button>
+            {left !== undefined && left <= 25 && <p className="text-center text-sm text-clay">Only {left} spot{left === 1 ? "" : "s"} left</p>}
             <p className="text-center text-xs text-stone-400">Simulated for this prototype. No messages are sent.</p>
           </form>
         )}
