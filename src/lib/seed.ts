@@ -20,6 +20,7 @@ function v(input: {
   assignee: string | null;
   status: FollowStatus;
   household?: string;
+  memberDaysAgo?: number; // members only: when they joined
   rsvps?: { offeringId: string; itemId?: string; daysAgo: number }[];
   notes?: { by: string; body: string; daysAgo: number }[];
   tasks?: { title: string; dueIn: number; who: string | null; done?: boolean }[];
@@ -134,6 +135,7 @@ function v(input: {
     assigneeId: input.assignee,
     status: input.status,
     household: input.household,
+    memberSince: input.memberDaysAgo !== undefined ? daysAgo(input.memberDaysAgo) : null,
     rsvps,
     visitPlan: input.plannedSunday
       ? {
@@ -153,6 +155,20 @@ function v(input: {
     tasks,
     activity: activity.sort((a, b) => +new Date(b.at) - +new Date(a.at)),
   };
+}
+
+/** Long-time families who've joined the church. */
+function member(input: { first: string; last: string; photo?: string; years: number; joinedYearsAgo: number; household?: string; interests: InterestId[]; kids?: Parameters<typeof v>[0]["kids"]; students?: Parameters<typeof v>[0]["students"]; notes?: { by: string; body: string; daysAgo: number }[] }) {
+  return v({
+    first: input.first, last: input.last, photo: input.photo,
+    visitedDaysAgo: Math.round(input.years * 365), source: "Member",
+    interests: input.interests,
+    stage: "Connected", assignee: null, status: "Contacted",
+    household: input.household,
+    memberDaysAgo: Math.round(input.joinedYearsAgo * 365),
+    kids: input.kids, students: input.students, notes: input.notes,
+    activity: [{ kind: "member", label: "Became a member", daysAgo: Math.round(input.joinedYearsAgo * 365) }],
+  });
 }
 
 export function buildSeedVisitors(): Visitor[] {
@@ -290,6 +306,31 @@ export function buildSeedVisitors(): Visitor[] {
         { kind: "rsvp", label: "Signed up for Discover Membership", daysAgo: 7 },
         { kind: "contacted", label: "Garrett Smith marked as contacted", daysAgo: 6 },
       ],
+    }),
+    member({
+      first: "Mark", last: "Henderson", photo: portraits.marcus, years: 9, joinedYearsAgo: 8, household: "2 adults · 3 kids",
+      interests: ["serve", "people"],
+      kids: { list: [["Ella", 98, "F", "2"], ["Wyatt", 70, "M", "k"], ["June", 30, "F", "p2"]], service: "9:00", daysAgo: 400, second: "Kristen", school: "Wyman Elementary", pickup: [{ name: "Linda Henderson", relationship: "Grandma", phone: "(573) 555-0166" }] },
+      notes: [{ by: "micah", body: "Kristen leads the preschool room on the first Sunday of the month.", daysAgo: 60 }],
+    }),
+    member({
+      first: "Sarah", last: "Whitfield", photo: portraits.nora, years: 14, joinedYearsAgo: 13, household: "2 adults · 2 students",
+      interests: ["faith", "people"],
+      students: { list: [["Caleb", "11", "Rolla High School"], ["Abby", "8", "Rolla Junior High"]], daysAgo: 300 },
+    }),
+    member({
+      first: "Dale", last: "Montgomery", years: 26, joinedYearsAgo: 25, household: "2 adults",
+      interests: ["serve"],
+      notes: [{ by: "lance", body: "Dale and Judy run the Wednesday meal. Ask them before scheduling anything in the fellowship hall.", daysAgo: 120 }],
+    }),
+    member({
+      first: "Tessa", last: "Nguyen", years: 3, joinedYearsAgo: 2, household: "2 adults · 1 kid",
+      interests: ["people", "faith"],
+      kids: { list: [["Leo", 54, "M", "prek", "Gluten-free snacks only"]], service: "10:30", daysAgo: 200, second: "Brian" },
+    }),
+    member({
+      first: "Ruth", last: "Abernathy", years: 41, joinedYearsAgo: 40, household: "1 adult",
+      interests: ["faith"],
     }),
   ];
 }

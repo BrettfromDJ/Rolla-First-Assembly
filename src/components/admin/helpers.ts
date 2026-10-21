@@ -38,6 +38,7 @@ export function nextAction(v: Visitor): { label: string; due?: string; overdue?:
   const open = v.tasks.filter((t) => !t.done).sort((a, b) => +new Date(a.dueDate) - +new Date(b.dueDate))[0];
   if (open) return { label: open.title, due: open.dueDate, overdue: new Date(open.dueDate).getTime() < Date.now() };
   if (v.status === "Needs follow-up" && !v.assigneeId) return { label: "Assign a welcome team member" };
+  if (v.memberSince) return { label: v.status === "Needs follow-up" ? "Reach out" : "Nothing due" };
   const byStage: Record<Stage, string> = {
     "Planning a visit": "Welcome them on Sunday",
     "First-time visitor": "Send a welcome note",
@@ -47,6 +48,8 @@ export function nextAction(v: Visitor): { label: string; due?: string; overdue?:
   };
   return { label: byStage[v.stage] };
 }
+
+export const isMember = (v: Visitor) => !!v.memberSince;
 
 export function fullName(v: Visitor) {
   return `${v.firstName}${v.lastName ? ` ${v.lastName}` : ""}`;

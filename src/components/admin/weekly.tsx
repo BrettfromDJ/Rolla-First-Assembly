@@ -13,7 +13,7 @@ import type { Visitor } from "@/lib/types";
 import { cn, greeting, timeAgo } from "@/lib/utils";
 import { fullName, stageStyle } from "./helpers";
 
-type Tab = "visitors" | "members" | "baptisms" | "attendance" | "prayer" | "volunteers" | "schedule";
+type Tab = "people" | "baptisms" | "attendance" | "prayer" | "volunteers" | "schedule";
 
 const day = (d: string, opts: Intl.DateTimeFormatOptions = { month: "short", day: "numeric" }) => new Date(`${d}T12:00:00`).toLocaleDateString("en-US", opts);
 const fmt = (n: number) => Math.round(n).toLocaleString("en-US");
@@ -144,7 +144,7 @@ export function WeeklyView({ go, openVisitor }: { go: (t: Tab) => void; openVisi
 
       <div className="grid gap-4 lg:grid-cols-2 2xl:grid-cols-3">
         {/* ---------- New people ---------- */}
-        <Card icon={UserPlus} title="New people" stat={`${d.last.firstTime || d.newPeople.length}`} statLabel={d.last.firstTime ? "first-time guests Sunday" : "new this week"} onMore={() => go("visitors")} more="All visitors">
+        <Card icon={UserPlus} title="New people" stat={`${d.last.firstTime || d.newPeople.length}`} statLabel={d.last.firstTime ? "first-time guests Sunday" : "new this week"} onMore={() => go("people")} more="All people">
           {d.newPeople.length ? (
             <ul className="divide-y divide-stone-100">
               {d.newPeople.slice(0, 5).map((v) => (
@@ -157,7 +157,7 @@ export function WeeklyView({ go, openVisitor }: { go: (t: Tab) => void; openVisi
         </Card>
 
         {/* ---------- Follow-ups due ---------- */}
-        <Card icon={ListChecks} title="Follow-ups due" stat={String(d.tasks.length + d.unassigned.length)} statLabel={`${d.tasks.filter((t) => t.overdue).length} overdue`} warn={d.tasks.some((t) => t.overdue)} onMore={() => go("visitors")} more="Open the list">
+        <Card icon={ListChecks} title="Follow-ups due" stat={String(d.tasks.length + d.unassigned.length)} statLabel={`${d.tasks.filter((t) => t.overdue).length} overdue`} warn={d.tasks.some((t) => t.overdue)} onMore={() => go("people")} more="Open the list">
           {d.tasks.length || d.unassigned.length ? (
             <ul className="divide-y divide-stone-100">
               {d.unassigned.slice(0, 2).map((v) => (

@@ -239,7 +239,7 @@ export interface Task {
 
 export interface Activity {
   id: string;
-  kind: "visit" | "plan" | "baptism" | "kids" | "students" | "onboarding" | "rsvp" | "contacted" | "assigned" | "note" | "task" | "stage" | "join" | "question";
+  kind: "member" | "visit" | "plan" | "baptism" | "kids" | "students" | "onboarding" | "rsvp" | "contacted" | "assigned" | "note" | "task" | "stage" | "join" | "question";
   label: string;
   at: string;
 }
@@ -264,6 +264,8 @@ export interface Visitor {
   kids?: KidsRegistration | null;
   students?: StudentsRegistration | null;
   household?: string;
+  /** Set when they become a member. Everyone else is a guest. */
+  memberSince?: string | null;
   notes: Note[];
   tasks: Task[];
   activity: Activity[];
@@ -275,6 +277,7 @@ export interface VisitorOverlay {
   stage?: Stage;
   assigneeId?: string | null;
   status?: FollowStatus;
+  memberSince?: string | null;
   notes: Note[];
   tasks: Task[];
   activity: Activity[];

@@ -68,7 +68,7 @@ const freshProfile = (): Profile => ({
 const freshOverlay = (): VisitorOverlay => ({ notes: [], tasks: [], activity: [] });
 
 /** Bump when the sample data changes, so saved demos pick up the new examples. */
-const SEED_VERSION = 4;
+const SEED_VERSION = 5;
 
 interface State {
   profile: Profile;
@@ -90,7 +90,7 @@ const seedEvents = () => buildSeedEvents();
 
 const freshState = (): State => ({ profile: freshProfile(), visitors: buildSeedVisitors(), overlay: freshOverlay(), attendance: buildSeedAttendance(), prayers: buildSeedPrayers(), prayed: [], sermonNotes: {}, serve: buildSeedServe(), schedule: { ...buildSeedSchedule(), settings: defaultScheduleSettings }, ...seedEvents(), hiddenOfferings: [], seedVersion: SEED_VERSION });
 
-export type VisitorPatch = Partial<Pick<Visitor, "stage" | "assigneeId" | "status">>;
+export type VisitorPatch = Partial<Pick<Visitor, "stage" | "assigneeId" | "status" | "memberSince">>;
 
 interface Store extends State {
   hydrated: boolean;
@@ -217,6 +217,7 @@ function profileToVisitor(p: Profile, o: VisitorOverlay): Visitor | null {
     stage: o.stage ?? derivedStage(p),
     assigneeId: o.assigneeId ?? null,
     status: o.status ?? "Needs follow-up",
+    memberSince: o.memberSince ?? null,
     rsvps: p.rsvps,
     visitPlan: p.visitPlan,
     baptism: p.baptism,
@@ -571,7 +572,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   /* ---------- staff actions ---------- */
 
   const editVisitor = useCallback(
-    (id: string, fn: (v: { stage?: Stage; assigneeId?: string | null; status?: FollowStatus; notes: Note[]; tasks: Task[]; activity: Activity[] }) => Partial<VisitorOverlay>) => {
+    (id: string, fn: (v: { stage?: Stage; assigneeId?: string | null; status?: FollowStatus; memberSince?: string | null; notes: Note[]; tasks: Task[]; activity: Activity[] }) => Partial<VisitorOverlay>) => {
       setState((s) => {
         if (id === "you") return { ...s, overlay: { ...s.overlay, ...fn(s.overlay) } };
         return { ...s, visitors: s.visitors.map((v) => (v.id === id ? { ...v, ...fn(v) } : v)) };

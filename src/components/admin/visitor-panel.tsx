@@ -20,6 +20,8 @@ import {
   ArrowRightLeft,
   Droplets,
   Baby,
+  BadgeCheck,
+  HeartPulse,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Sheet } from "@/components/ui/sheet";
@@ -35,6 +37,7 @@ import {
   serveAreaOptions,
   staffById,
   kidGradeLabel,
+  kidsGroups,
   vibeOptions,
   welcomeTeam,
 } from "@/lib/data";
@@ -42,8 +45,10 @@ import { useStore } from "@/lib/store";
 import type { Activity, Stage, Visitor } from "@/lib/types";
 import { cn, daysFromNow, formatDate, formatShortDay, formatTime, timeAgo } from "@/lib/utils";
 import { ACTING_AS, fullName, rsvpInfo, stageStyle, stages } from "./helpers";
+import { ageLabel, groupOf } from "./kids-roster";
 
 const actIcon: Record<Activity["kind"], React.ComponentType<{ className?: string }>> = {
+  member: BadgeCheck,
   visit: Footprints,
   plan: CalendarDays,
   baptism: Droplets,
@@ -101,9 +106,10 @@ function PanelBody({ v }: { v: Visitor }) {
             <div className="flex flex-wrap items-center gap-2">
               <h2 className="truncate text-xl font-semibold text-stone-900">{fullName(v)}</h2>
               {v.isYou && <span className="rounded-full bg-honey-soft px-2 py-0.5 text-[11px] font-semibold text-honey">You · live demo</span>}
+              <PersonTag v={v} />
             </div>
             <p className="mt-0.5 text-sm text-stone-500">
-              {v.source} · First visit {formatDate(v.firstVisit)}
+              {v.memberSince ? `Member since ${new Date(v.memberSince).getFullYear()}` : `${v.source} · First visit ${formatDate(v.firstVisit)}`}
               {v.household ? ` · ${v.household}` : ""}
             </p>
             <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm">
@@ -119,6 +125,23 @@ function PanelBody({ v }: { v: Visitor }) {
 
         {/* Controls */}
         <div className="mt-5 grid grid-cols-2 gap-2">
+          {v.memberSince ? (
+            <div>
+              <span className="mb-1 block text-[11px] font-medium uppercase tracking-wider text-stone-400">Membership</span>
+              <div className="flex h-10 items-center justify-between gap-2 rounded-xl bg-stone-50 pl-3 pr-2 text-sm ring-1 ring-stone-200">
+                <span className="truncate">Since {new Date(v.memberSince).toLocaleDateString("en-US", { month: "short", year: "numeric" })}</span>
+                <button
+                  onClick={() => {
+                    patchVisitor(v.id, { memberSince: null }, "Changed back to a guest", "member");
+                    toast(`${v.firstName} is listed as a guest again`);
+                  }}
+                  className="shrink-0 rounded-lg px-2 py-1 text-xs text-stone-500 hover:bg-stone-100 hover:text-stone-900"
+                >
+                  Undo
+                </button>
+              </div>
+            </div>
+          ) : (
           <label className="block">
             <span className="mb-1 block text-[11px] font-medium uppercase tracking-wider text-stone-400">Stage</span>
             <select
@@ -133,6 +156,7 @@ function PanelBody({ v }: { v: Visitor }) {
               {stages.map((s) => <option key={s}>{s}</option>)}
             </select>
           </label>
+          )}
           <label className="block">
             <span className="mb-1 block text-[11px] font-medium uppercase tracking-wider text-stone-400">Assigned to</span>
             <select
@@ -173,10 +197,27 @@ function PanelBody({ v }: { v: Visitor }) {
             </Button>
           )}
         </div>
+        {!v.memberSince && (
+          <button
+            onClick={() => {
+              patchVisitor(v.id, { memberSince: new Date().toISOString(), stage: "Connected" }, "Became a member", "member");
+              toast(`${v.firstName} is now a member`, { description: "They move out of the guest journey." });
+            }}
+            className="mt-2 flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-sm text-stone-600 ring-1 ring-stone-200 transition hover:text-stone-900 hover:ring-stone-300"
+          >
+            <BadgeCheck className="size-4" /> Mark as member
+          </button>
+        )}
       </div>
 
       {/* Body */}
       <div className="flex-1 space-y-8 overflow-y-auto px-6 py-6">
+        {(v.kids || v.students) && (
+          <Section title="Family">
+            <Family v={v} />
+          </Section>
+        )}
+
         <Section title="Interests">
           {v.interests.length ? (
             <div className="flex flex-wrap gap-1.5">{v.interests.map((i) => <InterestChip key={i} id={i} label={interestShort[i]} />)}</div>
@@ -211,53 +252,17 @@ function PanelBody({ v }: { v: Visitor }) {
                 </li>
               )}
               {v.kids && (
-                <li className="rounded-2xl bg-stone-50 px-4 py-3 text-sm">
-                  <div className="flex items-center gap-3">
-                    <Baby className="size-4 text-forest-500" />
-                    <span className="flex-1 text-stone-800">Kids First · {v.kids.kids.length} {v.kids.kids.length === 1 ? "child" : "kids"}</span>
-                    <span className="text-stone-500">{formatShortDay(v.kids.date)} · {v.kids.service}</span>
-                  </div>
-                  <ul className="mt-2 space-y-1.5 pl-7 text-xs text-stone-600">
-                    {v.kids.kids.map((k, i) => (
-                      <li key={i}>
-                        <span className="font-medium text-stone-800">{k.firstName}{k.nickname ? ` "${k.nickname}"` : ""} {k.lastName}</span>
-                        {" · "}{kidGradeLabel(k.grade)} · {k.gender === "F" ? "Girl" : k.gender === "M" ? "Boy" : "—"} · Born {new Date(`${k.birthdate}T12:00:00`).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
-                        {k.school ? ` · ${k.school}` : ""}
-                        {k.medicalNotes && <span className="block text-clay">Medical: {k.medicalNotes}</span>}
-                      </li>
-                    ))}
-                  </ul>
-                  <p className="mt-2 pl-7 text-xs text-stone-500">
-                    Parent: {v.kids.parent.firstName} {v.kids.parent.lastName} · {v.kids.parent.phone} · {v.kids.parent.email}
-                    {v.kids.secondGuardian && <span className="block">Also: {v.kids.secondGuardian.firstName} {v.kids.secondGuardian.lastName}{v.kids.secondGuardian.phone ? ` · ${v.kids.secondGuardian.phone}` : ""}</span>}
-                    {v.kids.pickup.length > 0 && <span className="block">Can pick up: {v.kids.pickup.map((p) => `${p.name}${p.relationship ? ` (${p.relationship})` : ""}`).join(", ")}</span>}
-                    {v.kids.emergency && <span className="block">Emergency: {v.kids.emergency.name} · {v.kids.emergency.phone}</span>}
-                  </p>
-                  {v.kids.notes && <p className="mt-1.5 pl-7 text-xs text-stone-500">Note: {v.kids.notes}</p>}
+                <li className="flex items-center gap-3 rounded-2xl bg-stone-50 px-4 py-3 text-sm">
+                  <Baby className="size-4 text-forest-500" />
+                  <span className="flex-1 text-stone-800">Kids First · first Sunday</span>
+                  <span className="text-stone-500">{formatShortDay(v.kids.date)} · {v.kids.service}</span>
                 </li>
               )}
               {v.students && (
-                <li className="rounded-2xl bg-stone-50 px-4 py-3 text-sm">
-                  <div className="flex items-center gap-3">
-                    <Users className="size-4 text-forest-500" />
-                    <span className="flex-1 text-stone-800">Wednesday Students · {v.students.students.length} {v.students.students.length === 1 ? "student" : "students"}</span>
-                    <span className="text-stone-500">Starts {formatShortDay(v.students.date)}</span>
-                  </div>
-                  <ul className="mt-2 space-y-1.5 pl-7 text-xs text-stone-600">
-                    {v.students.students.map((s, i) => (
-                      <li key={i}>
-                        <span className="font-medium text-stone-800">{s.firstName} {s.lastName}</span> · {s.grade}th grade
-                        {s.school ? ` · ${s.school}` : ""}
-                        {s.phone ? ` · cell ${s.phone}` : ""}
-                        {s.medicalNotes && <span className="block text-clay">Medical: {s.medicalNotes}</span>}
-                      </li>
-                    ))}
-                  </ul>
-                  <p className="mt-2 pl-7 text-xs text-stone-500">
-                    Parent: {v.students.parent.firstName} {v.students.parent.lastName} · {v.students.parent.phone} · {v.students.parent.email}
-                    <span className="block">{v.students.parentTexts ? "Wants weekly parent texts" : "No parent texts"}{v.students.studentTexts ? " · OK to add student to group text" : ""}</span>
-                  </p>
-                  {v.students.notes && <p className="mt-1.5 pl-7 text-xs text-stone-500">Note: {v.students.notes}</p>}
+                <li className="flex items-center gap-3 rounded-2xl bg-stone-50 px-4 py-3 text-sm">
+                  <Users className="size-4 text-forest-500" />
+                  <span className="flex-1 text-stone-800">Wednesday Students · first night</span>
+                  <span className="text-stone-500">{formatShortDay(v.students.date)} · 6:30</span>
                 </li>
               )}
               {v.baptism && (
@@ -449,4 +454,86 @@ function Section({ title, action, children }: { title: string; action?: React.Re
 
 function Empty({ children }: { children: React.ReactNode }) {
   return <p className="rounded-2xl border border-dashed border-stone-200 px-4 py-3 text-sm text-stone-400">{children}</p>;
+}
+
+/** "Member" or "Guest". Every person is one or the other. */
+export function PersonTag({ v, className }: { v: Visitor; className?: string }) {
+  return v.memberSince ? (
+    <span className={cn("inline-flex shrink-0 items-center gap-1 rounded-full bg-forest-700 px-2 py-0.5 text-[11px] font-semibold text-ink", className)}>
+      <BadgeCheck className="size-3" /> Member
+    </span>
+  ) : (
+    <span className={cn("inline-flex shrink-0 items-center rounded-full px-2 py-0.5 text-[11px] font-medium text-stone-500 ring-1 ring-stone-200", className)}>Guest</span>
+  );
+}
+
+/** Kids and students as cards, then the grown-ups who can pick them up. */
+function Family({ v }: { v: Visitor }) {
+  const kids = [
+    ...(v.kids?.kids.map((k) => ({
+      name: `${k.firstName} ${k.lastName}`,
+      detail: [k.nickname && `Goes by ${k.nickname}`, kidGradeLabel(k.grade), ageLabel(k.birthdate), k.gender === "F" ? "Girl" : k.gender === "M" ? "Boy" : ""].filter(Boolean).join(" · "),
+      room: kidsGroups.find((g) => g.id === groupOf(k))?.label ?? "Kids",
+      school: k.school,
+      medical: k.medicalNotes,
+      student: false,
+    })) ?? []),
+    ...(v.students?.students.map((st) => ({
+      name: `${st.firstName} ${st.lastName}`,
+      detail: [`${st.grade}th grade`, st.phone ? `Cell ${st.phone}` : ""].filter(Boolean).join(" · "),
+      room: "Students",
+      school: st.school,
+      medical: st.medicalNotes,
+      student: true,
+    })) ?? []),
+  ];
+  const parent = v.kids?.parent ?? v.students?.parent;
+  const adults = [
+    parent && { q: "Parent", a: `${parent.firstName} ${parent.lastName}`, sub: parent.phone },
+    v.kids?.secondGuardian && { q: "Second guardian", a: `${v.kids.secondGuardian.firstName} ${v.kids.secondGuardian.lastName}`, sub: v.kids.secondGuardian.phone },
+    ...(v.kids?.pickup.map((p) => ({ q: "Can pick up", a: `${p.name}${p.relationship ? ` (${p.relationship})` : ""}`, sub: p.phone })) ?? []),
+    v.kids?.emergency && { q: "Emergency", a: v.kids.emergency.name, sub: v.kids.emergency.phone },
+    v.students && { q: "Texts", a: v.students.parentTexts ? "Weekly parent texts" : "No parent texts", sub: v.students.studentTexts ? "Student OK for group text" : undefined },
+  ].filter(Boolean) as { q: string; a: string; sub?: string }[];
+  const notes = [v.kids?.notes, v.students?.notes].filter(Boolean);
+
+  return (
+    <div className="space-y-3">
+      <ul className="space-y-2">
+        {kids.map((k) => (
+          <li key={k.name} className="rounded-2xl p-4 ring-1 ring-stone-200/70">
+            <div className="flex items-start gap-3">
+              <Avatar name={k.name} className="size-10" />
+              <div className="min-w-0 flex-1">
+                <p className="font-medium text-stone-900">{k.name}</p>
+                <p className="mt-0.5 text-sm text-stone-500">{k.detail}</p>
+                {k.school && <p className="text-sm text-stone-400">{k.school}</p>}
+              </div>
+              <span className={cn("shrink-0 rounded-full px-2.5 py-1 text-xs font-medium", k.student ? "bg-forest-700 text-ink" : "bg-stone-100 text-stone-700")}>{k.room}</span>
+            </div>
+            {k.medical && (
+              <p className="mt-3 flex items-start gap-2 rounded-xl bg-clay/10 px-3 py-2 text-sm text-stone-800 ring-1 ring-clay/30">
+                <HeartPulse className="mt-0.5 size-4 shrink-0 text-clay" />
+                {k.medical}
+              </p>
+            )}
+          </li>
+        ))}
+      </ul>
+      {adults.length > 0 && (
+        <dl className="divide-y divide-stone-100 rounded-2xl ring-1 ring-stone-200/70">
+          {adults.map((x, i) => (
+            <div key={i} className="flex gap-4 px-4 py-3 text-sm">
+              <dt className="w-28 shrink-0 text-stone-400 sm:w-36">{x.q}</dt>
+              <dd className="min-w-0">
+                <span className="text-stone-800">{x.a}</span>
+                {x.sub && <span className="block text-stone-500">{x.sub}</span>}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      )}
+      {notes.map((n, i) => <p key={i} className="rounded-2xl bg-stone-50 px-4 py-3 text-sm text-stone-600">{n}</p>)}
+    </div>
+  );
 }

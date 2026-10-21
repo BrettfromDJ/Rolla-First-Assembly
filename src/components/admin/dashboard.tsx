@@ -27,38 +27,41 @@ import {
   CalendarRange,
   Sun,
   CalendarPlus,
+  BadgeCheck,
+  Download,
+  HeartPulse,
+  UserRound,
 } from "lucide-react";
 import { Logo } from "@/components/ui/logo";
 import { Avatar } from "@/components/ui/avatar";
-import { InterestIcon, interestTone } from "@/components/ui/interest-icon";
 import { VisitorPanel } from "./visitor-panel";
 import { BaptismsView } from "./baptisms";
-import { MembersView } from "./members";
+import { PersonTag } from "./visitor-panel";
+import { downloadKidsRoster, groupOf, hasKids, inGroup, type KidsGroup } from "./kids-roster";
 import { AttendanceView } from "./attendance";
 import { PrayerView } from "./prayer";
 import { VolunteersView } from "./volunteers";
 import { ScheduleView } from "./schedule";
 import { WeeklyView } from "./weekly";
 import { EventsView } from "./events";
-import { interests as interestList, interestShort, staffById, welcomeTeam } from "@/lib/data";
+import { interests as interestList, interestShort, kidsGroups, staffById, welcomeTeam } from "@/lib/data";
 import { useStore } from "@/lib/store";
 import type { InterestId, Stage, Visitor } from "@/lib/types";
 import { cn, formatDate, formatShortDay, greeting, relativeDay } from "@/lib/utils";
-import { ACTING_AS, fullName, isRecent, needsAttention, nextAction, rsvpInfo, stageStyle, stages } from "./helpers";
+import { ACTING_AS, fullName, isMember, isRecent, needsAttention, nextAction, rsvpInfo, stageStyle, stages } from "./helpers";
 
-type Tab = "week" | "visitors" | "members" | "baptisms" | "attendance" | "prayer" | "volunteers" | "schedule" | "events";
+type Tab = "week" | "people" | "baptisms" | "attendance" | "prayer" | "volunteers" | "schedule" | "events";
 type View = "all" | "attention" | "mine" | "new" | "planning" | "requests" | "rsvps";
+type Who = "all" | "guests" | "members";
 
-const views: { id: View; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
-  { id: "all", label: "All visitors", icon: Users },
-  { id: "attention", label: "Needs attention", icon: AlertCircle },
-  { id: "mine", label: "Assigned to me", icon: ListChecks },
-];
+const whoLabel: Record<Who, string> = { all: "Everyone", guests: "Guests", members: "Members" };
 
 export function Dashboard() {
   const store = useStore();
   const { allVisitors, hydrated } = store;
   const [view, setView] = useState<View>("all");
+  const [who, setWho] = useState<Who>("all");
+  const [family, setFamily] = useState<KidsGroup | "kids" | "">("");
   const [tab, setTabState] = useState<Tab>("week");
   const setTab = (t: Tab) => {
     setTabState(t);
@@ -66,7 +69,8 @@ export function Dashboard() {
   };
   useEffect(() => {
     const h = location.hash.slice(1);
-    if (h === "visitors" || h === "baptisms" || h === "members" || h === "attendance" || h === "prayer" || h === "volunteers" || h === "schedule" || h === "events") setTabState(h);
+    if (h === "visitors" || h === "members") setTabState("people");
+    if (h === "people" || h === "baptisms" || h === "attendance" || h === "prayer" || h === "volunteers" || h === "schedule" || h === "events") setTabState(h);
   }, []);
   const [query, setQuery] = useState("");
   const [stage, setStage] = useState<Stage | "">("");
@@ -78,10 +82,11 @@ export function Dashboard() {
 
   const metrics = useMemo(() => {
     const now = Date.now();
-    const rs = allVisitors.flatMap((v) => v.rsvps.map((r) => ({ v, ...rsvpInfo(r) })));
+    const guests = allVisitors.filter((v) => !isMember(v));
+    const rs = guests.flatMap((v) => v.rsvps.map((r) => ({ v, ...rsvpInfo(r) })));
     return {
-      new: allVisitors.filter((v) => isRecent(v.firstVisit) && !(v.stage === "Planning a visit")).length,
-      planning: allVisitors.filter((v) => v.stage === "Planning a visit" || (v.visitPlan && new Date(v.visitPlan.date).getTime() > now)).length,
+      new: guests.filter((v) => isRecent(v.firstVisit) && !(v.stage === "Planning a visit")).length,
+      planning: guests.filter((v) => v.stage === "Planning a visit" || (v.visitPlan && new Date(v.visitPlan.date).getTime() > now)).length,
       requests: rs.filter((r) => r.kind === "join" || r.kind === "question").length,
       upcoming: rs.filter((r) => r.date && new Date(r.date).getTime() > now).length,
       attention: allVisitors.filter(needsAttention).length,
@@ -92,21 +97,41 @@ export function Dashboard() {
     const q = query.trim().toLowerCase();
     const now = Date.now();
     return allVisitors.filter((v) => {
+      if (who === "guests" && isMember(v)) return false;
+      if (who === "members" && !isMember(v)) return false;
+      if (family === "kids" ? !hasKids(v) : family && !inGroup(v, family)) return false;
+      if (["new", "planning", "requests", "rsvps"].includes(view) && isMember(v)) return false;
       if (view === "attention" && !needsAttention(v)) return false;
       if (view === "mine" && v.assigneeId !== ACTING_AS) return false;
       if (view === "new" && !(isRecent(v.firstVisit) && v.stage !== "Planning a visit")) return false;
       if (view === "planning" && !(v.stage === "Planning a visit" || (v.visitPlan && new Date(v.visitPlan.date).getTime() > now))) return false;
       if (view === "requests" && !v.rsvps.some((r) => ["join", "question"].includes(rsvpInfo(r).kind))) return false;
       if (view === "rsvps" && !v.rsvps.some((r) => { const d = rsvpInfo(r).date; return d && new Date(d).getTime() > now; })) return false;
-      if (stage && v.stage !== stage) return false;
+      if (stage && (v.stage !== stage || isMember(v))) return false;
       if (interest && !v.interests.includes(interest)) return false;
       if (assignee === "none" ? v.assigneeId : assignee && v.assigneeId !== assignee) return false;
-      if (q && !`${fullName(v)} ${v.email} ${v.phone}`.toLowerCase().includes(q)) return false;
+      if (q && !searchText(v).includes(q)) return false;
       return true;
     });
-  }, [allVisitors, view, query, stage, interest, assignee]);
+  }, [allVisitors, view, who, family, query, stage, interest, assignee]);
 
-  const stageCounts = useMemo(() => stages.map((s) => ({ s, n: allVisitors.filter((v) => v.stage === s).length })), [allVisitors]);
+  const stageCounts = useMemo(() => stages.map((s) => ({ s, n: allVisitors.filter((v) => v.stage === s && !isMember(v)).length })), [allVisitors]);
+  const memberStats = useMemo(() => {
+    const members = allVisitors.filter(isMember);
+    const kids = members.flatMap((v) => [...(v.kids?.kids ?? []), ...(v.students?.students ?? [])]);
+    return { families: members.filter(hasKids).length, kids: kids.length, medical: kids.filter((k) => k.medicalNotes).length };
+  }, [allVisitors]);
+  const counts = useMemo(() => {
+    const members = allVisitors.filter(isMember);
+    const kids = allVisitors.flatMap((v) => v.kids?.kids ?? []);
+    return {
+      all: allVisitors.length,
+      guests: allVisitors.length - members.length,
+      members: members.length,
+      families: allVisitors.filter(hasKids).length,
+      group: (g: KidsGroup) => (g === "students" ? allVisitors.reduce((n, v) => n + (v.students?.students.length ?? 0), 0) : kids.filter((k) => groupOf(k) === g).length),
+    };
+  }, [allVisitors]);
   const myTasks = useMemo(
     () =>
       allVisitors
@@ -115,8 +140,16 @@ export function Dashboard() {
     [allVisitors],
   );
 
-  const hasFilters = !!(query || stage || interest || assignee || view !== "all");
-  const clear = () => { setQuery(""); setStage(""); setInterest(""); setAssignee(""); setView("all"); };
+  const hasFilters = !!(query || stage || interest || assignee || family || view !== "all");
+  const clear = () => { setQuery(""); setStage(""); setInterest(""); setAssignee(""); setFamily(""); setView("all"); };
+  /** Jump to the People tab with one sidebar shortcut applied. */
+  const goPeople = (next: { who?: Who; view?: View; family?: KidsGroup | "kids" | ""; stage?: Stage | "" }) => {
+    setWho(next.who ?? "all");
+    setView(next.view ?? "all");
+    setFamily(next.family ?? "");
+    setStage(next.stage ?? "");
+    setTab("people");
+  };
   const me = staffById[ACTING_AS];
 
   return (
@@ -136,26 +169,30 @@ export function Dashboard() {
             <span className="flex-1 text-left">This week</span>
           </button>
           <p className="px-3 pb-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-stone-400">People</p>
-          {views.map((x) => {
-            const count = x.id === "all" ? allVisitors.length : x.id === "attention" ? metrics.attention : allVisitors.filter((v) => v.assigneeId === ACTING_AS).length;
-            return (
-              <button
-                key={x.id}
-                onClick={() => { setView(x.id); setTab("visitors"); }}
-                className={cn("flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm transition", tab === "visitors" && view === x.id ? "bg-stone-100 font-medium text-stone-900" : "text-stone-600 hover:bg-stone-50")}
-              >
-                <x.icon className="size-4 text-stone-400" />
-                <span className="flex-1 text-left">{x.label}</span>
-                <span className="text-xs tabular-nums text-stone-400">{hydrated ? count : "–"}</span>
-              </button>
-            );
-          })}
-          <p className="px-3 pb-2 pt-6 text-[11px] font-semibold uppercase tracking-[0.12em] text-stone-400">Stages</p>
+          {([
+            { label: "Everyone", icon: Users, n: counts.all, on: who === "all" && view === "all" && !family && !stage, go: {} },
+            { label: "Guests", icon: UserRound, n: counts.guests, on: who === "guests" && view === "all" && !family && !stage, go: { who: "guests" } },
+            { label: "Members", icon: BadgeCheck, n: counts.members, on: who === "members" && view === "all" && !family, go: { who: "members" } },
+            { label: "Families with kids", icon: Baby, n: counts.families, on: family === "kids" && who === "all" && view === "all", go: { family: "kids" } },
+            { label: "Needs attention", icon: AlertCircle, n: metrics.attention, on: view === "attention" && who === "all", go: { view: "attention" } },
+            { label: "Assigned to me", icon: ListChecks, n: allVisitors.filter((v) => v.assigneeId === ACTING_AS).length, on: view === "mine" && who === "all", go: { view: "mine" } },
+          ] as const).map((x) => (
+            <button
+              key={x.label}
+              onClick={() => goPeople(x.go)}
+              className={cn("flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm transition", tab === "people" && x.on ? "bg-stone-100 font-medium text-stone-900" : "text-stone-600 hover:bg-stone-50")}
+            >
+              <x.icon className="size-4 text-stone-400" />
+              <span className="flex-1 text-left">{x.label}</span>
+              <span className="text-xs tabular-nums text-stone-400">{hydrated ? x.n : "–"}</span>
+            </button>
+          ))}
+          <p className="px-3 pb-2 pt-6 text-[11px] font-semibold uppercase tracking-[0.12em] text-stone-400">Guest journey</p>
           {stageCounts.map(({ s, n }) => (
             <button
               key={s}
-              onClick={() => { setStage(stage === s ? "" : s); setView("all"); setTab("visitors"); }}
-              className={cn("flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm transition", tab === "visitors" && stage === s ? "bg-stone-100 font-medium text-stone-900" : "text-stone-600 hover:bg-stone-50")}
+              onClick={() => (tab === "people" && stage === s ? setStage("") : goPeople({ who: "guests", stage: s }))}
+              className={cn("flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm transition", tab === "people" && stage === s ? "bg-stone-100 font-medium text-stone-900" : "text-stone-600 hover:bg-stone-50")}
             >
               <span className={cn("size-2 rounded-full", stageStyle[s].dot)} />
               <span className="flex-1 text-left">{s}</span>
@@ -205,14 +242,6 @@ export function Dashboard() {
             <span className="flex-1 text-left">Events</span>
           </button>
           <button
-            onClick={() => setTab("members")}
-            className={cn("flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm transition", tab === "members" ? "bg-stone-100 font-medium text-stone-900" : "text-stone-600 hover:bg-stone-50")}
-          >
-            <Baby className="size-4 text-stone-400" />
-            <span className="flex-1 text-left">Members &amp; kids</span>
-            <span className="text-xs tabular-nums text-stone-400">{hydrated ? allVisitors.reduce((n, v) => n + (v.kids?.kids.length ?? 0), 0) : "–"}</span>
-          </button>
-          <button
             onClick={() => setTab("baptisms")}
             className={cn("flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm transition", tab === "baptisms" ? "bg-stone-100 font-medium text-stone-900" : "text-stone-600 hover:bg-stone-50")}
           >
@@ -245,8 +274,8 @@ export function Dashboard() {
               <input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder={`Search ${tab === "events" ? "events" : tab === "week" ? "visitors" : tab === "members" ? "members & kids" : tab === "prayer" ? "prayer requests" : tab === "schedule" ? "volunteers" : tab}`}
-                aria-label={`Search ${tab === "members" ? "members & kids" : tab === "prayer" ? "prayer requests" : tab}`}
+                placeholder={`Search ${tab === "events" ? "events" : tab === "people" ? "people & kids" : tab === "prayer" ? "prayer requests" : tab === "schedule" ? "volunteers" : tab}`}
+                aria-label={`Search ${tab === "people" ? "people & kids" : tab === "prayer" ? "prayer requests" : tab}`}
                 className="h-10 w-full rounded-full bg-white pl-10 pr-4 text-sm ring-1 ring-stone-200 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-forest-500"
               />
             </div>
@@ -261,8 +290,7 @@ export function Dashboard() {
           <div role="tablist" aria-label="Dashboard sections" className="no-scrollbar -mb-px flex gap-1 overflow-x-auto overflow-y-hidden">
             {([
               ["week", "This week", Sun],
-              ["visitors", "Visitors", Users],
-              ["members", "Members", Baby],
+              ["people", "People", Users],
               ["baptisms", "Baptisms", Droplets],
               ["attendance", "Attendance", BarChart3],
               ["prayer", "Prayer", HandHeart],
@@ -274,7 +302,7 @@ export function Dashboard() {
                 key={id}
                 role="tab"
                 aria-selected={tab === id}
-                onClick={() => setTab(id)}
+                onClick={() => (id === "people" && tab !== "people" ? goPeople({}) : setTab(id))}
                 className={cn("flex shrink-0 items-center gap-2 whitespace-nowrap border-b-2 px-2.5 pb-3 pt-1 text-sm transition sm:px-3", tab === id ? "border-forest-700 font-medium text-stone-900" : "border-transparent text-stone-500 hover:text-stone-800")}
               >
                 <Icon className="size-4" /> {label}
@@ -294,7 +322,7 @@ export function Dashboard() {
           </div>
         ) : tab === "week" ? (
           <div key={tab} className="m-tab px-5 pt-8 md:px-8">
-            <WeeklyView go={setTab} openVisitor={setSelectedId} />
+            <WeeklyView go={(t) => (t === "people" ? goPeople({}) : setTab(t))} openVisitor={setSelectedId} />
           </div>
         ) : tab === "schedule" ? (
           <div key={tab} className="m-tab px-5 pt-8 md:px-8">
@@ -328,14 +356,6 @@ export function Dashboard() {
             </div>
             <AttendanceView />
           </div>
-        ) : tab === "members" ? (
-          <div key={tab} className="m-tab px-5 pt-8 md:px-8">
-            <div className="mb-6">
-              <p className="text-sm text-stone-500">People</p>
-              <h1 className="mt-1 text-[28px] font-semibold tracking-[-0.02em]">Members &amp; kids</h1>
-            </div>
-            <MembersView query={query} onOpen={setSelectedId} />
-          </div>
         ) : tab === "baptisms" ? (
           <div key={tab} className="m-tab px-5 pt-8 md:px-8">
             <div className="mb-6">
@@ -348,26 +368,48 @@ export function Dashboard() {
         <div key={tab} className="m-tab px-5 pt-8 md:px-8">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
-              <p className="text-sm text-stone-500" suppressHydrationWarning>{hydrated ? new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" }) : " "}</p>
-              <h1 className="mt-1 text-[28px] font-semibold tracking-[-0.02em]" suppressHydrationWarning>
-                {hydrated ? greeting() : "Hello"}, {me.name.split(" ")[0]}
-              </h1>
+              <p className="text-sm text-stone-500" suppressHydrationWarning>{hydrated ? `${greeting()}, ${me.name.split(" ")[0]}` : " "}</p>
+              <h1 className="mt-1 text-[28px] font-semibold tracking-[-0.02em]">People</h1>
             </div>
             {hydrated && store.you && (
               <button onClick={() => setSelectedId("you")} className="group flex items-center gap-3 rounded-2xl bg-white py-2 pl-2 pr-4 text-left ring-1 ring-honey/60 transition hover:ring-honey">
                 <Avatar name={store.you.firstName} className="size-9 bg-forest-700 text-ink" />
                 <span className="text-sm">
                   <span className="flex items-center gap-1.5 font-medium"><Sparkles className="size-3.5 text-honey" /> Your demo profile is here</span>
-                  <span className="text-stone-500">{store.you.firstName} · {store.you.stage}</span>
+                  <span className="text-stone-500">{store.you.firstName} · {store.you.memberSince ? "Member" : store.you.stage}</span>
                 </span>
                 <ChevronRight className="size-4 text-stone-300 transition group-hover:translate-x-0.5" />
               </button>
             )}
           </div>
 
+          {/* Everyone / Guests / Members */}
+          <div role="radiogroup" aria-label="Show" className="mt-6 inline-flex rounded-full bg-white p-1 ring-1 ring-stone-200/70">
+            {(["all", "guests", "members"] as const).map((w) => (
+              <button
+                key={w}
+                role="radio"
+                aria-checked={who === w}
+                onClick={() => { setWho(w); if (w === "members") { setStage(""); if (["new", "planning", "requests", "rsvps"].includes(view)) setView("all"); } }}
+                className={cn("flex h-9 items-center gap-2 rounded-full px-4 text-sm transition", who === w ? "bg-forest-700 font-medium text-ink" : "text-stone-600 hover:text-stone-900")}
+              >
+                {whoLabel[w]} <span className="tabular-nums opacity-60">{hydrated ? counts[w] : ""}</span>
+              </button>
+            ))}
+          </div>
+
           {/* Metrics */}
-          <div className="mt-8 grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-5">
-            <Metric label="New visitors" sub="Last 14 days" value={metrics.new} icon={UserRoundPlus} active={view === "new"} onClick={() => setView(view === "new" ? "all" : "new")} ready={hydrated} />
+          {who === "members" ? (
+            <div className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-4">
+              <Metric label="Members" sub="Joined the church" value={counts.members} icon={BadgeCheck} active={false} onClick={() => setFamily("")} ready={hydrated} />
+              <Metric label="Families with kids" sub="Kids or students registered" value={memberStats.families} icon={Baby} active={family === "kids"} onClick={() => setFamily(family === "kids" ? "" : "kids")} ready={hydrated} />
+              <Metric label="Kids & students" sub="In member families" value={memberStats.kids} icon={Users} active={false} onClick={() => setFamily("kids")} ready={hydrated} />
+              <Metric label="Allergies & medical" sub="Printed on name tags" value={memberStats.medical} icon={HeartPulse} accent active={false} onClick={() => setFamily("kids")} ready={hydrated} />
+            </div>
+          ) : (
+          <>
+          <div className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-5">
+            <Metric label="New guests" sub="Last 14 days" value={metrics.new} icon={UserRoundPlus} active={view === "new"} onClick={() => setView(view === "new" ? "all" : "new")} ready={hydrated} />
             <Metric label="Planning a visit" sub="Coming soon" value={metrics.planning} icon={CalendarDays} active={view === "planning"} onClick={() => setView(view === "planning" ? "all" : "planning")} ready={hydrated} />
             <Metric label="Connection requests" sub="Groups, teams & questions" value={metrics.requests} icon={Inbox} active={view === "requests"} onClick={() => setView(view === "requests" ? "all" : "requests")} ready={hydrated} />
             <Metric label="Upcoming RSVPs" sub="Events ahead" value={metrics.upcoming} icon={CalendarCheck} active={view === "rsvps"} onClick={() => setView(view === "rsvps" ? "all" : "rsvps")} ready={hydrated} />
@@ -377,15 +419,15 @@ export function Dashboard() {
           {/* Journey bar */}
           <div className="mt-3 rounded-2xl bg-white p-5 ring-1 ring-stone-200/70">
             <div className="flex items-center justify-between">
-              <p className="text-sm font-medium">Visitor journey</p>
-              <p className="text-xs text-stone-400">{allVisitors.length} people</p>
+              <p className="text-sm font-medium">Guest journey</p>
+              <p className="text-xs text-stone-400">{counts.guests} guests · becoming a member ends the journey</p>
             </div>
             <div className="mt-4 flex h-2.5 gap-1 overflow-hidden rounded-full">
               {stageCounts.map(({ s, n }) => (
                 <motion.button
                   key={s}
                   aria-label={`${s}: ${n}`}
-                  onClick={() => setStage(stage === s ? "" : s)}
+                  onClick={() => { setStage(stage === s ? "" : s); if (who === "all") setWho("guests"); }}
                   initial={false}
                   animate={{ flexGrow: hydrated ? Math.max(n, 0.15) : 1 }}
                   className={cn("h-full min-w-1 rounded-full transition-opacity", stageStyle[s].bar, stage && stage !== s && "opacity-25")}
@@ -394,27 +436,39 @@ export function Dashboard() {
             </div>
             <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1.5">
               {stageCounts.map(({ s, n }) => (
-                <button key={s} onClick={() => setStage(stage === s ? "" : s)} className={cn("flex items-center gap-1.5 text-xs transition", stage && stage !== s ? "text-stone-300" : "text-stone-500 hover:text-stone-800")}>
+                <button key={s} onClick={() => { setStage(stage === s ? "" : s); if (who === "all") setWho("guests"); }} className={cn("flex items-center gap-1.5 text-xs transition", stage && stage !== s ? "text-stone-300" : "text-stone-500 hover:text-stone-800")}>
                   <span className={cn("size-1.5 rounded-full", stageStyle[s].dot)} /> {s} <span className="tabular-nums text-stone-400">{hydrated ? n : ""}</span>
                 </button>
               ))}
             </div>
           </div>
+          </>
+          )}
 
           <div className="mt-8 grid gap-6 2xl:grid-cols-[1fr_320px]">
             {/* Table */}
-            <section className="min-w-0 rounded-2xl bg-white ring-1 ring-stone-200/70" aria-labelledby="visitors-title">
+            <section className="min-w-0 rounded-2xl bg-white ring-1 ring-stone-200/70" aria-labelledby="people-title">
               <div className="flex flex-wrap items-center gap-2 border-b border-stone-100 p-4">
-                <h2 id="visitors-title" className="mr-auto px-1 font-medium">
-                  {view === "all" ? "Visitors" : { attention: "Needs attention", mine: "Assigned to me", new: "New visitors", planning: "Planning a visit", requests: "Connection requests", rsvps: "Upcoming RSVPs" }[view]}
+                <h2 id="people-title" className="mr-auto px-1 font-medium">
+                  {view === "all" ? whoLabel[who] : { attention: "Needs attention", mine: "Assigned to me", new: "New guests", planning: "Planning a visit", requests: "Connection requests", rsvps: "Upcoming RSVPs" }[view]}
                   <span className="ml-2 text-sm font-normal text-stone-400">{hydrated ? filtered.length : ""}</span>
                 </h2>
-                <Filter value={stage} onChange={(v) => setStage(v as Stage | "")} label="Stage" options={stages.map((s) => ({ v: s, l: s }))} />
+                {who !== "members" && <Filter value={stage} onChange={(v) => { setStage(v as Stage | ""); if (v && who === "all") setWho("guests"); }} label="Stage" options={stages.map((s) => ({ v: s, l: s }))} />}
+                <Filter value={family} onChange={(v) => setFamily(v as KidsGroup | "kids" | "")} label="Kids" allLabel="Kids: Any" options={[{ v: "kids", l: "Has kids registered" }, ...kidsGroups.map((g) => ({ v: g.id, l: `${g.label} (${counts.group(g.id)})` }))]} />
                 <Filter value={interest} onChange={(v) => setInterest(v as InterestId | "")} label="Interest" options={interestList.map((i) => ({ v: i.id, l: interestShort[i.id] }))} />
                 <Filter value={assignee} onChange={setAssignee} label="Assigned" options={[{ v: "none", l: "Unassigned" }, ...welcomeTeam.map((s) => ({ v: s.id, l: s.name }))]} />
                 {hasFilters && (
                   <button onClick={clear} className="inline-flex h-9 items-center gap-1 rounded-full px-3 text-sm text-stone-500 hover:bg-stone-100">
                     <X className="size-3.5" /> Clear
+                  </button>
+                )}
+                {family && (
+                  <button
+                    onClick={() => downloadKidsRoster(filtered, family === "kids" ? "" : family)}
+                    disabled={!filtered.some((v) => v.kids)}
+                    className="inline-flex h-9 items-center gap-1.5 rounded-full px-3.5 text-sm text-stone-600 ring-1 ring-stone-200 transition hover:text-stone-900 hover:ring-stone-300 disabled:opacity-40"
+                  >
+                    <Download className="size-3.5" /> Kids roster
                   </button>
                 )}
               </div>
@@ -426,16 +480,16 @@ export function Dashboard() {
                   <span className="flex size-12 items-center justify-center rounded-2xl bg-stone-100 text-stone-400"><LayoutGrid className="size-5" /></span>
                   <p className="mt-4 font-medium">No one matches those filters</p>
                   <p className="mt-1 text-sm text-stone-500">Try a different search, or clear filters to see everyone.</p>
-                  <button onClick={clear} className="mt-4 text-sm font-medium text-forest-600 hover:text-forest-300">Clear filters</button>
+                  <button onClick={() => { clear(); setWho("all"); }} className="mt-4 text-sm font-medium text-forest-600 hover:text-forest-300">Clear filters</button>
                 </div>
               ) : (
                 <>
                   {/* Desktop table */}
                   <div className="hidden overflow-x-auto md:block">
-                    <table className="w-full min-w-[880px] text-left text-sm">
+                    <table className="w-full min-w-[760px] text-left text-sm">
                       <thead>
                         <tr className="text-xs text-stone-400">
-                          {["Name", "First visit", "Interests", "Stage", "Assigned", "Next action"].map((h) => (
+                          {["Name", "Journey", "Assigned", "Next action"].map((h) => (
                             <th key={h} className="px-4 py-3 font-medium first:pl-5">{h}</th>
                           ))}
                         </tr>
@@ -453,9 +507,9 @@ export function Dashboard() {
                           <Avatar name={fullName(v)} src={v.photo} className={cn(v.isYou && "bg-forest-700 text-ink")} />
                           <div className="min-w-0 flex-1">
                             <p className="truncate font-medium">{fullName(v)} {v.isYou && <span className="text-xs text-honey">· You</span>}</p>
-                            <p className="truncate text-xs text-stone-500">{nextAction(v).label}</p>
+                            <p className="truncate text-xs text-stone-500">{isMember(v) ? `Member since ${new Date(v.memberSince!).getFullYear()}` : nextAction(v).label}</p>
                           </div>
-                          <StagePill s={v.stage} />
+                          {isMember(v) ? <PersonTag v={v} /> : <StagePill s={v.stage} />}
                         </button>
                       </li>
                     ))}
@@ -522,7 +576,7 @@ function Metric({ label, sub, value, icon: Icon, onClick, active, accent, ready,
   );
 }
 
-function Filter({ value, onChange, label, options }: { value: string; onChange: (v: string) => void; label: string; options: { v: string; l: string }[] }) {
+function Filter({ value, onChange, label, allLabel, options }: { value: string; onChange: (v: string) => void; label: string; allLabel?: string; options: { v: string; l: string }[] }) {
   return (
     <select
       value={value}
@@ -533,7 +587,7 @@ function Filter({ value, onChange, label, options }: { value: string; onChange: 
         value ? "bg-forest-50 text-forest-300 ring-forest-200" : "bg-white text-stone-600 ring-stone-200",
       )}
     >
-      <option value="">{label}: All</option>
+      <option value="">{allLabel ?? `${label}: All`}</option>
       {options.map((o) => <option key={o.v} value={o.v}>{o.l}</option>)}
     </select>
   );
@@ -543,9 +597,18 @@ function StagePill({ s }: { s: Stage }) {
   return <span className={cn("inline-flex shrink-0 items-center whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-medium", stageStyle[s].pill)}>{s}</span>;
 }
 
+/** Name, contact, kids and guardians: everything the search box looks through. */
+function searchText(v: Visitor) {
+  const kids = v.kids?.kids.map((k) => `${k.firstName} ${k.nickname ?? ""} ${k.lastName}`).join(" ") ?? "";
+  const students = v.students?.students.map((k) => `${k.firstName} ${k.lastName}`).join(" ") ?? "";
+  const guardian = v.kids?.secondGuardian?.firstName ?? "";
+  return `${fullName(v)} ${v.email} ${v.phone} ${kids} ${students} ${guardian}`.toLowerCase();
+}
+
 function Row({ v, onOpen }: { v: Visitor; onOpen: () => void }) {
   const a = v.assigneeId ? staffById[v.assigneeId] : null;
   const next = nextAction(v);
+  const member = isMember(v);
   return (
     <tr
       onClick={onOpen}
@@ -558,40 +621,35 @@ function Row({ v, onOpen }: { v: Visitor; onOpen: () => void }) {
           <Avatar name={fullName(v)} src={v.photo} className={cn(v.isYou && "bg-forest-700 text-ink")} />
           <div className="min-w-0">
             <p className="flex items-center gap-2 font-medium text-stone-900">
-              {fullName(v)}
+              <span className="truncate">{fullName(v)}</span>
               {v.isYou && <span className="rounded-full bg-honey-soft px-1.5 py-0.5 text-[10px] font-semibold text-honey">YOU</span>}
+              {member && <PersonTag v={v} />}
             </p>
-            <p className="max-w-[200px] truncate text-xs text-stone-400">{v.email || v.phone || "No contact info"}</p>
+            <p className="max-w-[220px] truncate text-xs text-stone-400">{v.email || v.phone || "No contact info"}</p>
           </div>
         </div>
       </td>
-      <td className="px-4 py-3 text-stone-600">
-        {formatDate(v.firstVisit)}
-        <span className="block text-xs text-stone-400">{v.source}</span>
+            <td className="px-4 py-3">
+        {member ? (
+          <span className="whitespace-nowrap text-stone-600">Member since {new Date(v.memberSince!).getFullYear()}</span>
+        ) : (
+          <>
+            <StagePill s={v.stage} />
+            <span className="mt-1 block text-xs text-stone-400">First visit {formatDate(v.firstVisit)}</span>
+          </>
+        )}
       </td>
-      <td className="px-4 py-3">
-        <div className="flex gap-1">
-          {v.interests.length ? (
-            v.interests.map((i) => (
-              <span key={i} title={interestShort[i]} className={cn("flex size-7 items-center justify-center rounded-lg", interestTone[i])}>
-                <InterestIcon id={i} className="size-3.5" />
-              </span>
-            ))
-          ) : (
-            <span className="text-xs text-stone-300">—</span>
-          )}
-        </div>
-      </td>
-      <td className="px-4 py-3"><StagePill s={v.stage} /></td>
       <td className="px-4 py-3">
         {a ? (
           <span className="flex items-center gap-2 text-stone-700"><Avatar name={a.name} src={a.photo} className="size-6 text-[10px]" />{a.name.split(" ")[0]}</span>
+        ) : member ? (
+          <span className="text-xs text-stone-300">—</span>
         ) : (
           <span className="inline-flex items-center rounded-full border border-dashed border-stone-300 px-2 py-0.5 text-xs text-stone-400">Unassigned</span>
         )}
       </td>
       <td className="px-4 py-3">
-        <p className={cn("max-w-[220px] truncate", next.overdue ? "text-clay" : "text-stone-700")}>{next.label}</p>
+        <p className={cn("max-w-[220px] truncate", next.overdue ? "text-clay" : member && next.label === "Nothing due" ? "text-stone-400" : "text-stone-700")}>{next.label}</p>
         {next.due && <p className={cn("text-xs", next.overdue ? "text-clay/80" : "text-stone-400")}>{next.overdue ? "Overdue" : `Due ${formatShortDay(next.due)}`}</p>}
       </td>
     </tr>
