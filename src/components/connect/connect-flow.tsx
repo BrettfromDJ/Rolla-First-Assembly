@@ -377,7 +377,7 @@ function ResultsStep({ onEdit }: { onEdit: () => void }) {
       <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease }} className="grid gap-6 md:grid-cols-[1fr_auto] md:items-end">
         <div>
           <p className="text-sm font-medium text-forest-600">{name ? `For you, ${name}` : "Just for you"}</p>
-          <h1 className="mt-3 font-display text-[clamp(3rem,7vw,6rem)] leading-[0.95] tracking-[-0.025em] text-stone-900 text-balance">
+          <h1 className="mt-3 font-display text-[clamp(3rem,6.4vw,82px)] leading-[0.95] tracking-[-0.025em] text-stone-900 text-balance">
             Here&apos;s where you could start
           </h1>
           <p className="mt-5 max-w-xl text-lg text-stone-500">A few ways to find your place, based on what you shared.</p>

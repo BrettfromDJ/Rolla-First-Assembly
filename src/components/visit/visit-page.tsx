@@ -48,7 +48,7 @@ export function VisitPage() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            className="mt-4 max-w-5xl font-mori text-[clamp(48px,7.2vw,104px)] font-semibold leading-[0.95] tracking-[-0.05em] text-[#dcd2c5] text-balance"
+            className="mt-4 max-w-5xl font-mori text-[clamp(48px,6.4vw,82px)] font-semibold leading-[0.95] tracking-[-0.05em] text-[#dcd2c5] text-balance"
           >
             New here? <span className="font-editorial font-normal italic tracking-[-0.03em] text-[#0285ff]">You&apos;re</span> in the right place.
           </motion.h1>
@@ -97,7 +97,7 @@ export function VisitPage() {
                 <div className="mt-3 flex flex-wrap items-end gap-x-6 gap-y-2">
                   {church.services.map((t) => (
                     <div key={t}>
-                      <span className="font-display text-[56px] leading-none sm:text-7xl md:text-8xl">{t}</span>
+                      <span className="font-display text-[56px] leading-none sm:text-7xl md:text-[82px]">{t}</span>
                       <span className="ml-1 text-paper/60">AM</span>
                     </div>
                   ))}

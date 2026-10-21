@@ -159,7 +159,7 @@ export function ChurchHome() {
           <div className="relative">
             <p className={cn(mori, "text-[16px] uppercase leading-[1.1] tracking-[-0.03em] text-[#0285ff] lg:absolute lg:left-[11px] lg:top-[47px]")}>Our mission</p>
             <WordsIn
-              className={cn(mori, "mt-4 text-[clamp(34px,7.78vw,112px)] tracking-[-0.05em] lg:mt-0")}
+              className={cn(mori, "mt-4 text-[clamp(34px,5.7vw,82px)] tracking-[-0.05em] lg:mt-0")}
               words={[
                 [{ text: "Helping", dim: true }, { text: "people", dim: true }, { text: "come", italic: true }],
                 [
@@ -205,7 +205,7 @@ export function ChurchHome() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={A("worship.jpg")} alt="Gannon singing and playing guitar during a night of worship" width={1321} height={523} loading="lazy" className="size-full object-cover" />
           </SettleIn>
-          <h2 className="absolute left-[4.16%] top-[11.5%] font-editorial font-normal text-[clamp(48px,8.48cqw,112px)] leading-[0.94] tracking-[-0.05em] text-[#0285ff]">
+          <h2 className="absolute left-[4.16%] top-[11.5%] font-editorial font-normal text-[clamp(48px,6.2cqw,82px)] leading-[0.94] tracking-[-0.05em] text-[#0285ff]">
             A Night
             <br />
             of Worship

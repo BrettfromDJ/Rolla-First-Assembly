@@ -41,7 +41,7 @@ export function KidsPage() {
         {/* ---------- Hero ---------- */}
         <section className="mx-auto max-w-[1440px] px-5 pb-10 pt-14 md:px-[60px] md:pt-[63px]">
           <p className={cn(mori, "m-load-rise text-[16px] uppercase leading-[1.1] tracking-[-0.03em] text-[#0285ff]")}>Kids First</p>
-          <h1 className={cn(mori, "m-title mt-4 max-w-[1100px] text-[clamp(52px,8vw,124px)] leading-[0.92] tracking-[-0.05em]")}>
+          <h1 className={cn(mori, "m-title mt-4 max-w-[1100px] text-[clamp(52px,6.4vw,82px)] leading-[0.92] tracking-[-0.05em]")}>
             Kids are the best part of <Ed>Sunday</Ed>
           </h1>
         </section>

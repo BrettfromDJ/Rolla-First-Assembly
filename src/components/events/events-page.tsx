@@ -42,7 +42,7 @@ export function EventsPage() {
           <p className="text-[13px] font-medium uppercase tracking-[0.16em] text-forest-500">Explore</p>
           <AnimatePresence mode="wait">
             <motion.div key={current.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }} transition={{ duration: 0.3 }}>
-              <h1 className="mt-4 font-display text-[clamp(3rem,7vw,6rem)] leading-[0.95] tracking-[-0.025em] text-stone-900">{current.label}</h1>
+              <h1 className="mt-4 font-display text-[clamp(3rem,6.4vw,82px)] leading-[0.95] tracking-[-0.025em] text-stone-900">{current.label}</h1>
               <p className="mt-4 max-w-lg text-lg text-stone-500">{current.blurb}</p>
             </motion.div>
           </AnimatePresence>

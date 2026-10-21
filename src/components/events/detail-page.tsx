@@ -58,7 +58,7 @@ export function DetailPage({ offering: o }: { offering: Offering }) {
         <section className="mx-auto max-w-7xl px-5 pt-4 md:px-8">
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease }}>
             <p className="text-sm font-medium text-forest-600">{o.tag}</p>
-            <h1 className="mt-3 max-w-4xl font-display text-[clamp(2.75rem,6.5vw,5.5rem)] leading-[0.95] tracking-[-0.025em] text-stone-900 text-balance">{o.title}</h1>
+            <h1 className="mt-3 max-w-4xl font-display text-[clamp(2.75rem,6vw,82px)] leading-[0.95] tracking-[-0.025em] text-stone-900 text-balance">{o.title}</h1>
             <p className="mt-5 max-w-2xl text-lg leading-relaxed text-stone-600">{o.summary}</p>
           </motion.div>
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.15, duration: 0.8 }}>

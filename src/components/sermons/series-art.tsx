@@ -37,7 +37,7 @@ export function SeriesArt({ series, className, label = true }: { series: SermonS
       )}
       <div className="flex h-full flex-col justify-end p-[6cqw]">
         {label && <p className={cn("font-mori text-[3.2cqw] font-semibold uppercase tracking-[0.06em]", tone.sub)}>Rolla First · Series</p>}
-        <p className={cn("mt-[1.5cqw] max-w-[85%] font-mori text-[11cqw] font-semibold leading-[0.9] tracking-[-0.05em]", tone.ink)}>{title}</p>
+        <p className={cn("mt-[1.5cqw] max-w-[85%] font-mori text-[min(11cqw,82px)] font-semibold leading-[0.9] tracking-[-0.05em]", tone.ink)}>{title}</p>
       </div>
     </div>
   );

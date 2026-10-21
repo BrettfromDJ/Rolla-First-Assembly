@@ -42,7 +42,7 @@ export function BaptismPage() {
         <section className="mx-auto grid max-w-[1440px] gap-10 px-5 pb-16 pt-14 md:px-[60px] md:pt-[63px] lg:grid-cols-[1.25fr_1fr] lg:items-end lg:gap-16">
           <div>
             <p className={cn(mori, "m-load-rise text-[16px] uppercase leading-[1.1] tracking-[-0.03em] text-[#0285ff]")}>Baptism</p>
-            <h1 className={cn(mori, "m-title mt-4 text-[clamp(52px,8vw,124px)] leading-[0.92] tracking-[-0.05em]")}>
+            <h1 className={cn(mori, "m-title mt-4 text-[clamp(52px,6.4vw,82px)] leading-[0.92] tracking-[-0.05em]")}>
               Take the
               <br />
               <Ed>next</Ed> step

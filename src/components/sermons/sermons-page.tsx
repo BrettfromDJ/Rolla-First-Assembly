@@ -69,7 +69,7 @@ export function SermonsPage() {
         <section className="mx-auto grid max-w-[1440px] gap-10 px-5 pb-12 pt-14 md:px-[60px] md:pt-[63px] lg:grid-cols-[1.4fr_1fr] lg:items-end lg:gap-16">
           <div>
             <p className={cn(mori, "m-load-rise text-[16px] uppercase leading-[1.1] tracking-[-0.03em] text-[#0285ff]")}>Sermons</p>
-            <h1 className={cn(mori, "m-title mt-4 text-[clamp(52px,8vw,124px)] leading-[0.92] tracking-[-0.05em]")}>
+            <h1 className={cn(mori, "m-title mt-4 text-[clamp(52px,6.4vw,82px)] leading-[0.92] tracking-[-0.05em]")}>
               Messages from <Ed>Sunday</Ed>
             </h1>
             <p className="m-load-rise mt-6 max-w-lg text-lg leading-relaxed text-stone-600 md:text-xl" style={{ "--rd": "0.45s" } as React.CSSProperties}>Missed a week, or want to hear it again? Watch, listen, and take notes on every message.</p>

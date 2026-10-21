@@ -72,7 +72,7 @@ export function HomePage() {
         <section className="mx-auto max-w-7xl px-5 pb-10 pt-12 md:px-8 md:pt-20">
           <div className="grid gap-8 md:grid-cols-[1fr_auto] md:items-end">
             <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease }}>
-              <h1 className="font-display text-[clamp(3.25rem,8vw,7rem)] leading-[0.92] tracking-[-0.025em] text-stone-900">
+              <h1 className="font-display text-[clamp(3.25rem,6.4vw,82px)] leading-[0.92] tracking-[-0.025em] text-stone-900">
                 {greeting()}
                 {name ? <>, <span className="italic text-forest-600">{name}.</span></> : "."}
               </h1>
