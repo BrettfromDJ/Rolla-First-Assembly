@@ -9,7 +9,6 @@ import { Sheet } from "@/components/ui/sheet";
 import { Field, Textarea } from "@/components/ui/field";
 import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/ui/avatar";
-import { staffById } from "@/lib/data";
 import { headcount } from "@/lib/event-builder";
 import { useStore } from "@/lib/store";
 import type { Offering, SubItem } from "@/lib/types";
@@ -54,7 +53,6 @@ export function RsvpSheet({
   const date = item?.date ?? (item ? undefined : offering.date);
   const duration = item?.durationMin ?? offering.durationMin;
   const location = item?.location ?? offering.location;
-  const host = staffById[offering.hostIds[0]];
   const isQuestion = offering.actionKind === "question";
   // Staff-built events can take guests, ask one question, and cap how many people come.
   const left = offering.capacity ? offering.capacity - headcount(responses.filter((r) => r.eventId === offering.id)) : undefined;
@@ -102,14 +100,6 @@ export function RsvpSheet({
                 {date ? `${formatDay(date)} · ${formatTime(date)}` : item?.meta || offering.schedule}
               </p>
               <p className="text-sm text-stone-500">{location}</p>
-              {host && (
-                <div className="mt-4 flex items-center gap-3 border-t border-stone-100 pt-4">
-                  <Avatar name={host.name} src={host.photo} />
-                  <p className="text-sm text-stone-600">
-                    <span className="font-medium text-stone-900">{host.name.split(" ")[0]}</span> will say hello.
-                  </p>
-                </div>
-              )}
             </div>
 
             <div className="mt-6 grid gap-3 sm:grid-cols-2">

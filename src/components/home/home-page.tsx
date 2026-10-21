@@ -104,7 +104,7 @@ export function HomePage() {
                 tone={toneFor(nextPlan.o)}
                 eyebrow={nextPlan.date ? `${relativeDay(nextPlan.date)} · ${formatTime(nextPlan.date)}` : nextPlan.item?.meta || nextPlan.o.schedule}
                 title={nextPlan.item?.title ?? nextPlan.o.title}
-                body={nextPlan.item ? nextPlan.item.location : `${nextPlan.o.location}. ${nextPlan.o.hostIds[0] ? `${staffById[nextPlan.o.hostIds[0]].name.split(" ")[0]} will be there to say hello.` : ""}`}
+                body={nextPlan.item ? nextPlan.item.location : nextPlan.o.location}
                 cta="View details"
                 badge={nextPlan.o.actionKind === "join" ? "Request sent" : "You're going"}
               />

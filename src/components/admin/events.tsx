@@ -6,7 +6,7 @@ import { CalendarDays, Copy, Download, Eye, EyeOff, ImagePlus, Pencil, Plus, Tra
 import { toast } from "sonner";
 import { Sheet } from "@/components/ui/sheet";
 import { OfferingCard } from "@/components/events/offering-cards";
-import { builtInOfferings, interests, staff, staffById } from "@/lib/data";
+import { builtInOfferings, interests } from "@/lib/data";
 import { blankEvent, eventKinds, eventPhotos, headcount, kindFor, responseTypes } from "@/lib/event-builder";
 import { useStore } from "@/lib/store";
 import type { EventResponse, InterestId, Offering } from "@/lib/types";
@@ -233,7 +233,6 @@ function Editor({ initial, onClose }: { initial: Offering; onClose: () => void }
     if (!repeats && !date) e.date = "Pick a date, or switch to \"Repeats\".";
     if (repeats && !o.schedule.trim()) e.schedule = "Say when it meets, like \"Tuesdays at 6:30 PM\".";
     if (!o.location.trim()) e.location = "Where is it?";
-    if (!o.hostIds.length) e.hosts = "Pick at least one host.";
     if (o.capacity !== undefined && o.capacity < 1) e.capacity = "Use a number above zero, or leave it blank.";
     setErrors(e);
     if (Object.keys(e).length) {
@@ -334,22 +333,8 @@ function Editor({ initial, onClose }: { initial: Offering; onClose: () => void }
               </div>
             </Group>
 
-            <Group title="Who's hosting?">
-              <div className="flex flex-wrap gap-2">
-                {staff.map((s) => {
-                  const on = o.hostIds.includes(s.id);
-                  return (
-                    <button key={s.id} onClick={() => set({ hostIds: on ? o.hostIds.filter((x) => x !== s.id) : [...o.hostIds, s.id] })} aria-pressed={on} className={cn("inline-flex h-10 items-center gap-2 rounded-full py-1 pl-1 pr-3.5 text-sm ring-1 transition", on ? "bg-forest-700 text-ink ring-forest-700" : "bg-white text-stone-700 ring-stone-200 hover:ring-stone-300")}>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={s.photo} alt="" className="size-8 rounded-full object-cover object-top" />
-                      {s.name.split(" ")[0]}
-                    </button>
-                  );
-                })}
-              </div>
-              {errors.hosts && <p className="text-[13px] text-clay">{errors.hosts}</p>}
+            <Group title="Who's it for?" hint="Helps us recommend it">
               <div>
-                <p className="mb-2 text-sm font-medium text-stone-800">Who&apos;s it for? <span className="font-normal text-stone-400">Helps us recommend it</span></p>
                 <div className="flex flex-wrap gap-2">
                   {interests.map((it) => {
                     const on = o.interests.includes(it.id);
@@ -565,7 +550,6 @@ function ResponsesSheet({ eventId, onClose }: { eventId: string | null; onClose:
               ))}
             </ul>
           )}
-          <p className="mt-4 text-xs text-stone-400">Hosted by {o.hostIds.map((id) => staffById[id]?.name.split(" ")[0]).filter(Boolean).join(" & ")}</p>
         </div>
       )}
     </Sheet>

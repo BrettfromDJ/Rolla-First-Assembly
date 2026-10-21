@@ -10,11 +10,10 @@ import { SiteHeader } from "@/components/site/header";
 import { SiteFooter } from "@/components/site/footer";
 import { Photo } from "@/components/ui/photo";
 import { Button } from "@/components/ui/button";
-import { Avatar } from "@/components/ui/avatar";
 import { RsvpSheet } from "./rsvp-sheet";
 import { headcount } from "@/lib/event-builder";
 import { OfferingRow, toneFor } from "./offering-cards";
-import { getOfferings, staffById } from "@/lib/data";
+import { getOfferings } from "@/lib/data";
 import { useStore } from "@/lib/store";
 import type { Offering, SubItem } from "@/lib/types";
 import { cn, downloadIcs, formatDay, formatShortDay, formatTime } from "@/lib/utils";
@@ -29,7 +28,6 @@ export function DetailPage({ offering: o }: { offering: Offering }) {
   const closed = !!o.closesAt && hydrated && Date.now() > +new Date(o.closesAt);
   const blocked = closed || left === 0;
   const [sheet, setSheet] = useState<{ open: boolean; item?: SubItem }>({ open: false });
-  const hosts = o.hostIds.map((id) => staffById[id]).filter(Boolean);
   const main = hydrated ? hasRsvp(o.id) : undefined;
   const related = useMemo(
     () => getOfferings().filter((x) => x.id !== o.id && x.interests.some((i) => o.interests.includes(i))).slice(0, 3),
@@ -100,23 +98,6 @@ export function DetailPage({ offering: o }: { offering: Offering }) {
               </ul>
             </div>
 
-            {hosts.length > 0 && (
-              <div>
-                <h2 className="font-display text-4xl text-stone-900">Who you&apos;ll meet</h2>
-                <div className="mt-6 grid gap-4 sm:grid-cols-2">
-                  {hosts.map((h) => (
-                    <div key={h.id} className="flex gap-4 rounded-3xl bg-white p-5 ring-1 ring-stone-200/70">
-                      <Avatar name={h.name} src={h.photo} className="size-14" />
-                      <div>
-                        <p className="font-medium text-stone-900">{h.name}</p>
-                        <p className="text-sm text-forest-600">{h.role}</p>
-                        {h.bio && <p className="mt-2 text-sm leading-relaxed text-stone-500">{h.bio}</p>}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
           </div>
 
           {/* Sticky action card */}
