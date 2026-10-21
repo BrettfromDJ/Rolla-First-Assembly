@@ -85,7 +85,7 @@ export function EventsView({ query }: { query: string }) {
                     </span>
                     {o.capacity ? (
                       <span className="block h-1.5 w-32 overflow-hidden rounded-full bg-forest-100">
-                        <span className="block h-full rounded-full bg-forest-700" style={{ width: `${Math.min(100, (n / o.capacity) * 100)}%` }} />
+                        <span className="m-grow-x block h-full rounded-full bg-forest-700" style={{ width: `${Math.min(100, (n / o.capacity) * 100)}%` }} />
                       </span>
                     ) : null}
                   </div>

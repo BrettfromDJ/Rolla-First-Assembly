@@ -6,7 +6,7 @@ import { ArrowUpRight, Baby, BadgeCheck, CalendarPlus, Droplets, HeartHandshake,
 import { toast } from "sonner";
 import { SiteHeader } from "@/components/site/header";
 import { SiteFooter } from "@/components/site/footer";
-import { Rise } from "@/components/church/motion";
+import { RevealGroup, Rise } from "@/components/church/motion";
 import { Faq } from "@/components/visit/new-here";
 import { KidsSheet } from "./register-sheet";
 import { church, getOffering, kidGradeLabel, kidsGroups, staffById } from "@/lib/data";
@@ -40,9 +40,9 @@ export function KidsPage() {
       <main>
         {/* ---------- Hero ---------- */}
         <section className="mx-auto max-w-[1440px] px-5 pb-10 pt-14 md:px-[60px] md:pt-[63px]">
-          <p className={cn(mori, "text-[16px] uppercase leading-[1.1] tracking-[-0.03em] text-[#0285ff]")}>Kids First</p>
-          <h1 className={cn(mori, "mt-4 max-w-[1100px] text-[clamp(52px,8vw,124px)] leading-[0.92] tracking-[-0.05em]")}>
-            Kids are the best part of <Ed>Sunday</Ed>.
+          <p className={cn(mori, "m-load-rise text-[16px] uppercase leading-[1.1] tracking-[-0.03em] text-[#0285ff]")}>Kids First</p>
+          <h1 className={cn(mori, "m-title mt-4 max-w-[1100px] text-[clamp(52px,8vw,124px)] leading-[0.92] tracking-[-0.05em]")}>
+            Kids are the best part of <Ed>Sunday</Ed>
           </h1>
         </section>
 
@@ -59,7 +59,7 @@ export function KidsPage() {
           </Rise>
 
           <Rise load delay={0.2} y={20}>
-            <div className="relative flex h-full flex-col justify-between overflow-hidden rounded-[28px] bg-[#0285ff] p-7 text-black md:p-9">
+            <div className="relative flex h-full flex-col justify-between overflow-hidden m-sheen rounded-[28px] bg-[#0285ff] p-7 text-black md:p-9">
               <Baby aria-hidden className="pointer-events-none absolute -right-6 -top-6 size-44 text-black/[0.07]" strokeWidth={1.25} />
               <div>
                 <p className="font-mori text-[15px] font-semibold uppercase tracking-[-0.03em] text-black/60">Every Sunday</p>
@@ -125,7 +125,7 @@ export function KidsPage() {
           <Rise>
             <div className="flex flex-wrap items-end justify-between gap-4">
               <h2 className={cn(mori, "text-[clamp(40px,5.2vw,72px)] leading-[0.95] tracking-[-0.05em]")}>
-                A room for <Ed>every</Ed> age.
+                A room for <Ed>every</Ed> age
               </h2>
               <p className="max-w-sm text-[15px] text-stone-500">Same leaders every week, so your kids see familiar faces.</p>
             </div>
@@ -158,14 +158,14 @@ export function KidsPage() {
           <div className="grid gap-12 lg:grid-cols-[1fr_1.4fr] lg:gap-20">
             <Rise>
               <h2 className={cn(mori, "text-[clamp(40px,5.2vw,72px)] leading-[0.95] tracking-[-0.05em]")}>
-                Your first <Ed>Sunday</Ed>.
+                Your first <Ed>Sunday</Ed>
               </h2>
               <p className="mt-5 max-w-sm text-[17px] leading-relaxed text-stone-600">
                 Check-in takes about two minutes. Plan to arrive 15 minutes early the first time so you can see the room.
               </p>
               <div className="mt-10 rounded-[28px] bg-[#dcd2c5]/[0.05] p-7">
                 <ShieldCheck className="size-6 text-[#0285ff]" strokeWidth={1.5} />
-                <h3 className={cn(mori, "mt-4 text-[22px] tracking-[-0.03em]")}>Safety first, always.</h3>
+                <h3 className={cn(mori, "mt-4 text-[22px] tracking-[-0.03em]")}>Safety first, always</h3>
                 <ul className="mt-3 space-y-2 text-[15px] leading-relaxed text-stone-600">
                   {["Every volunteer is background-checked and trained", "Leaders always serve in pairs", "Secure entry to every kids' room", "Allergies printed on every name tag"].map((t) => (
                     <li key={t} className="flex gap-2.5">
@@ -202,7 +202,7 @@ export function KidsPage() {
           <Rise>
             <div className="flex flex-wrap items-end justify-between gap-4">
               <h2 className={cn(mori, "text-[clamp(40px,5.2vw,72px)] leading-[0.95] tracking-[-0.05em]")}>
-                Meet the <Ed>team</Ed>.
+                Meet the <Ed>team</Ed>
               </h2>
               <Link href="/events/family-team" className={cn(mori, "group inline-flex items-center gap-3 text-[16px] uppercase tracking-[-0.04em] transition hover:text-[#0285ff]")}>
                 Book a tour of the kids area
@@ -214,7 +214,7 @@ export function KidsPage() {
             </div>
           </Rise>
           <Rise>
-            <ul className="mt-10 grid gap-4 sm:grid-cols-3">
+            <RevealGroup as="ul" className="mt-10 grid gap-4 sm:grid-cols-3">
               {team.map((p) => (
                 <li key={p.id}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -226,7 +226,7 @@ export function KidsPage() {
                   )}
                 </li>
               ))}
-            </ul>
+            </RevealGroup>
           </Rise>
         </section>
 
@@ -238,10 +238,10 @@ export function KidsPage() {
             </h2>
           </Rise>
           <Rise>
-            <ul className="mt-10 grid gap-4 md:grid-cols-3">
+            <RevealGroup as="ul" className="mt-10 grid gap-4 md:grid-cols-3">
               {familyEvents.map((e) => (
                 <li key={e.id}>
-                  <Link href="/events/family-events" className="group flex h-full flex-col justify-between gap-10 rounded-[28px] border-2 border-[#dcd2c5]/80 p-7 transition hover:border-[#0285ff] md:p-8">
+                  <Link href="/events/family-events" className="m-lift group flex h-full flex-col justify-between gap-10 rounded-[28px] border-2 border-[#dcd2c5]/80 p-7 transition hover:border-[#0285ff] md:p-8">
                     <div>
                       {e.date && (
                         <p className="font-magda text-[13px] uppercase tracking-[0.04em] opacity-60">
@@ -258,7 +258,7 @@ export function KidsPage() {
                   </Link>
                 </li>
               ))}
-            </ul>
+            </RevealGroup>
           </Rise>
           <div className="mt-4 grid gap-4 md:grid-cols-2">
             <Rise>
@@ -290,7 +290,7 @@ export function KidsPage() {
           <div className="grid gap-12 md:grid-cols-12">
             <Rise className="md:col-span-4">
               <h2 className={cn(mori, "text-[clamp(40px,4.6vw,64px)] leading-[0.95] tracking-[-0.05em]")}>
-                Parent <Ed>questions</Ed>.
+                Parent <Ed>questions</Ed>
               </h2>
               <div className="mt-8 flex items-center gap-4">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -316,7 +316,7 @@ export function KidsPage() {
             <Rise>
               <button onClick={() => setSheet(true)} className="group flex w-full flex-col justify-between gap-8 rounded-[28px] border-2 border-[#dcd2c5]/80 p-8 text-left transition hover:border-[#0285ff] md:flex-row md:items-center md:p-12">
                 <span className={cn(mori, "text-[clamp(36px,4.4vw,60px)] leading-[0.95] tracking-[-0.05em]")}>
-                  We&apos;ll have their <Ed>name tags</Ed> ready.
+                  We&apos;ll have their <Ed>name tags</Ed> ready
                 </span>
                 <span className="flex items-center gap-3">
                   <span className={cn(mori, "text-[16px] uppercase tracking-[-0.04em]")}>Pre-register</span>

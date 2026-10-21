@@ -5,7 +5,7 @@ import { ArrowUpRight, CalendarPlus, Droplets, Mail, Pencil, Shirt, Users, X } f
 import { toast } from "sonner";
 import { SiteHeader } from "@/components/site/header";
 import { SiteFooter } from "@/components/site/footer";
-import { Rise } from "@/components/church/motion";
+import { RevealGroup, Rise } from "@/components/church/motion";
 import { Faq } from "@/components/visit/new-here";
 import { BaptismSheet } from "./register-sheet";
 import { baptism, baptismDates, church, staffById } from "@/lib/data";
@@ -41,19 +41,19 @@ export function BaptismPage() {
         {/* ---------- Hero + next baptism ---------- */}
         <section className="mx-auto grid max-w-[1440px] gap-10 px-5 pb-16 pt-14 md:px-[60px] md:pt-[63px] lg:grid-cols-[1.25fr_1fr] lg:items-end lg:gap-16">
           <div>
-            <p className={cn(mori, "text-[16px] uppercase leading-[1.1] tracking-[-0.03em] text-[#0285ff]")}>Baptism</p>
-            <h1 className={cn(mori, "mt-4 text-[clamp(52px,8vw,124px)] leading-[0.92] tracking-[-0.05em]")}>
+            <p className={cn(mori, "m-load-rise text-[16px] uppercase leading-[1.1] tracking-[-0.03em] text-[#0285ff]")}>Baptism</p>
+            <h1 className={cn(mori, "m-title mt-4 text-[clamp(52px,8vw,124px)] leading-[0.92] tracking-[-0.05em]")}>
               Take the
               <br />
-              <Ed>next</Ed> step.
+              <Ed>next</Ed> step
             </h1>
-            <p className="mt-6 max-w-lg text-lg leading-relaxed text-stone-600 md:text-xl">
+            <p className="m-load-rise mt-6 max-w-lg text-lg leading-relaxed text-stone-600 md:text-xl" style={{ "--rd": "0.45s" } as React.CSSProperties}>
               Baptism is a public way of saying, &ldquo;I&apos;m following Jesus.&rdquo; If you&apos;ve made that decision, we&apos;d love to celebrate it with you.
             </p>
           </div>
 
           <Rise load delay={0.2} y={20}>
-            <div className="relative overflow-hidden rounded-[28px] bg-[#0285ff] p-7 text-black md:p-9">
+            <div className="relative overflow-hidden m-sheen rounded-[28px] bg-[#0285ff] p-7 text-black md:p-9">
               <Droplets aria-hidden className="pointer-events-none absolute -right-6 -top-6 size-44 text-black/[0.07]" strokeWidth={1.25} />
               <p className="font-mori text-[15px] font-semibold uppercase tracking-[-0.03em] text-black/60">Next baptism</p>
               {next ? (
@@ -152,7 +152,7 @@ export function BaptismPage() {
           <div className="grid gap-12 lg:grid-cols-[1fr_1.4fr] lg:gap-20">
             <Rise>
               <h2 className={cn(mori, "text-[clamp(40px,5.2vw,72px)] leading-[0.95] tracking-[-0.05em]")}>
-                How it <Ed>works</Ed>.
+                How it <Ed>works</Ed>
               </h2>
               <p className="mt-5 max-w-sm text-[17px] leading-relaxed text-stone-600">
                 Four simple steps. A pastor is with you for every one of them.
@@ -213,11 +213,11 @@ export function BaptismPage() {
             </div>
           </Rise>
           <Rise>
-          <ul className="mt-10 grid gap-4 md:grid-cols-3">
+          <RevealGroup as="ul" className="mt-10 grid gap-4 md:grid-cols-3">
             {dates.map((d) => {
               const mine = reg && new Date(reg.date).toDateString() === d.date.toDateString();
               return (
-                  <li key={d.date.toISOString()} className={cn("flex h-full flex-col justify-between gap-10 rounded-[28px] border-2 p-7 md:p-8", mine ? "border-[#0285ff]" : "border-[#dcd2c5]/80")}>
+                  <li key={d.date.toISOString()} className={cn("m-lift flex h-full flex-col justify-between gap-10 rounded-[28px] border-2 p-7 md:p-8", mine ? "border-[#0285ff]" : "border-[#dcd2c5]/80")}>
                     <div>
                       <p className="font-magda text-[13px] uppercase tracking-[0.04em] opacity-60">{d.date.toLocaleDateString("en-US", { weekday: "long" })}</p>
                       <p className={cn(mori, "mt-2 text-[44px] leading-none tracking-[-0.05em]")}>{d.date.toLocaleDateString("en-US", { month: "long", day: "numeric" })}</p>
@@ -237,7 +237,7 @@ export function BaptismPage() {
                   </li>
               );
             })}
-          </ul>
+          </RevealGroup>
           </Rise>
         </section>
 
@@ -246,7 +246,7 @@ export function BaptismPage() {
           <div className="grid gap-12 md:grid-cols-12">
             <Rise className="md:col-span-4">
               <h2 className={cn(mori, "text-[clamp(40px,4.6vw,64px)] leading-[0.95] tracking-[-0.05em]")}>
-                Good <Ed>questions</Ed>.
+                Good <Ed>questions</Ed>
               </h2>
               <div className="mt-8 flex items-center gap-4">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -272,7 +272,7 @@ export function BaptismPage() {
             <Rise>
               <button onClick={() => open()} className="group flex w-full flex-col justify-between gap-8 rounded-[28px] border-2 border-[#dcd2c5]/80 p-8 text-left transition hover:border-[#0285ff] md:flex-row md:items-center md:p-12">
                 <span className={cn(mori, "text-[clamp(36px,4.4vw,60px)] leading-[0.95] tracking-[-0.05em]")}>
-                  Ready? <Ed>Let&apos;s</Ed> celebrate together.
+                  Ready? <Ed>Let&apos;s</Ed> celebrate together
                 </span>
                 <span className="flex items-center gap-3">
                   <span className={cn(mori, "text-[16px] uppercase tracking-[-0.04em]")}>Register for {next.date.toLocaleDateString("en-US", { month: "short", day: "numeric" })}</span>

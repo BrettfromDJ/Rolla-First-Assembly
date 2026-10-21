@@ -5,7 +5,7 @@ import { BadgeCheck, Clock, Mic2, ShieldCheck, Users, X } from "lucide-react";
 import { toast } from "sonner";
 import { SiteHeader } from "@/components/site/header";
 import { SiteFooter } from "@/components/site/footer";
-import { Rise } from "@/components/church/motion";
+import { RevealGroup, Rise } from "@/components/church/motion";
 import { Faq } from "@/components/visit/new-here";
 import { staffById } from "@/lib/data";
 import { mostNeeded, serveAreas, serveTeams, serveTimeOptions, teamById, type ServeArea, type ServeTeam } from "@/lib/serve";
@@ -47,16 +47,16 @@ export function ServePage() {
         {/* ---------- Hero ---------- */}
         <section className="mx-auto grid max-w-[1440px] gap-10 px-5 pb-16 pt-14 md:px-[60px] md:pt-[63px] lg:grid-cols-[1.3fr_1fr] lg:items-end lg:gap-16">
           <div>
-            <p className={cn(mori, "text-[16px] uppercase leading-[1.1] tracking-[-0.03em] text-[#0285ff]")}>Serve</p>
-            <h1 className={cn(mori, "mt-4 text-[clamp(52px,8vw,124px)] leading-[0.92] tracking-[-0.05em]")}>
-              Find your <Ed>place</Ed> on a team.
+            <p className={cn(mori, "m-load-rise text-[16px] uppercase leading-[1.1] tracking-[-0.03em] text-[#0285ff]")}>Serve</p>
+            <h1 className={cn(mori, "m-title mt-4 text-[clamp(52px,8vw,124px)] leading-[0.92] tracking-[-0.05em]")}>
+              Find your <Ed>place</Ed> on a team
             </h1>
-            <p className="mt-6 max-w-lg text-lg leading-relaxed text-stone-600 md:text-xl">
+            <p className="m-load-rise mt-6 max-w-lg text-lg leading-relaxed text-stone-600 md:text-xl" style={{ "--rd": "0.45s" } as React.CSSProperties}>
               Church happens because people show up for each other. Pick a team, try it for a Sunday, and see where you fit.
             </p>
           </div>
           <Rise load delay={0.2} y={20}>
-            <div className="relative overflow-hidden rounded-[28px] bg-[#0285ff] p-7 text-black md:p-9">
+            <div className="relative overflow-hidden m-sheen rounded-[28px] bg-[#0285ff] p-7 text-black md:p-9">
               <Users aria-hidden className="pointer-events-none absolute -right-6 -top-6 size-44 text-black/[0.07]" strokeWidth={1.25} />
               <p className="font-mori text-[15px] font-semibold uppercase tracking-[-0.03em] text-black/60">Most needed right now</p>
               <ul className="mt-5 space-y-3">
@@ -128,11 +128,11 @@ export function ServePage() {
               <p className="mt-2 text-stone-500">Try fewer choices, or email the church office and we&apos;ll help you find a fit.</p>
             </div>
           ) : (
-            <ul className="mt-4 grid gap-4 md:grid-cols-2">
+            <RevealGroup as="ul" className="mt-4 grid gap-4 md:grid-cols-2">
               {teams.map((t) => (
                 <TeamCard key={t.id} t={t} joined={mine.some((m) => m.teamId === t.id)} onOpen={() => setOpen(t.id)} />
               ))}
-            </ul>
+            </RevealGroup>
           )}
         </section>
 
@@ -141,7 +141,7 @@ export function ServePage() {
           <div className="grid gap-12 lg:grid-cols-[1fr_1.4fr] lg:gap-20">
             <Rise>
               <h2 className={cn(mori, "text-[clamp(40px,5.2vw,72px)] leading-[0.95] tracking-[-0.05em]")}>
-                How it <Ed>works</Ed>.
+                How it <Ed>works</Ed>
               </h2>
               <p className="mt-5 max-w-sm text-[17px] leading-relaxed text-stone-600">No experience needed. Every team trains you and pairs you with someone who&apos;s done it before.</p>
             </Rise>
@@ -171,7 +171,7 @@ export function ServePage() {
           <div className="grid gap-12 md:grid-cols-12">
             <Rise className="md:col-span-4">
               <h2 className={cn(mori, "text-[clamp(40px,4.6vw,64px)] leading-[0.95] tracking-[-0.05em]")}>
-                Good <Ed>questions</Ed>.
+                Good <Ed>questions</Ed>
               </h2>
               <p className="mt-5 max-w-xs text-[15px] text-stone-600">Not sure which team? Email the church office and we&apos;ll help you find one.</p>
             </Rise>
@@ -212,7 +212,7 @@ function TeamCard({ t, joined, onOpen }: { t: ServeTeam; joined: boolean; onOpen
   const leader = staffById[t.leaderId];
   return (
     <li>
-      <button onClick={onOpen} className={cn("group flex h-full w-full flex-col justify-between gap-8 rounded-[28px] border-2 p-7 text-left transition hover:border-[#0285ff]", joined ? "border-[#0285ff]" : "border-[#dcd2c5]/80")}>
+      <button onClick={onOpen} className={cn("m-lift group flex h-full w-full flex-col justify-between gap-8 rounded-[28px] border-2 p-7 text-left transition hover:border-[#0285ff]", joined ? "border-[#0285ff]" : "border-[#dcd2c5]/80")}>
         <div>
           <div className="flex items-center justify-between gap-3">
             <p className="font-magda text-[13px] uppercase tracking-[0.04em] opacity-60">{serveAreas.find((a) => a.id === t.area)!.label}</p>

@@ -1,5 +1,6 @@
 "use client";
 
+import { CountUp } from "@/components/church/motion";
 import { useState } from "react";
 import { CalendarCheck, Download, MessageSquarePlus, ShieldCheck, Sparkles, UserPlus, Users } from "lucide-react";
 import { toast } from "sonner";
@@ -145,7 +146,7 @@ export function VolunteersView({ query }: { query: string }) {
                         </span>
                       </span>
                       <span className="mt-1.5 block h-2 overflow-hidden rounded-full bg-forest-100">
-                        <span className="block h-full rounded-full bg-forest-700" style={{ width: `${pct * 100}%` }} />
+                        <span className="m-grow-x block h-full rounded-full bg-forest-700" style={{ width: `${pct * 100}%` }} />
                       </span>
                     </button>
                   </li>
@@ -285,7 +286,7 @@ function Stat({ icon: Icon, label, value, sub, warn, ready, onClick }: { icon: R
         <span className="text-[13px] text-stone-500">{label}</span>
         <Icon className={cn("size-4", warn ? "text-clay" : "text-stone-300")} />
       </div>
-      <p className="mt-3 text-[32px] font-semibold leading-none tracking-[-0.02em]">{ready ? value : "–"}</p>
+      <p className="mt-3 text-[32px] font-semibold leading-none tracking-[-0.02em]">{ready ? <CountUp value={value} /> : "–"}</p>
       <p className="mt-2 truncate text-xs text-stone-400">{sub}</p>
     </button>
   );

@@ -334,7 +334,7 @@ function AboutStep({ onNext, onSkip }: { onNext: () => void; onSkip: () => void 
   return (
     <StepShell
       eyebrow="Almost there"
-      title="Let's get to know you."
+      title="Let's get to know you"
       body="So we can help you get connected with the right people."
       footer={
         <>
@@ -378,7 +378,7 @@ function ResultsStep({ onEdit }: { onEdit: () => void }) {
         <div>
           <p className="text-sm font-medium text-forest-600">{name ? `For you, ${name}` : "Just for you"}</p>
           <h1 className="mt-3 font-display text-[clamp(3rem,7vw,6rem)] leading-[0.95] tracking-[-0.025em] text-stone-900 text-balance">
-            Here&apos;s where you could start.
+            Here&apos;s where you could start
           </h1>
           <p className="mt-5 max-w-xl text-lg text-stone-500">A few ways to find your place, based on what you shared.</p>
         </div>
@@ -408,7 +408,7 @@ function ResultsStep({ onEdit }: { onEdit: () => void }) {
 
       <div className="mt-16 grid gap-10 border-t border-stone-200 pt-12 md:grid-cols-[1fr_1.2fr]">
         <div>
-          <h2 className="font-display text-4xl leading-tight text-stone-900">Your home base is ready.</h2>
+          <h2 className="font-display text-4xl leading-tight text-stone-900">Your home base is ready</h2>
           <p className="mt-3 max-w-sm text-stone-500">Everything you saved, plus what&apos;s coming up, all in one place. Come back anytime.</p>
           <Button asChild size="lg" className="mt-8">
             <Link href="/me">Go to My Rolla First <ArrowRight /></Link>

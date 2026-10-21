@@ -1,5 +1,6 @@
 "use client";
 
+import { CountUp } from "@/components/church/motion";
 import { useMemo } from "react";
 import { AlertTriangle, ArrowRight, Baby, CalendarClock, Droplets, HandHeart, Heart, ListChecks, Lock, PhoneCall, Sparkles, UserPlus, Users } from "lucide-react";
 import { Avatar } from "@/components/ui/avatar";
@@ -91,7 +92,7 @@ export function WeeklyView({ go, openVisitor }: { go: (t: Tab) => void; openVisi
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <p className="text-sm text-stone-500">Week of {day(d.last.date, { month: "long", day: "numeric" })}</p>
-          <h1 className="mt-1 text-[28px] font-semibold tracking-[-0.02em]">{greeting()}. Here&apos;s your week.</h1>
+          <h1 className="mt-1 text-[28px] font-semibold tracking-[-0.02em]">{greeting()}, here&apos;s your week</h1>
         </div>
         <p className="text-sm text-stone-500">
           {todo ? (
@@ -112,7 +113,7 @@ export function WeeklyView({ go, openVisitor }: { go: (t: Tab) => void; openVisi
             {d.last.any ? (
               <>
                 <div className="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                  <p className="text-[56px] font-semibold leading-none tracking-[-0.03em]">{fmt(d.last.total)}</p>
+                  <p className="text-[56px] font-semibold leading-none tracking-[-0.03em]"><CountUp value={fmt(d.last.total)} duration={1400} /></p>
                   <p className="text-sm text-stone-500">in person</p>
                   {delta !== null && Math.abs(delta) >= 0.5 && (
                     <span className={cn("text-sm font-medium", delta >= 0 ? "text-sage" : "text-clay")}>
@@ -297,7 +298,7 @@ function Card({ icon: Icon, title, stat, statLabel, warn, onMore, more, children
             <Icon className={cn("size-4", warn ? "text-clay" : "text-forest-500")} /> {title}
           </h2>
           <p className="mt-2 flex items-baseline gap-2">
-            <span className="text-[32px] font-semibold leading-none tracking-[-0.02em]">{stat}</span>
+            <span className="text-[32px] font-semibold leading-none tracking-[-0.02em]"><CountUp value={stat} /></span>
             <span className="text-sm text-stone-500">{statLabel}</span>
           </p>
         </div>
@@ -371,10 +372,10 @@ function Sparkline({ weeks }: { weeks: { date: string; total: number; complete: 
     <div>
       <div className="relative h-24 w-full">
         <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" className="h-full w-full overflow-visible" role="img" aria-label={`Sunday attendance for the last ${weeks.length} weeks, from ${fmt(pts[0].total)} to ${fmt(pts[pts.length - 1].total)}`}>
-          <path d={line} fill="none" stroke="#77736c" strokeWidth={2} vectorEffect="non-scaling-stroke" strokeLinejoin="round" strokeLinecap="round" />
+          <path d={line} pathLength={1} className="m-draw" fill="none" stroke="#77736c" strokeWidth={2} vectorEffect="non-scaling-stroke" strokeLinejoin="round" strokeLinecap="round" />
         </svg>
         <span
-          className="absolute size-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#3987e5] ring-2 ring-white"
+          className="m-fade-late absolute size-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#3987e5] ring-2 ring-white"
           style={{ left: `${(x(lastIdx) / W) * 100}%`, top: `${(y(lastPt.total) / H) * 100}%` }}
         />
       </div>

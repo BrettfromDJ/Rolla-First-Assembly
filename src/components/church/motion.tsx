@@ -147,3 +147,67 @@ export function StaggerItem({ children, className, as = "div", index = 0 }: { ch
     </Comp>
   );
 }
+
+/**
+ * A list or grid whose items rise in one after another when it scrolls into view.
+ * A drop-in for the wrapping element: <RevealGroup as="ul" className="grid ...">.
+ */
+export function RevealGroup({ children, className, as = "div" }: { children: React.ReactNode; className?: string; as?: "div" | "ul" | "ol" }) {
+  const [ref, state] = useReveal<HTMLDivElement & HTMLUListElement & HTMLOListElement>();
+  const Comp = as;
+  return (
+    <Comp ref={ref} data-reveal={state} className={cn("m-group", className)}>
+      {children}
+    </Comp>
+  );
+}
+
+/**
+ * Counts up to a number the first time it's on screen. Accepts plain numbers or text that starts with one
+ * ("462", "1,284", "14/18"); only the leading number animates and the rest stays as written.
+ */
+export function CountUp({ value, duration = 1100 }: { value: string | number; duration?: number }) {
+  const text = String(value);
+  const m = text.match(/^(\d[\d,]*)(.*)$/s);
+  const target = m ? Number(m[1].replace(/,/g, "")) : NaN;
+  const rest = m ? m[2] : "";
+  const ref = useRef<HTMLSpanElement>(null);
+  const [shown, setShown] = useState<number | null>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || !Number.isFinite(target) || target === 0) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    let raf = 0;
+    const run = () => {
+      const t0 = performance.now();
+      const tick = (t: number) => {
+        const p = Math.min(1, (t - t0) / duration);
+        const eased = 1 - Math.pow(1 - p, 4);
+        setShown(p < 1 ? Math.round(target * eased) : null);
+        if (p < 1) raf = requestAnimationFrame(tick);
+      };
+      setShown(0);
+      raf = requestAnimationFrame(tick);
+    };
+    const io = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) {
+        run();
+        io.disconnect();
+      }
+    });
+    io.observe(el);
+    return () => {
+      io.disconnect();
+      cancelAnimationFrame(raf);
+    };
+  }, [target, duration]);
+
+  if (!m) return <>{text}</>;
+  return (
+    <span ref={ref} className="tabular-nums">
+      {shown === null ? m[1] : shown.toLocaleString("en-US")}
+      {rest}
+    </span>
+  );
+}

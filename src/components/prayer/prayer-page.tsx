@@ -6,7 +6,7 @@ import { Check, EyeOff, HandHeart, Heart, Lock, Phone, Sparkles, Trash2, Users }
 import { toast } from "sonner";
 import { SiteHeader } from "@/components/site/header";
 import { SiteFooter } from "@/components/site/footer";
-import { Rise } from "@/components/church/motion";
+import { RevealGroup, Rise } from "@/components/church/motion";
 import { Checkbox, Field } from "@/components/ui/field";
 import { church } from "@/lib/data";
 import { prayerCategories, prayerCategoryLabel, prayerVisibility, publicName } from "@/lib/prayer";
@@ -37,11 +37,11 @@ export function PrayerPage() {
         {/* ---------- Hero + form ---------- */}
         <section className="mx-auto grid max-w-[1440px] gap-10 px-5 pb-16 pt-14 md:px-[60px] md:pt-[63px] lg:grid-cols-[1fr_1.05fr] lg:gap-16">
           <div>
-            <p className={cn(mori, "text-[16px] uppercase leading-[1.1] tracking-[-0.03em] text-[#0285ff]")}>Prayer</p>
-            <h1 className={cn(mori, "mt-4 text-[clamp(52px,7.4vw,112px)] leading-[0.92] tracking-[-0.05em]")}>
+            <p className={cn(mori, "m-load-rise text-[16px] uppercase leading-[1.1] tracking-[-0.03em] text-[#0285ff]")}>Prayer</p>
+            <h1 className={cn(mori, "m-title mt-4 text-[clamp(52px,7.4vw,112px)] leading-[0.92] tracking-[-0.05em]")}>
               How can we <Ed>pray</Ed> for you?
             </h1>
-            <p className="mt-6 max-w-lg text-lg leading-relaxed text-stone-600 md:text-xl">
+            <p className="m-load-rise mt-6 max-w-lg text-lg leading-relaxed text-stone-600 md:text-xl" style={{ "--rd": "0.45s" } as React.CSSProperties}>
               Whatever you&apos;re carrying, you don&apos;t have to carry it alone. Share as much or as little as you want. Real people here will pray for you by name.
             </p>
             <ul className="mt-10 max-w-md space-y-4">
@@ -107,11 +107,11 @@ export function PrayerPage() {
             <div className="mt-10 grid gap-4 md:grid-cols-3">{[0, 1, 2].map((i) => <div key={i} className="h-56 animate-pulse rounded-[28px] bg-[#dcd2c5]/[0.05]" />)}</div>
           ) : (
             <>
-              <ul className="mt-10 gap-4 [column-fill:_balance] sm:columns-2 lg:columns-3">
+              <RevealGroup as="ul" className="mt-10 gap-4 [column-fill:_balance] sm:columns-2 lg:columns-3">
                 {(more ? shown : shown.slice(0, 9)).map((p) => (
                   <WallCard key={p.id} p={p} />
                 ))}
-              </ul>
+              </RevealGroup>
               {shown.length > 9 && (
                 <button onClick={() => setMore(!more)} className={cn(mori, "mx-auto mt-6 flex h-12 items-center rounded-[80px] border-2 border-[#dcd2c5]/40 px-6 text-[14px] uppercase tracking-[-0.04em] transition hover:border-[#dcd2c5]")}>
                   {more ? "Show fewer" : `Show all ${shown.length}`}
@@ -192,7 +192,7 @@ function RequestForm() {
               <Heart className="size-7" fill="currentColor" />
             </span>
             <h2 className={cn(mori, "mt-6 text-[clamp(36px,4vw,52px)] leading-[0.95] tracking-[-0.05em]")}>
-              We&apos;re <Ed>praying</Ed> with you.
+              We&apos;re <Ed>praying</Ed> with you
             </h2>
             <p className="mx-auto mt-4 max-w-sm text-[16px] leading-relaxed text-stone-600">
               {sent === "pastors"
@@ -313,7 +313,7 @@ function WallCard({ p }: { p: PrayerRequest }) {
   const answered = p.status === "answered";
   return (
     <li className="mb-4 break-inside-avoid">
-      <article className={cn("rounded-[28px] border-2 p-6 md:p-7", answered ? "border-[#0285ff]" : "border-[#dcd2c5]/25")}>
+      <article className={cn("m-lift rounded-[28px] border-2 p-6 md:p-7", answered ? "border-[#0285ff]" : "border-[#dcd2c5]/25")}>
         <div className="flex items-center justify-between gap-3">
           <p className="font-magda text-[13px] uppercase tracking-[0.04em] opacity-60">{prayerCategoryLabel(p.category)}</p>
           {answered && (
@@ -345,7 +345,7 @@ function WallCard({ p }: { p: PrayerRequest }) {
               did ? "border-[#0285ff] bg-[#0285ff]/10 text-[#0285ff]" : "border-[#dcd2c5]/30 hover:border-[#0285ff] hover:text-[#0285ff]",
             )}
           >
-            <Heart className="size-4" fill={did ? "currentColor" : "none"} />
+            <Heart key={did ? "on" : "off"} className={cn("size-4", did && "m-pop")} fill={did ? "currentColor" : "none"} />
             {did ? "Prayed" : "I prayed"}
             {p.prayedCount > 0 && <span className="tabular-nums opacity-70">{p.prayedCount}</span>}
           </button>

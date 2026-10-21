@@ -102,7 +102,7 @@ export function PlanVisitSheet({ open, onOpenChange }: { open: boolean; onOpenCh
           >
             {step === 0 && (
               <form onSubmit={(e) => { e.preventDefault(); next(); }} className="space-y-6">
-                <Heading title="Let us know you're coming." body="Totally optional. It just helps us say hello by name and have the kids' name tags ready." />
+                <Heading title="Let us know you're coming" body="Totally optional. It just helps us say hello by name and have the kids' name tags ready." />
                 <Field label="First name" value={firstName} onChange={(e) => { setFirstName(e.target.value); setErrors((x) => ({ ...x, name: undefined })); }} error={errors.name} autoComplete="given-name" autoFocus placeholder="Sarah" />
                 <Field label="Email or phone" value={contact} onChange={(e) => { setContact(e.target.value); setErrors((x) => ({ ...x, contact: undefined })); }} error={errors.contact} hint="We'll send a friendly reminder the day before. That's it." autoComplete="email" placeholder="sarah@example.com" />
                 <Button type="submit" size="lg" className="w-full">Continue <ArrowRight /></Button>

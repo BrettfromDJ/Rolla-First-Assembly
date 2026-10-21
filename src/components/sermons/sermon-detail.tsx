@@ -6,7 +6,7 @@ import { ArrowLeft, BookOpen, Check, Headphones, Link2, Mail } from "lucide-reac
 import { toast } from "sonner";
 import { SiteHeader } from "@/components/site/header";
 import { SiteFooter } from "@/components/site/footer";
-import { Rise } from "@/components/church/motion";
+import { RevealGroup, Rise } from "@/components/church/motion";
 import { staffById } from "@/lib/data";
 import { bibleLink, seriesById, seriesSermons, sermonById, sermonDate, sermonsByDate } from "@/lib/sermons";
 import { useStore } from "@/lib/store";
@@ -54,7 +54,7 @@ export function SermonDetail({ id }: { id: string }) {
               {series.title}
               {s.part ? ` · Part ${s.part}` : ""}
             </Link>
-            <h1 className={cn(mori, "mt-3 text-[clamp(44px,5.4vw,80px)] leading-[0.92] tracking-[-0.05em]")}>{s.title}</h1>
+            <h1 className={cn(mori, "m-title mt-3 text-[clamp(44px,5.4vw,80px)] leading-[0.92] tracking-[-0.05em]")}>{s.title}</h1>
             <p className="mt-4 text-[16px] text-stone-500">{sermonDate(s.date, { weekday: "long", month: "long", day: "numeric", year: "numeric" })}</p>
             <div className="mt-6 flex items-center gap-3">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -133,7 +133,7 @@ export function SermonDetail({ id }: { id: string }) {
                 <Link href={`/sermons?series=${series.id}`} className="text-[15px] text-stone-500 transition hover:text-[#dcd2c5]">See the whole series</Link>
               </div>
             </Rise>
-            <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <RevealGroup as="ul" className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {inSeries.map((x) => {
                 const here = x.id === s.id;
                 return (
@@ -148,7 +148,7 @@ export function SermonDetail({ id }: { id: string }) {
                   </li>
                 );
               })}
-            </ul>
+            </RevealGroup>
           </section>
         )}
 

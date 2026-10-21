@@ -167,7 +167,7 @@ export function BaptismSheet({ open, onOpenChange, initialDate }: { open: boolea
 
             {step === 1 && (
               <div className="space-y-7">
-                <Heading title="Pick your Sunday." body="Baptisms happen during both services. Choose whichever fits your family." />
+                <Heading title="Pick your Sunday" body="Baptisms happen during both services. Choose whichever fits your family." />
                 <div className="grid gap-2 sm:grid-cols-3">
                   {dates.map((d, i) => {
                     const on = d.date.toISOString() === date;
@@ -205,7 +205,7 @@ export function BaptismSheet({ open, onOpenChange, initialDate }: { open: boolea
 
             {step === 2 && (
               <div className="space-y-7">
-                <Heading title={age === "child" ? "Almost done." : "Share your story."} body={age === "child" ? "A couple of optional details to help us celebrate with your family." : "Optional, but we'd love to hear it. A sentence or two is plenty."} />
+                <Heading title={age === "child" ? "Almost done" : "Share your story"} body={age === "child" ? "A couple of optional details to help us celebrate with your family." : "Optional, but we'd love to hear it. A sentence or two is plenty."} />
                 {age !== "child" && (
                   <div className="space-y-3">
                     <Textarea label="What has God been doing in your life?" value={story} onChange={(e) => setStory(e.target.value)} placeholder="When did you put your faith in Jesus? What made you want to take this step?" />

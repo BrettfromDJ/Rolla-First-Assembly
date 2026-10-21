@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { BookOpen, Radio, Search, X } from "lucide-react";
 import { SiteHeader } from "@/components/site/header";
 import { SiteFooter } from "@/components/site/footer";
-import { Rise } from "@/components/church/motion";
+import { RevealGroup, Rise } from "@/components/church/motion";
 import { church, churchLinks, staffById } from "@/lib/data";
 import {
   currentSeries,
@@ -68,11 +68,11 @@ export function SermonsPage() {
         {/* ---------- Hero ---------- */}
         <section className="mx-auto grid max-w-[1440px] gap-10 px-5 pb-12 pt-14 md:px-[60px] md:pt-[63px] lg:grid-cols-[1.4fr_1fr] lg:items-end lg:gap-16">
           <div>
-            <p className={cn(mori, "text-[16px] uppercase leading-[1.1] tracking-[-0.03em] text-[#0285ff]")}>Sermons</p>
-            <h1 className={cn(mori, "mt-4 text-[clamp(52px,8vw,124px)] leading-[0.92] tracking-[-0.05em]")}>
-              Messages from <Ed>Sunday</Ed>.
+            <p className={cn(mori, "m-load-rise text-[16px] uppercase leading-[1.1] tracking-[-0.03em] text-[#0285ff]")}>Sermons</p>
+            <h1 className={cn(mori, "m-title mt-4 text-[clamp(52px,8vw,124px)] leading-[0.92] tracking-[-0.05em]")}>
+              Messages from <Ed>Sunday</Ed>
             </h1>
-            <p className="mt-6 max-w-lg text-lg leading-relaxed text-stone-600 md:text-xl">Missed a week, or want to hear it again? Watch, listen, and take notes on every message.</p>
+            <p className="m-load-rise mt-6 max-w-lg text-lg leading-relaxed text-stone-600 md:text-xl" style={{ "--rd": "0.45s" } as React.CSSProperties}>Missed a week, or want to hear it again? Watch, listen, and take notes on every message.</p>
           </div>
           <Rise load delay={0.2} y={20}>
             <LiveCard />
@@ -128,7 +128,7 @@ export function SermonsPage() {
                   {seriesSermons(currentSeries.id).length} messages so far · {sermonDate(seriesSermons(currentSeries.id)[0].date, { month: "short", day: "numeric" })} to {sermonDate(latestSermon.date, { month: "short", day: "numeric" })}
                 </p>
               </div>
-              <ol className="self-start border-t border-[#dcd2c5]/15">
+              <RevealGroup as="ol" className="self-start border-t border-[#dcd2c5]/15">
                 {seriesSermons(currentSeries.id).map((s, i) => (
                   <li key={s.id}>
                     <Link href={`/sermons/${s.id}`} className="group flex items-center gap-5 border-b border-[#dcd2c5]/15 py-5 md:gap-8">
@@ -144,7 +144,7 @@ export function SermonsPage() {
                     </Link>
                   </li>
                 ))}
-              </ol>
+              </RevealGroup>
             </div>
           </Rise>
         </section>
@@ -191,11 +191,11 @@ export function SermonsPage() {
                 {list.length} message{list.length === 1 ? "" : "s"}
                 {series ? ` in ${seriesById[series].title}` : ""}
               </p>
-              <ul className="mt-4 grid gap-x-4 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+              <RevealGroup as="ul" className="mt-4 grid gap-x-4 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
                 {shown.map((s) => (
                   <SermonCard key={s.id} s={s} />
                 ))}
-              </ul>
+              </RevealGroup>
               {!filtered && list.length > shown.length && (
                 <button onClick={() => setAll(true)} className={cn(mori, "mx-auto mt-10 flex h-12 items-center rounded-[80px] border-2 border-[#dcd2c5]/40 px-6 text-[14px] uppercase tracking-[-0.04em] transition hover:border-[#dcd2c5]")}>
                   Show all {list.length}
@@ -212,7 +212,7 @@ export function SermonsPage() {
               Browse by <Ed>series</Ed>
             </h2>
           </Rise>
-          <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <RevealGroup as="ul" className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {sermonSeries.map((s) => {
               const n = seriesSermons(s.id).length;
               return (
@@ -225,7 +225,7 @@ export function SermonsPage() {
                 </li>
               );
             })}
-          </ul>
+          </RevealGroup>
         </section>
       </main>
       <SiteFooter />
@@ -237,7 +237,7 @@ function SermonCard({ s }: { s: Sermon }) {
   const p = staffById[s.speakerId];
   return (
     <li>
-      <Link href={`/sermons/${s.id}`} className="group block">
+      <Link href={`/sermons/${s.id}`} className="m-lift group block rounded-[20px]">
         <div className="relative overflow-hidden rounded-[20px]">
           <SeriesArt series={seriesById[s.seriesId]} label={false} className="transition duration-700 group-hover:scale-[1.03]" />
           <span className="absolute bottom-3 right-3 rounded-full bg-black/60 px-2.5 py-1 text-[12px] tabular-nums text-[#dcd2c5] backdrop-blur">{s.minutes} min</span>
@@ -306,7 +306,7 @@ function LiveCard() {
   })();
 
   return (
-    <div className="relative overflow-hidden rounded-[28px] bg-[#0285ff] p-7 text-black md:p-9">
+    <div className="relative overflow-hidden m-sheen rounded-[28px] bg-[#0285ff] p-7 text-black md:p-9">
       <Radio aria-hidden className="pointer-events-none absolute -right-6 -top-6 size-44 text-black/[0.07]" strokeWidth={1.25} />
       <p className="flex items-center gap-2 font-mori text-[15px] font-semibold uppercase tracking-[-0.03em] text-black/60">
         {next?.live && <span className="size-2.5 animate-pulse rounded-full bg-black" />}

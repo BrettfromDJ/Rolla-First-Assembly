@@ -42,7 +42,7 @@ export function ContactSheet({ open, onOpenChange }: { open: boolean; onOpenChan
         <div className="flex items-center gap-4">
           <Avatar name={amber.name} src={amber.photo} className="size-14" />
           <div>
-            <h2 className="font-display text-3xl leading-tight text-stone-900">Hi, I&apos;m Amber.</h2>
+            <h2 className="font-display text-3xl leading-tight text-stone-900">Hi, I&apos;m Amber</h2>
             <p className="text-sm text-stone-500">I work in the church office. Ask me anything.</p>
           </div>
         </div>

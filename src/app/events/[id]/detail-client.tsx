@@ -18,7 +18,7 @@ export function DetailClient({ id }: { id: string }) {
       <>
         <SiteHeader />
         <main className="mx-auto max-w-3xl px-5 py-32 text-center md:px-8">
-          <h1 className="font-mori text-5xl font-semibold tracking-[-0.05em] text-stone-900">This event isn&apos;t here.</h1>
+          <h1 className="font-mori text-5xl font-semibold tracking-[-0.05em] text-stone-900">This event isn&apos;t here</h1>
           <p className="mt-4 text-lg text-stone-500">It may have ended or been taken down.</p>
           <Link href="/events" className="mt-8 inline-flex h-12 items-center rounded-full bg-forest-700 px-6 font-medium text-ink">See what&apos;s coming up</Link>
         </main>

@@ -123,7 +123,7 @@ export function StudentsSheet({ open, onOpenChange }: { open: boolean; onOpenCha
           <motion.div key={step} initial={{ opacity: 0, x: dir * 24 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: dir * -24 }} transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}>
             {step === 0 && (
               <form onSubmit={(e) => { e.preventDefault(); next(); }} noValidate className="space-y-6">
-                <Heading title="Hi, parents." body="A couple of quick details so Pastor Gannon can say hello and keep you in the loop." />
+                <Heading title="Hi, parents" body="A couple of quick details so Pastor Gannon can say hello and keep you in the loop." />
                 <div className="grid gap-3 sm:grid-cols-2">
                   <Field label="Your first name" value={parent.firstName} onChange={(e) => { setParent((p) => ({ ...p, firstName: e.target.value })); clear("pFirst"); }} error={errors.pFirst} autoComplete="given-name" autoFocus />
                   <Field label="Your last name" value={parent.lastName} onChange={(e) => { setParent((p) => ({ ...p, lastName: e.target.value })); clear("pLast"); }} error={errors.pLast} autoComplete="family-name" />

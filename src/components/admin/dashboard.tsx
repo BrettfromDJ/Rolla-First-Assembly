@@ -1,5 +1,6 @@
 "use client";
 
+import { CountUp } from "@/components/church/motion";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "motion/react";
@@ -283,7 +284,7 @@ export function Dashboard() {
           </div>
         </div>
         {tab === "events" ? (
-          <div className="px-5 pt-8 md:px-8">
+          <div key={tab} className="m-tab px-5 pt-8 md:px-8">
             <div className="mb-6">
               <p className="text-sm text-stone-500">Ministry</p>
               <h1 className="mt-1 text-[28px] font-semibold tracking-[-0.02em]">Events</h1>
@@ -292,11 +293,11 @@ export function Dashboard() {
             <EventsView query={query} />
           </div>
         ) : tab === "week" ? (
-          <div className="px-5 pt-8 md:px-8">
+          <div key={tab} className="m-tab px-5 pt-8 md:px-8">
             <WeeklyView go={setTab} openVisitor={setSelectedId} />
           </div>
         ) : tab === "schedule" ? (
-          <div className="px-5 pt-8 md:px-8">
+          <div key={tab} className="m-tab px-5 pt-8 md:px-8">
             <div className="mb-6">
               <p className="text-sm text-stone-500">Volunteers</p>
               <h1 className="mt-1 text-[28px] font-semibold tracking-[-0.02em]">Sunday schedule</h1>
@@ -304,7 +305,7 @@ export function Dashboard() {
             <ScheduleView query={query} />
           </div>
         ) : tab === "volunteers" ? (
-          <div className="px-5 pt-8 md:px-8">
+          <div key={tab} className="m-tab px-5 pt-8 md:px-8">
             <div className="mb-6">
               <p className="text-sm text-stone-500">Ministry</p>
               <h1 className="mt-1 text-[28px] font-semibold tracking-[-0.02em]">Volunteers</h1>
@@ -312,7 +313,7 @@ export function Dashboard() {
             <VolunteersView query={query} />
           </div>
         ) : tab === "prayer" ? (
-          <div className="px-5 pt-8 md:px-8">
+          <div key={tab} className="m-tab px-5 pt-8 md:px-8">
             <div className="mb-6">
               <p className="text-sm text-stone-500">Ministry</p>
               <h1 className="mt-1 text-[28px] font-semibold tracking-[-0.02em]">Prayer requests</h1>
@@ -320,7 +321,7 @@ export function Dashboard() {
             <PrayerView query={query} />
           </div>
         ) : tab === "attendance" ? (
-          <div className="px-5 pt-8 md:px-8">
+          <div key={tab} className="m-tab px-5 pt-8 md:px-8">
             <div className="mb-6">
               <p className="text-sm text-stone-500">Ministry</p>
               <h1 className="mt-1 text-[28px] font-semibold tracking-[-0.02em]">Attendance</h1>
@@ -328,7 +329,7 @@ export function Dashboard() {
             <AttendanceView />
           </div>
         ) : tab === "members" ? (
-          <div className="px-5 pt-8 md:px-8">
+          <div key={tab} className="m-tab px-5 pt-8 md:px-8">
             <div className="mb-6">
               <p className="text-sm text-stone-500">People</p>
               <h1 className="mt-1 text-[28px] font-semibold tracking-[-0.02em]">Members &amp; kids</h1>
@@ -336,7 +337,7 @@ export function Dashboard() {
             <MembersView query={query} onOpen={setSelectedId} />
           </div>
         ) : tab === "baptisms" ? (
-          <div className="px-5 pt-8 md:px-8">
+          <div key={tab} className="m-tab px-5 pt-8 md:px-8">
             <div className="mb-6">
               <p className="text-sm text-stone-500">Ministry</p>
               <h1 className="mt-1 text-[28px] font-semibold tracking-[-0.02em]">Baptisms</h1>
@@ -344,7 +345,7 @@ export function Dashboard() {
             <BaptismsView query={query} onOpen={setSelectedId} />
           </div>
         ) : (
-        <div className="px-5 pt-8 md:px-8">
+        <div key={tab} className="m-tab px-5 pt-8 md:px-8">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
               <p className="text-sm text-stone-500" suppressHydrationWarning>{hydrated ? new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" }) : " "}</p>
@@ -515,7 +516,7 @@ function Metric({ label, sub, value, icon: Icon, onClick, active, accent, ready,
         <span className={cn("text-[13px]", active ? "text-paper/80" : "text-stone-500")}>{label}</span>
         <Icon className={cn("size-4", active ? "text-honey" : accent && value > 0 ? "text-clay" : "text-stone-300")} />
       </div>
-      <p className="mt-3 text-[32px] font-semibold leading-none tracking-[-0.02em] tabular-nums">{ready ? value : "–"}</p>
+      <p className="mt-3 text-[32px] font-semibold leading-none tracking-[-0.02em] tabular-nums">{ready ? <CountUp value={value} /> : "–"}</p>
       <p className={cn("mt-2 text-xs", active ? "text-paper/60" : "text-stone-400")}>{sub}</p>
     </button>
   );

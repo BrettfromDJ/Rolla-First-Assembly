@@ -174,7 +174,7 @@ export function ServeSheet({ teamId, onOpenChange }: { teamId: string | null; on
             {step === 1 && (
               <form onSubmit={(e) => { e.preventDefault(); submit(); }} noValidate className="space-y-6">
                 <div>
-                  <h2 className="font-mori text-4xl font-semibold leading-[1.02] tracking-[-0.05em] text-stone-900 sm:text-[42px]">Tell us about you.</h2>
+                  <h2 className="font-mori text-4xl font-semibold leading-[1.02] tracking-[-0.05em] text-stone-900 sm:text-[42px]">Tell us about you</h2>
                   <p className="mt-3 text-[15px] text-stone-500">{lead} will use this to reach out and find a Sunday to start.</p>
                 </div>
                 <div className="grid gap-3 sm:grid-cols-2">

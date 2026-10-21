@@ -1,5 +1,6 @@
 "use client";
 
+import { CountUp } from "@/components/church/motion";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AlertTriangle, Baby, CalendarDays, Download, Minus, Pencil, Plus, Sparkles, Trash2, TrendingDown, TrendingUp, Users } from "lucide-react";
 import { toast } from "sonner";
@@ -197,7 +198,7 @@ function Stat({ icon: Icon, label, value, sub, delta, warn }: { icon: React.Comp
         <Icon className={cn("size-4 shrink-0", warn ? "text-honey" : "text-stone-300")} />
       </div>
       <div className="mt-3 flex flex-wrap items-baseline gap-x-2.5 gap-y-1">
-        <p className="text-[32px] font-semibold leading-none tracking-[-0.02em]">{value}</p>
+        <p className="text-[32px] font-semibold leading-none tracking-[-0.02em]"><CountUp value={value} /></p>
         {delta !== undefined && Math.abs(delta) >= 0.5 && (
           <span className={cn("inline-flex items-center gap-1 text-xs font-medium", up ? "text-sage" : "text-clay")}>
             {up ? <TrendingUp className="size-3.5" /> : <TrendingDown className="size-3.5" />}
@@ -357,7 +358,7 @@ function TrendChart({ weeks, services, onPick }: { weeks: Week[]; services: Atte
               );
             });
             return (
-              <g key={w.date}>
+              <g key={w.date} className="m-grow-y" style={{ "--gd": `${i * 18}ms` } as React.CSSProperties}>
                 {segs}
                 {!w.complete && (
                   <circle cx={x(i)} cy={y(acc) - (acc ? 10 : 6)} r={4} fill="none" stroke={INK.muted} strokeWidth={1.5}>
@@ -369,7 +370,7 @@ function TrendChart({ weeks, services, onPick }: { weeks: Week[]; services: Atte
             );
           })}
 
-          {avgPath && <path d={avgPath} fill="none" stroke={INK.avg} strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />}
+          {avgPath && <path d={avgPath} pathLength={1} className="m-draw" style={{ "--gd": "0.5s" } as React.CSSProperties} fill="none" stroke={INK.avg} strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />}
 
           {hover !== null && <line x1={x(hover)} x2={x(hover)} y1={top} y2={top + plotH} stroke={INK.axis} strokeWidth={1} pointerEvents="none" />}
 
@@ -455,7 +456,7 @@ function AreaBars({ weeks, services }: { weeks: Week[]; services: AttendanceServ
         <li key={r.id} className="grid grid-cols-[96px_1fr] items-center gap-3 text-sm">
           <span className="text-stone-600">{r.label}</span>
           <span className="flex items-center gap-2.5">
-            <span className="h-4 rounded-r-[4px]" style={{ width: `${(r.value / max) * 82}%`, minWidth: 3, background: INK.bar }} />
+            <span className="m-grow-x h-4 rounded-r-[4px]" style={{ width: `${(r.value / max) * 82}%`, minWidth: 3, background: INK.bar }} />
             <span className="whitespace-nowrap tabular-nums text-stone-900">
               {fmt(r.value)} <span className="text-xs text-stone-400">{total ? `${Math.round((r.value / total) * 100)}%` : ""}</span>
             </span>

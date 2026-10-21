@@ -6,7 +6,7 @@ import { ArrowUpRight, BadgeCheck, CalendarPlus, Droplets, HandHeart, Mail, MapP
 import { toast } from "sonner";
 import { SiteHeader } from "@/components/site/header";
 import { SiteFooter } from "@/components/site/footer";
-import { Rise } from "@/components/church/motion";
+import { RevealGroup, Rise } from "@/components/church/motion";
 import { Faq } from "@/components/visit/new-here";
 import { church, staffById } from "@/lib/data";
 import { gradeLabel, studentEvents, studentGroups, studentsFaqs, studentsInfo, wednesdayFlow } from "@/lib/students";
@@ -31,9 +31,9 @@ export function StudentsPage() {
       <main>
         {/* ---------- Hero ---------- */}
         <section className="mx-auto max-w-[1440px] px-5 pb-10 pt-14 md:px-[60px] md:pt-[63px]">
-          <p className={cn(mori, "text-[16px] uppercase leading-[1.1] tracking-[-0.03em] text-[#0285ff]")}>Students · 6th–12th grade</p>
-          <h1 className={cn(mori, "mt-4 max-w-[1100px] text-[clamp(52px,8vw,124px)] leading-[0.92] tracking-[-0.05em]")}>
-            Wednesdays are for <Ed>students</Ed>.
+          <p className={cn(mori, "m-load-rise text-[16px] uppercase leading-[1.1] tracking-[-0.03em] text-[#0285ff]")}>Students · 6th–12th grade</p>
+          <h1 className={cn(mori, "m-title mt-4 max-w-[1100px] text-[clamp(52px,8vw,124px)] leading-[0.92] tracking-[-0.05em]")}>
+            Wednesdays are for <Ed>students</Ed>
           </h1>
         </section>
 
@@ -44,7 +44,7 @@ export function StudentsPage() {
           </Rise>
 
           <Rise load delay={0.2} y={20}>
-            <div className="relative flex h-full flex-col justify-between overflow-hidden rounded-[28px] bg-[#0285ff] p-7 text-black md:p-9">
+            <div className="relative flex h-full flex-col justify-between overflow-hidden m-sheen rounded-[28px] bg-[#0285ff] p-7 text-black md:p-9">
               <Users aria-hidden className="pointer-events-none absolute -right-6 -top-6 size-44 text-black/[0.07]" strokeWidth={1.25} />
               <div>
                 <p className="font-mori text-[15px] font-semibold uppercase tracking-[-0.03em] text-black/60">Every Wednesday</p>
@@ -123,7 +123,7 @@ export function StudentsPage() {
           <div className="grid gap-12 lg:grid-cols-[1fr_1.4fr] lg:gap-20">
             <Rise>
               <h2 className={cn(mori, "text-[clamp(40px,5.2vw,72px)] leading-[0.95] tracking-[-0.05em]")}>
-                What a Wednesday <Ed>looks like</Ed>.
+                What a Wednesday <Ed>looks like</Ed>
               </h2>
               <p className="mt-5 max-w-sm text-[17px] leading-relaxed text-stone-600">Ninety minutes, and it goes fast. First time? Come at 6:15 and a leader will show you around.</p>
               <div className="mt-10 rounded-[28px] bg-[#dcd2c5]/[0.05] p-7">
@@ -183,10 +183,10 @@ export function StudentsPage() {
               Coming <Ed>up</Ed>
             </h2>
           </Rise>
-          <ul className="mt-10 grid gap-4 md:grid-cols-2">
+          <RevealGroup as="ul" className="mt-10 grid gap-4 md:grid-cols-2">
             {events.map((e) => (
               <li key={e.id}>
-                <article className="flex h-full flex-col justify-between gap-8 rounded-[28px] border-2 border-[#dcd2c5]/80 p-7 md:p-8">
+                <article className="m-lift flex h-full flex-col justify-between gap-8 rounded-[28px] border-2 border-[#dcd2c5]/80 p-7 transition hover:border-[#0285ff] md:p-8">
                   <div>
                     <div className="flex items-center justify-between gap-3">
                       <p className="font-magda text-[13px] uppercase tracking-[0.04em] opacity-60">
@@ -212,7 +212,7 @@ export function StudentsPage() {
                 </article>
               </li>
             ))}
-          </ul>
+          </RevealGroup>
           <div className="mt-4 grid gap-4 md:grid-cols-2">
             <Rise>
               <Link href="/serve" className="flex h-full gap-5 rounded-[28px] bg-[#dcd2c5]/[0.05] p-7 transition hover:bg-[#dcd2c5]/[0.09]">
@@ -240,7 +240,7 @@ export function StudentsPage() {
           <div className="grid gap-12 md:grid-cols-12">
             <Rise className="md:col-span-4">
               <h2 className={cn(mori, "text-[clamp(40px,4.6vw,64px)] leading-[0.95] tracking-[-0.05em]")}>
-                Parent <Ed>questions</Ed>.
+                Parent <Ed>questions</Ed>
               </h2>
               <p className="mt-5 max-w-xs text-[15px] text-stone-600">Anything else? Pastor Gannon is happy to talk.</p>
             </Rise>
@@ -255,7 +255,7 @@ export function StudentsPage() {
             <Rise>
               <button onClick={() => setSheet(true)} className="group flex w-full flex-col justify-between gap-8 rounded-[28px] border-2 border-[#dcd2c5]/80 p-8 text-left transition hover:border-[#0285ff] md:flex-row md:items-center md:p-12">
                 <span className={cn(mori, "text-[clamp(36px,4.4vw,60px)] leading-[0.95] tracking-[-0.05em]")}>
-                  See them <Ed>Wednesday</Ed>.
+                  See them <Ed>Wednesday</Ed>
                 </span>
                 <span className="flex items-center gap-3">
                   <span className={cn(mori, "text-[16px] uppercase tracking-[-0.04em]")}>Sign up your student</span>

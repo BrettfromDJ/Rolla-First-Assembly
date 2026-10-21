@@ -157,7 +157,7 @@ export function KidsSheet({ open, onOpenChange }: { open: boolean; onOpenChange:
           <motion.div key={step} initial={{ opacity: 0, x: dir * 24 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: dir * -24 }} transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}>
             {step === 0 && (
               <form onSubmit={(e) => { e.preventDefault(); next(); }} className="space-y-6" noValidate>
-                <Heading title="Let's get your kids ready." body="Pre-registering takes a few minutes and makes your first check-in a breeze. Name tags will be waiting." />
+                <Heading title="Let's get your kids ready" body="Pre-registering takes a few minutes and makes your first check-in a breeze. Name tags will be waiting." />
                 <div className="grid gap-3 sm:grid-cols-2">
                   <Field label="Your first name" value={parent.firstName} onChange={(e) => { setParent((p) => ({ ...p, firstName: e.target.value })); clear("pFirst"); }} error={errors.pFirst} autoComplete="given-name" autoFocus />
                   <Field label="Your last name" value={parent.lastName} onChange={(e) => { setParent((p) => ({ ...p, lastName: e.target.value })); clear("pLast"); }} error={errors.pLast} autoComplete="family-name" />
@@ -274,7 +274,7 @@ export function KidsSheet({ open, onOpenChange }: { open: boolean; onOpenChange:
 
             {step === 2 && (
               <div className="space-y-6">
-                <Heading title="Pickup & safety." body="Only you and the adults you list here can pick up your kids. Both are optional, and you can add people at the desk too." />
+                <Heading title="Pickup & safety" body="Only you and the adults you list here can pick up your kids. Both are optional, and you can add people at the desk too." />
                 <div className="space-y-3">
                   <p className="text-sm font-medium text-stone-800">Anyone else allowed to pick up?</p>
                   {pickup.map((p, i) => (

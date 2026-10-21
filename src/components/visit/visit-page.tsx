@@ -145,7 +145,7 @@ export function VisitPage() {
             <Reveal delay={0.1} className="md:col-span-7">
               <div className="flex h-full flex-col justify-between rounded-[44px] border-4 border-[#dcd2c5] p-7 md:p-10">
                 <h2 className="font-mori text-[clamp(40px,4.6vw,64px)] font-semibold leading-[0.95] tracking-[-0.05em] text-[#dcd2c5]">
-                  A glimpse of <span className="font-editorial font-normal italic tracking-[-0.03em]">Sunday</span>.
+                  A glimpse of <span className="font-editorial font-normal italic tracking-[-0.03em]">Sunday</span>
                 </h2>
                 <ol className="mt-10 space-y-4">
                   {[
@@ -168,7 +168,7 @@ export function VisitPage() {
         {/* ---------- What to expect ---------- */}
         <section id="expect" className="mx-auto max-w-7xl scroll-mt-24 px-5 py-24 md:px-8 md:py-32">
           <Reveal>
-            <h2 className="max-w-2xl font-display text-5xl leading-[1] tracking-[-0.02em] text-stone-900 md:text-6xl">What to expect.</h2>
+            <h2 className="max-w-2xl font-display text-5xl leading-[1] tracking-[-0.02em] text-stone-900 md:text-6xl">What to expect</h2>
           </Reveal>
           <div className="mt-14 grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
             {[
@@ -209,7 +209,7 @@ export function VisitPage() {
             <div>
               <Reveal>
                 <p className="text-[13px] font-medium uppercase tracking-[0.16em] text-forest-500">Kids First</p>
-                <h2 className="mt-5 font-display text-5xl leading-[1] tracking-[-0.02em] text-stone-900 md:text-6xl">Kids are the best part of Sunday.</h2>
+                <h2 className="mt-5 font-display text-5xl leading-[1] tracking-[-0.02em] text-stone-900 md:text-6xl">Kids are the best part of Sunday</h2>
                 <p className="mt-6 max-w-md text-[17px] leading-relaxed text-stone-600">
                   During both services, kids from birth through 5th grade have their own space to play, learn, and be known by name. Students in 6th–12th meet Wednesday nights in the youth room upstairs.
                 </p>
@@ -258,7 +258,7 @@ export function VisitPage() {
         <section id="arrive" className="mx-auto max-w-7xl scroll-mt-24 px-5 py-24 md:px-8 md:py-32">
           <Reveal>
             <div className="mb-12 flex flex-col justify-between gap-6 md:flex-row md:items-end">
-              <h2 className="max-w-xl font-display text-5xl leading-[1] tracking-[-0.02em] text-stone-900 md:text-6xl">Your first Sunday, step by step.</h2>
+              <h2 className="max-w-xl font-display text-5xl leading-[1] tracking-[-0.02em] text-stone-900 md:text-6xl">Your first Sunday, step by step</h2>
               <p className="max-w-sm text-[17px] text-stone-600">Tap a stop to see where it is.</p>
             </div>
           </Reveal>
@@ -270,7 +270,7 @@ export function VisitPage() {
           <div className="mx-auto grid max-w-7xl gap-12 px-5 py-24 md:grid-cols-12 md:px-8 md:py-32">
             <Reveal className="md:col-span-4">
               <h2 className="font-mori text-[clamp(40px,4.6vw,64px)] font-semibold leading-[0.95] tracking-[-0.05em] text-[#dcd2c5]">
-                Good <span className="font-editorial font-normal italic tracking-[-0.03em]">questions</span>.
+                Good <span className="font-editorial font-normal italic tracking-[-0.03em]">questions</span>
               </h2>
               <p className="mt-5 max-w-xs text-stone-600">The things most people wonder before their first visit.</p>
               <button onClick={() => setContactOpen(true)} className="mt-8 inline-flex h-[52px] items-center gap-2 rounded-[80px] border-[3px] border-[#0285ff] px-6 font-mori text-[15px] font-semibold uppercase tracking-[-0.05em] text-[#0285ff] transition hover:bg-[#0285ff] hover:text-black">
@@ -290,7 +290,7 @@ export function VisitPage() {
               <div className="grid gap-10 p-8 md:grid-cols-[1fr_auto] md:items-center md:p-14">
                 <div>
                   <p className="flex items-center gap-2 text-sm text-forest-500"><CalendarCheck className="size-4" /> You&apos;re on the list</p>
-                  <h2 className="mt-4 font-display text-5xl leading-[1] md:text-6xl">See you {formatDay(plan.date).split(",")[0]}, {plan.firstName}.</h2>
+                  <h2 className="mt-4 font-display text-5xl leading-[1] md:text-6xl">See you {formatDay(plan.date).split(",")[0]}, {plan.firstName}</h2>
                   <p className="mt-4 text-paper/70">
                     {formatDay(plan.date)} · {plan.service} AM{plan.bringingKids ? ` · Bringing ${plan.kidsCount} kid${plan.kidsCount === 1 ? "" : "s"}` : ""}
                   </p>
@@ -305,7 +305,7 @@ export function VisitPage() {
             ) : (
               <div className="grid md:grid-cols-[1.1fr_1fr]">
                 <div className="p-8 md:p-14">
-                  <h2 className="font-display text-5xl leading-[1] md:text-7xl">Let us know you&apos;re coming.</h2>
+                  <h2 className="font-display text-5xl leading-[1] md:text-7xl">Let us know you&apos;re coming</h2>
                   <p className="mt-5 max-w-md text-[17px] text-paper/70">
                     Totally optional. But if you do, we&apos;ll have name tags ready for the kids and make sure someone&apos;s looking out for you.
                   </p>

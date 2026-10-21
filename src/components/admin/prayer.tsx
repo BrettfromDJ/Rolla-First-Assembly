@@ -1,5 +1,6 @@
 "use client";
 
+import { CountUp } from "@/components/church/motion";
 import { useState } from "react";
 import { Archive, Check, Download, Eye, EyeOff, HandHeart, Heart, Inbox, Lock, MessageSquarePlus, PhoneCall, Sparkles, Users } from "lucide-react";
 import { toast } from "sonner";
@@ -314,7 +315,7 @@ function Stat({ icon: Icon, label, value, sub, warn, ready, onClick }: { icon: R
         <span className="text-[13px] text-stone-500">{label}</span>
         <Icon className={cn("size-4", warn ? "text-clay" : "text-stone-300")} />
       </div>
-      <p className="mt-3 text-[32px] font-semibold leading-none tracking-[-0.02em]">{ready ? value : "–"}</p>
+      <p className="mt-3 text-[32px] font-semibold leading-none tracking-[-0.02em]">{ready ? <CountUp value={value} /> : "–"}</p>
       <p className="mt-2 truncate text-xs text-stone-400">{sub}</p>
     </button>
   );

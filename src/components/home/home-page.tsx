@@ -293,7 +293,7 @@ export function HomePage() {
                   <p className="text-sm text-paper/60">Administrative Assistant</p>
                 </div>
               </div>
-              <h2 className="mt-8 font-display text-4xl leading-[1.05] md:text-5xl">Need anything? I&apos;m here.</h2>
+              <h2 className="mt-8 font-display text-4xl leading-[1.05] md:text-5xl">Need anything? I&apos;m here</h2>
               <p className="mt-4 max-w-md text-paper/70">
                 Questions about Sunday, a prayer request, or just want to grab coffee? Send a note to the church office. We usually reply the same day.
               </p>
