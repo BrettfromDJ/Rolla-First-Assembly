@@ -31,7 +31,6 @@ import {
   Download,
   HeartPulse,
   UserRound,
-  Globe,
   Home,
 } from "lucide-react";
 import { Logo } from "@/components/ui/logo";
@@ -46,14 +45,13 @@ import { VolunteersView } from "./volunteers";
 import { ScheduleView } from "./schedule";
 import { WeeklyView } from "./weekly";
 import { EventsView } from "./events";
-import { SiteEditor } from "./site-editor";
 import { interests as interestList, interestShort, kidsGroups, staffById, welcomeTeam } from "@/lib/data";
 import { useStore } from "@/lib/store";
 import type { InterestId, Stage, Visitor } from "@/lib/types";
 import { cn, formatDate, formatShortDay, greeting, relativeDay } from "@/lib/utils";
 import { ACTING_AS, fullName, isMember, isRecent, needsAttention, nextAction, rsvpInfo, stageStyle, stages } from "./helpers";
 
-type Tab = "week" | "people" | "website" | "baptisms" | "attendance" | "prayer" | "volunteers" | "schedule" | "events";
+type Tab = "week" | "people" | "baptisms" | "attendance" | "prayer" | "volunteers" | "schedule" | "events";
 type View = "all" | "attention" | "mine" | "new" | "planning" | "requests" | "rsvps";
 type Who = "all" | "guests" | "members";
 
@@ -74,7 +72,7 @@ export function Dashboard() {
   useEffect(() => {
     const h = location.hash.slice(1);
     if (h === "visitors" || h === "members") setTabState("people");
-    if (h === "people" || h === "website" || h === "baptisms" || h === "attendance" || h === "prayer" || h === "volunteers" || h === "schedule" || h === "events") setTabState(h);
+    if (h === "people" || h === "baptisms" || h === "attendance" || h === "prayer" || h === "volunteers" || h === "schedule" || h === "events") setTabState(h);
   }, []);
   const [query, setQuery] = useState("");
   const [stage, setStage] = useState<Stage | "">("");
@@ -258,15 +256,6 @@ export function Dashboard() {
             <span className="flex-1 text-left">Baptisms</span>
             <span className="text-xs tabular-nums text-stone-400">{hydrated ? allVisitors.filter((v) => v.baptism).length : "–"}</span>
           </button>
-          <p className="px-3 pb-2 pt-6 text-[11px] font-semibold uppercase tracking-[0.12em] text-stone-400">Website</p>
-          <button
-            onClick={() => setTab("website")}
-            className={cn("flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm transition", tab === "website" ? "bg-stone-100 font-medium text-stone-900" : "text-stone-600 hover:bg-stone-50")}
-          >
-            <Globe className="size-4 text-stone-400" />
-            <span className="flex-1 text-left">Site editor</span>
-            {hydrated && store.site.alert.on && <span className="rounded-full bg-[#f2b134] px-1.5 text-[11px] font-medium text-black">Alert on</span>}
-          </button>
         </nav>
         <div className="mt-auto space-y-3">
           <Link href="/" className="flex items-center justify-between rounded-xl px-3 py-2 text-sm text-stone-600 hover:bg-stone-50">
@@ -287,7 +276,7 @@ export function Dashboard() {
         <header className="sticky top-0 z-20 border-b border-stone-200/70 bg-stone-50/85 backdrop-blur-xl">
           <div className="flex h-16 items-center gap-4 px-5 md:px-8">
             <div className="lg:hidden"><Logo /></div>
-            <div className={cn("relative ml-auto w-full max-w-sm", (tab === "attendance" || tab === "week" || tab === "website") && "invisible")}>
+            <div className={cn("relative ml-auto w-full max-w-sm", (tab === "attendance" || tab === "week") && "invisible")}>
               <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-stone-400" />
               <input
                 value={query}
@@ -315,7 +304,6 @@ export function Dashboard() {
               ["volunteers", "Volunteers", UsersRound],
               ["schedule", "Schedule", CalendarRange],
               ["events", "Events", CalendarPlus],
-              ["website", "Website", Globe],
             ] as const).map(([id, label, Icon]) => (
               <button
                 key={id}
@@ -330,11 +318,7 @@ export function Dashboard() {
           </div>
           </div>
         </div>
-        {tab === "website" ? (
-          <div key={tab} className="m-tab px-5 pt-8 md:px-8">
-            <SiteEditor />
-          </div>
-        ) : tab === "events" ? (
+        {tab === "events" ? (
           <div key={tab} className="m-tab px-5 pt-8 md:px-8">
             <div className="mb-6">
               <p className="text-sm text-stone-500">Ministry</p>

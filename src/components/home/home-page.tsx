@@ -17,8 +17,7 @@ import { OfferingCard, toneFor } from "@/components/events/offering-cards";
 import { church, getOffering, interests as interestList, interestShort, staffById } from "@/lib/data";
 import { img } from "@/lib/images";
 import { reasonFor, recommend } from "@/lib/recommend";
-import { useSite, useStore } from "@/lib/store";
-import { addMinutes, clockFull, meridiem, serviceClock, sundayLine } from "@/lib/site";
+import { useStore } from "@/lib/store";
 import type { InterestId, Offering, Rsvp, SubItem } from "@/lib/types";
 import { cn, formatDay, formatShortDay, formatTime, greeting, relativeDay } from "@/lib/utils";
 
@@ -28,7 +27,6 @@ type Plan = { rsvp: Rsvp; o: Offering; item?: SubItem; date?: string };
 
 export function HomePage() {
   const { profile, hydrated } = useStore();
-  const site = useSite();
   const [contactOpen, setContactOpen] = useState(false);
   const [interestsOpen, setInterestsOpen] = useState(false);
 
@@ -228,7 +226,7 @@ export function HomePage() {
                   href="/students"
                   date={profile.students.date}
                   title={`Students · ${profile.students.students.map((s) => s.firstName).join(" & ")}`}
-                  meta={`Wednesday ${clockFull(site.wednesday)} · Youth room upstairs`}
+                  meta="Wednesday 6:30 PM · Youth room upstairs"
                   status="Signed up"
                 />
               )}
@@ -318,7 +316,6 @@ export function HomePage() {
 
 function SundayChip() {
   const { profile } = useStore();
-  const site = useSite();
   const plan = profile.visitPlan;
   return (
     <div className="flex items-center gap-4 rounded-3xl bg-white p-4 pr-6 ring-1 ring-stone-200/70">
@@ -333,8 +330,8 @@ function SundayChip() {
         )}
       </span>
       <div className="text-sm">
-        <p className="font-medium text-stone-900">{plan ? `Your visit · ${serviceClock(site, plan.service)} ${meridiem(site.sunday[plan.service === "9:00" ? 0 : 1])}` : `Sundays at ${sundayLine(site)}`}</p>
-        <p className="text-stone-500">{plan ? formatDay(plan.date) : site.address}</p>
+        <p className="font-medium text-stone-900">{plan ? `Your visit · ${plan.service} AM` : `Sundays at ${church.services.join(" & ")} AM`}</p>
+        <p className="text-stone-500">{plan ? formatDay(plan.date) : church.address}</p>
       </div>
     </div>
   );

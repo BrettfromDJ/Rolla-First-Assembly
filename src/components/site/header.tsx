@@ -9,7 +9,6 @@ import { Logo } from "@/components/ui/logo";
 import { churchLinks } from "@/lib/data";
 import { useStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
-import { SiteAlertBanner } from "./site-bits";
 
 const mori = "font-mori font-semibold";
 
@@ -35,8 +34,6 @@ export function SiteHeader() {
   const hasProfile = hydrated && (!!name || profile.onboardingComplete || profile.rsvps.length > 0 || !!profile.visitPlan);
 
   return (
-    <>
-    <SiteAlertBanner />
     <header className="relative z-40 mx-auto max-w-[1440px] px-5 pt-6 md:px-[60px] md:pt-[42px]">
       <div className="flex items-center justify-between gap-6">
         <div className="flex items-center gap-[40px] min-[1500px]:gap-[59px]">
@@ -118,6 +115,5 @@ export function SiteHeader() {
         )}
       </AnimatePresence>
     </header>
-    </>
   );
 }

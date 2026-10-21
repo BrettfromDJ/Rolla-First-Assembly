@@ -10,8 +10,7 @@ import { RevealGroup, Rise } from "@/components/church/motion";
 import { Faq } from "@/components/visit/new-here";
 import { KidsSheet } from "./register-sheet";
 import { church, getOffering, kidGradeLabel, kidsGroups, staffById } from "@/lib/data";
-import { useSite, useStore } from "@/lib/store";
-import { clockFull, sundayShort } from "@/lib/site";
+import { useStore } from "@/lib/store";
 import { cn, downloadIcs, formatDay, formatTime } from "@/lib/utils";
 
 const mori = "font-mori font-semibold";
@@ -23,12 +22,11 @@ const faqs = [
   { q: "How do you keep my child safe?", a: "Every volunteer is background-checked and trained, and they always serve in pairs. Kids' rooms have secure entry, and only the adult with the matching security tag can pick up your child." },
   { q: "My child has allergies. What should I do?", a: "Let us know when you pre-register or at check-in. Allergies print right on your child's name tag, and leaders check them before any snack is served." },
   { q: "What if my child has a hard time separating?", a: "That's completely normal. You're welcome to stay in the room for a few minutes, or the whole time on your first Sunday. If your child needs you during the service, we'll text you right away." },
-  { q: "What about middle and high school students?", a: "Students in 6th–12th grade sit with their families on Sunday mornings. On Wednesday nights they have their own night in the youth room upstairs, led by Pastor Gannon." },
+  { q: "What about middle and high school students?", a: "Students in 6th–12th grade sit with their families on Sunday mornings. On Wednesday nights at 6:30 PM they have their own night in the youth room upstairs, led by Pastor Gannon." },
 ];
 
 export function KidsPage() {
   const { profile, hydrated, cancelKids } = useStore();
-  const site = useSite();
   const [sheet, setSheet] = useState(false);
   const reg = hydrated ? profile.kids : null;
   const micah = staffById.micah;
@@ -65,13 +63,13 @@ export function KidsPage() {
               <Baby aria-hidden className="pointer-events-none absolute -right-6 -top-6 size-44 text-black/[0.07]" strokeWidth={1.25} />
               <div>
                 <p className="font-mori text-[15px] font-semibold uppercase tracking-[-0.03em] text-black/60">Every Sunday</p>
-                <p className={cn(mori, "mt-3 text-[clamp(48px,5.6vw,80px)] leading-[0.9] tracking-[-0.05em]")}>{sundayShort(site)}</p>
+                <p className={cn(mori, "mt-3 text-[clamp(48px,5.6vw,80px)] leading-[0.9] tracking-[-0.05em]")}>9:00 &amp; 10:30</p>
                 <p className="mt-4 max-w-sm text-[17px] leading-relaxed text-black/75">
                   Birth through 5th grade, during both services. While you worship, your kids play, learn about Jesus, and get known by name.
                 </p>
                 <div className="mt-6 flex flex-wrap gap-2 text-[13px]">
                   <span className="inline-flex items-center gap-1.5 rounded-full bg-black/10 px-3 py-1.5 font-medium"><MapPin className="size-3.5" /> Downstairs, below the auditorium</span>
-                  <span className="rounded-full bg-black/10 px-3 py-1.5 font-medium">Students: Wed {clockFull(site.wednesday)}</span>
+                  <span className="rounded-full bg-black/10 px-3 py-1.5 font-medium">Students: Wed 6:30 PM</span>
                 </div>
               </div>
 

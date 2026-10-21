@@ -10,8 +10,7 @@ import { Field, Textarea } from "@/components/ui/field";
 import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/ui/avatar";
 import { church, kidGradeLabel, kidGradeOptions, staffById, suggestGrade } from "@/lib/data";
-import { useSite, useStore } from "@/lib/store";
-import { atService, currentSite, meridiem, serviceClock } from "@/lib/site";
+import { useStore } from "@/lib/store";
 import type { Guardian, KidInfo, PickupPerson, ServiceTime } from "@/lib/types";
 import { cn, downloadIcs, formatDay, isEmail, isPhone, nextDow } from "@/lib/utils";
 
@@ -23,12 +22,15 @@ const blankPickup = (): PickupPerson => ({ name: "", relationship: "", phone: ""
 const todayYmd = () => new Date().toLocaleDateString("en-CA");
 const tooOld = () => new Date(new Date().getFullYear() - 13, new Date().getMonth(), new Date().getDate()).toLocaleDateString("en-CA");
 
-const serviceStart = (iso: string, service: ServiceTime) => atService(new Date(iso), currentSite(), service).toISOString();
+const serviceStart = (iso: string, service: ServiceTime) => {
+  const d = new Date(iso);
+  d.setHours(service === "9:00" ? 9 : 10, service === "9:00" ? 0 : 30, 0, 0);
+  return d.toISOString();
+};
 
 /** Parent pre-registration for Kids First: collects what Planning Center Check-Ins needs to create the household. */
 export function KidsSheet({ open, onOpenChange }: { open: boolean; onOpenChange: (o: boolean) => void }) {
   const { profile, saveKids } = useStore();
-  const site = useSite();
   const sundays = useMemo(() => [0, 1, 2].map((w) => nextDow(0, 9, 0, w)), []);
   const [step, setStep] = useState<Step>(0);
   const [dir, setDir] = useState(1);
@@ -332,8 +334,8 @@ export function KidsSheet({ open, onOpenChange }: { open: boolean; onOpenChange:
                     const on = service === t;
                     return (
                       <button key={t} onClick={() => setService(t)} aria-pressed={on} className={cn("relative rounded-2xl border-2 p-5 text-left transition", on ? "border-forest-700" : "border-stone-200 hover:border-stone-300")}>
-                        <span className="font-mori text-4xl font-semibold tracking-[-0.05em] text-stone-900">{serviceClock(site, t)}</span>
-                        <span className="ml-1 text-sm text-stone-500">{meridiem(site.sunday[t === "9:00" ? 0 : 1])}</span>
+                        <span className="font-mori text-4xl font-semibold tracking-[-0.05em] text-stone-900">{t}</span>
+                        <span className="ml-1 text-sm text-stone-500">AM</span>
                         {on && <span className="absolute right-4 top-4 flex size-6 items-center justify-center rounded-full bg-forest-700 text-ink"><Check className="size-3.5" strokeWidth={3} /></span>}
                       </button>
                     );

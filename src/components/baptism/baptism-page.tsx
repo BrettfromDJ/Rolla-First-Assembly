@@ -9,8 +9,7 @@ import { RevealGroup, Rise } from "@/components/church/motion";
 import { Faq } from "@/components/visit/new-here";
 import { BaptismSheet } from "./register-sheet";
 import { baptism, baptismDates, church, staffById } from "@/lib/data";
-import { useSite, useStore } from "@/lib/store";
-import { sundayShort } from "@/lib/site";
+import { useStore } from "@/lib/store";
 import { cn, downloadIcs, formatDay } from "@/lib/utils";
 
 const mori = "font-mori font-semibold";
@@ -27,7 +26,6 @@ const faqs = [
 
 export function BaptismPage() {
   const { profile, hydrated, cancelBaptism } = useStore();
-  const site = useSite();
   const [sheet, setSheet] = useState<{ open: boolean; date?: string }>({ open: false });
   const dates = useMemo(() => (hydrated ? baptismDates(3) : []), [hydrated]);
   const next = dates[0];
@@ -64,7 +62,7 @@ export function BaptismPage() {
                     {next.date.toLocaleDateString("en-US", { month: "long", day: "numeric" })}
                   </p>
                   <p className="mt-3 text-[17px] text-black/75">
-                    {next.date.toLocaleDateString("en-US", { weekday: "long" })} · During both services, {sundayShort(site)}
+                    {next.date.toLocaleDateString("en-US", { weekday: "long" })} · During both services, 9:00 &amp; 10:30
                   </p>
                   <div className="mt-6 flex flex-wrap gap-2 text-[13px]">
                     <span className="rounded-full bg-black/10 px-3 py-1.5 font-medium">{days === 0 ? "Today" : `In ${days} day${days === 1 ? "" : "s"}`}</span>
@@ -223,7 +221,7 @@ export function BaptismPage() {
                     <div>
                       <p className="font-magda text-[13px] uppercase tracking-[0.04em] opacity-60">{d.date.toLocaleDateString("en-US", { weekday: "long" })}</p>
                       <p className={cn(mori, "mt-2 text-[44px] leading-none tracking-[-0.05em]")}>{d.date.toLocaleDateString("en-US", { month: "long", day: "numeric" })}</p>
-                      <p className="mt-3 text-[15px] text-stone-500">{sundayShort(site)} services</p>
+                      <p className="mt-3 text-[15px] text-stone-500">9:00 &amp; 10:30 services</p>
                     </div>
                     {mine ? (
                       <span className={cn(mori, "inline-flex h-12 w-fit items-center rounded-[80px] bg-[#0285ff]/15 px-5 text-[14px] uppercase tracking-[-0.04em] text-[#0285ff]")}>You&apos;re registered</span>

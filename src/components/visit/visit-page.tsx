@@ -18,8 +18,7 @@ import { Faq, PathCard } from "./new-here";
 import { ContactSheet } from "@/components/site/contact-sheet";
 import { img } from "@/lib/images";
 import { church, staffById } from "@/lib/data";
-import { useSite, useStore } from "@/lib/store";
-import { addMinutes, atService, clock, clockFull, meridiem, sundayLine } from "@/lib/site";
+import { useStore } from "@/lib/store";
 import { downloadIcs, formatDay, nextDow } from "@/lib/utils";
 
 const sections = [
@@ -36,7 +35,6 @@ export function VisitPage() {
   const [planOpen, setPlanOpen] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
   const { profile, hydrated, updateProfile } = useStore();
-  const site = useSite();
   const plan = hydrated ? profile.visitPlan : null;
 
   return (
@@ -97,10 +95,10 @@ export function VisitPage() {
               <div>
                 <p className="text-sm text-paper/60">Every Sunday</p>
                 <div className="mt-3 flex flex-wrap items-end gap-x-6 gap-y-2">
-                  {site.sunday.map((t) => (
+                  {church.services.map((t) => (
                     <div key={t}>
-                      <span className="font-display text-[56px] leading-none sm:text-7xl md:text-[82px]">{clock(t)}</span>
-                      <span className="ml-1 text-paper/60">{meridiem(t)}</span>
+                      <span className="font-display text-[56px] leading-none sm:text-7xl md:text-[82px]">{t}</span>
+                      <span className="ml-1 text-paper/60">AM</span>
                     </div>
                   ))}
                 </div>
@@ -108,13 +106,13 @@ export function VisitPage() {
                   <Clock className="size-4 text-forest-500" /> About 70 minutes. Both services are the same.
                 </p>
                 <p className="mt-6 border-t border-paper/10 pt-5 text-paper/80">
-                  <span className="text-paper">Wednesdays at {clockFull(site.wednesday)}</span> · Adults &amp; youth
+                  <span className="text-paper">Wednesdays at 6:30 PM</span> · Adults &amp; youth
                 </p>
               </div>
               <div className="space-y-5 border-t border-paper/10 pt-6">
                 <div>
-                  <p className="text-lg">{site.address}</p>
-                  <p className="text-paper/60">{site.city}</p>
+                  <p className="text-lg">{church.address}</p>
+                  <p className="text-paper/60">{church.city}</p>
                 </div>
                 <div className="flex flex-wrap gap-3">
                   <Button asChild variant="light">
@@ -125,8 +123,8 @@ export function VisitPage() {
                   <Button
                     variant="outlineLight"
                     onClick={() => {
-                      downloadIcs({ title: "Sunday at Rolla First", start: atService(nextDow(0, 10, 30), site, "10:30").toISOString(), durationMin: 70, location: `${site.address}, ${site.city}`, description: `Services at ${sundayLine(site)}. Look for the welcome tent out front.` });
-                      toast("Calendar invite downloaded", { description: `This Sunday at ${clockFull(site.sunday[1])}.` });
+                      downloadIcs({ title: "Sunday at Rolla First", start: nextDow(0, 10, 30).toISOString(), durationMin: 70, location: `${church.address}, ${church.city}`, description: "Services at 9:00 and 10:30. Look for the welcome tent out front." });
+                      toast("Calendar invite downloaded", { description: "This Sunday at 10:30 AM." });
                     }}
                   >
                     <CalendarPlus /> Add to calendar
@@ -151,10 +149,10 @@ export function VisitPage() {
                 </h2>
                 <ol className="mt-10 space-y-4">
                   {[
-                    [clock(addMinutes(site.sunday[0], -30)), "Grab a coffee in the gym"],
-                    [clock(site.sunday[0]), "Music and a warm welcome"],
-                    [clock(addMinutes(site.sunday[0], 25)), "A message from the Bible that connects to real life"],
-                    [clock(addMinutes(site.sunday[0], 70)), `Linger and meet someone new. Second service starts at ${clock(site.sunday[1])}.`],
+                    ["8:30", "Grab a coffee in the gym"],
+                    ["9:00", "Music and a warm welcome"],
+                    ["9:25", "A message from the Bible that connects to real life"],
+                    ["10:10", "Linger and meet someone new. Second service starts at 10:30."],
                   ].map(([t, l]) => (
                     <li key={t} className="flex items-baseline gap-5 border-b border-[#dcd2c5]/15 pb-4 last:border-0 last:pb-0">
                       <span className="w-14 font-mori text-[15px] font-semibold tabular-nums text-[#0285ff]">{t}</span>
