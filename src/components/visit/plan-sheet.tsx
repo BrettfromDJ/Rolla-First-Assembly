@@ -10,7 +10,8 @@ import { Field } from "@/components/ui/field";
 import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/ui/avatar";
 import { church, staffById } from "@/lib/data";
-import { useStore } from "@/lib/store";
+import { useSite, useStore } from "@/lib/store";
+import { atService, meridiem, serviceClock } from "@/lib/site";
 import type { ServiceTime } from "@/lib/types";
 import { cn, downloadIcs, formatDay, isEmail, isPhone, nextDow } from "@/lib/utils";
 
@@ -18,6 +19,7 @@ type Step = 0 | 1 | 2 | 3;
 
 export function PlanVisitSheet({ open, onOpenChange }: { open: boolean; onOpenChange: (o: boolean) => void }) {
   const { profile, savePlan } = useStore();
+  const site = useSite();
   const sundays = useMemo(() => [0, 1, 2].map((w) => nextDow(0, 9, 0, w)), []);
   const [step, setStep] = useState<Step>(0);
   const [dir, setDir] = useState(1);
@@ -61,7 +63,7 @@ export function PlanVisitSheet({ open, onOpenChange }: { open: boolean; onOpenCh
     else if (step === 2) {
       if (kids === null) return;
       const d = new Date(date);
-      d.setHours(service === "9:00" ? 9 : 10, service === "9:00" ? 0 : 30, 0, 0);
+      atService(d, site, service);
       savePlan({ firstName: firstName.trim(), contact: contact.trim(), service, date: d.toISOString(), bringingKids: kids, kidsCount: kids ? kidsCount : 0 });
       go(3);
     }
@@ -69,9 +71,9 @@ export function PlanVisitSheet({ open, onOpenChange }: { open: boolean; onOpenCh
 
   const visitDate = useMemo(() => {
     const d = new Date(date);
-    d.setHours(service === "9:00" ? 9 : 10, service === "9:00" ? 0 : 30, 0, 0);
+    atService(d, site, service);
     return d.toISOString();
-  }, [date, service]);
+  }, [date, service, site]);
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange} title="Let us know you're coming" hideTitle className="sm:w-[min(600px,calc(100vw-48px))]">
@@ -128,8 +130,8 @@ export function PlanVisitSheet({ open, onOpenChange }: { open: boolean; onOpenCh
                     const on = service === t;
                     return (
                       <button key={t} onClick={() => setService(t)} aria-pressed={on} className={cn("relative rounded-3xl p-5 text-left ring-1 transition", on ? "bg-white ring-2 ring-forest-600" : "bg-white/60 ring-stone-200 hover:bg-white")}>
-                        <span className="font-display text-5xl text-stone-900">{t}</span>
-                        <span className="ml-1 text-sm text-stone-500">AM</span>
+                        <span className="font-display text-5xl text-stone-900">{serviceClock(site, t)}</span>
+                        <span className="ml-1 text-sm text-stone-500">{meridiem(site.sunday[t === "9:00" ? 0 : 1])}</span>
                         <span className="mt-2 block text-sm text-stone-500">{t === "9:00" ? "Quieter, great with little ones" : "Our fullest, most energetic"}</span>
                         {on && <span className="absolute right-4 top-4 flex size-6 items-center justify-center rounded-full bg-forest-600 text-ink"><Check className="size-3.5" strokeWidth={3} /></span>}
                       </button>

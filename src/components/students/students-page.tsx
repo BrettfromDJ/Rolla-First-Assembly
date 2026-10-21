@@ -10,7 +10,8 @@ import { RevealGroup, Rise } from "@/components/church/motion";
 import { Faq } from "@/components/visit/new-here";
 import { church, staffById } from "@/lib/data";
 import { gradeLabel, studentEvents, studentGroups, studentsFaqs, studentsInfo, wednesdayFlow } from "@/lib/students";
-import { useStore } from "@/lib/store";
+import { useSite, useStore } from "@/lib/store";
+import { clockFull } from "@/lib/site";
 import { cn, downloadIcs, formatDay, formatTime } from "@/lib/utils";
 import { StudentsSheet } from "./signup-sheet";
 
@@ -19,6 +20,7 @@ const Ed = ({ children }: { children: React.ReactNode }) => <span className="fon
 
 export function StudentsPage() {
   const { profile, hydrated, cancelStudents } = useStore();
+  const site = useSite();
   const [sheet, setSheet] = useState(false);
   const reg = hydrated ? profile.students : null;
   const gannon = staffById[studentsInfo.leaderId];
@@ -48,7 +50,7 @@ export function StudentsPage() {
               <Users aria-hidden className="pointer-events-none absolute -right-6 -top-6 size-44 text-black/[0.07]" strokeWidth={1.25} />
               <div>
                 <p className="font-mori text-[15px] font-semibold uppercase tracking-[-0.03em] text-black/60">Every Wednesday</p>
-                <p className={cn(mori, "mt-3 text-[clamp(48px,5.6vw,80px)] leading-[0.9] tracking-[-0.05em]")}>6:30 PM</p>
+                <p className={cn(mori, "mt-3 text-[clamp(48px,5.6vw,80px)] leading-[0.9] tracking-[-0.05em]")}>{clockFull(site.wednesday)}</p>
                 <p className="mt-4 max-w-sm text-[17px] leading-relaxed text-black/75">Games, worship, a message that&apos;s actually about real life, and small groups with friends who have your back.</p>
                 <div className="mt-6 flex flex-wrap gap-2 text-[13px]">
                   <span className="inline-flex items-center gap-1.5 rounded-full bg-black/10 px-3 py-1.5 font-medium"><MapPin className="size-3.5" /> Youth room, upstairs above the Gym</span>

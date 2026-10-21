@@ -10,7 +10,8 @@ import { Checkbox, Field, Textarea } from "@/components/ui/field";
 import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/ui/avatar";
 import { baptism, baptismDates, church, staffById } from "@/lib/data";
-import { useStore } from "@/lib/store";
+import { useSite, useStore } from "@/lib/store";
+import { atService, currentSite, meridiem, serviceClock } from "@/lib/site";
 import type { BaptismAge, ServiceTime } from "@/lib/types";
 import { cn, downloadIcs, formatDay, isEmail, isPhone } from "@/lib/utils";
 
@@ -22,14 +23,11 @@ const ages: { id: BaptismAge; label: string; hint: string }[] = [
   { id: "child", label: "My child", hint: "12 and under" },
 ];
 
-const serviceStart = (iso: string, service: ServiceTime) => {
-  const d = new Date(iso);
-  d.setHours(service === "9:00" ? 9 : 10, service === "9:00" ? 0 : 30, 0, 0);
-  return d.toISOString();
-};
+const serviceStart = (iso: string, service: ServiceTime) => atService(new Date(iso), currentSite(), service).toISOString();
 
 export function BaptismSheet({ open, onOpenChange, initialDate }: { open: boolean; onOpenChange: (o: boolean) => void; initialDate?: string }) {
   const { profile, saveBaptism } = useStore();
+  const site = useSite();
   const dates = useMemo(() => baptismDates(3), []);
   const [step, setStep] = useState<Step>(0);
   const [dir, setDir] = useState(1);
@@ -189,8 +187,8 @@ export function BaptismSheet({ open, onOpenChange, initialDate }: { open: boolea
                     const on = service === t;
                     return (
                       <button key={t} onClick={() => setService(t)} aria-pressed={on} className={cn("relative rounded-2xl border-2 p-5 text-left transition", on ? "border-forest-700" : "border-stone-200 hover:border-stone-300")}>
-                        <span className="font-mori text-4xl font-semibold tracking-[-0.05em] text-stone-900">{t}</span>
-                        <span className="ml-1 text-sm text-stone-500">AM</span>
+                        <span className="font-mori text-4xl font-semibold tracking-[-0.05em] text-stone-900">{serviceClock(site, t)}</span>
+                        <span className="ml-1 text-sm text-stone-500">{meridiem(site.sunday[t === "9:00" ? 0 : 1])}</span>
                         {on && <span className="absolute right-4 top-4 flex size-6 items-center justify-center rounded-full bg-forest-700 text-ink"><Check className="size-3.5" strokeWidth={3} /></span>}
                       </button>
                     );

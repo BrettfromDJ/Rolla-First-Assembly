@@ -7,6 +7,7 @@ import { churchLinks } from "@/lib/data";
 import { SiteHeader } from "@/components/site/header";
 import { SiteFooter } from "@/components/site/footer";
 import { PlanVisitLink, WelcomeBackBar } from "./visitor-hooks";
+import { Announcements, LeadershipStrip, SundayTimesCaps, WednesdayTimeCaps } from "@/components/site/site-bits";
 
 /**
  * Rolla First homepage, implemented from the Figma file
@@ -17,18 +18,6 @@ import { PlanVisitLink, WelcomeBackBar } from "./visitor-hooks";
  */
 
 const A = (f: string) => `/home/${f}`;
-
-/** Portraits are 340×605 (or 2×) in /public/home/team. */
-const pastors: { first: string; last: string; role: string; email: string; image: string }[] = [
-  { first: "Lance", last: "Langenberg", role: "Lead Pastor", email: "pastorlance@rollafirst.church", image: "team/lance-langenberg.jpg" },
-  { first: "Garrett", last: "Smith", role: "Executive Pastor", email: "pastorgarrett@rollafirst.church", image: "team/garrett-smith.jpg" },
-  { first: "Gannon", last: "Breig", role: "Youth / Worship Pastor", email: "pastorgannon@rollafirst.church", image: "team/gannon-breig.jpg" },
-  { first: "Micah", last: "Wells", role: "Children's Pastor", email: "pastormicah@rollafirst.church", image: "team/micah-wells.jpg" },
-  { first: "Pam", last: "Bales", role: "Children's Discipleship Pastor", email: "pastorpam@rollafirst.church", image: "team/pam-bales.jpg" },
-  { first: "Amber", last: "Eckelkamp", role: "Administrative Assistant", email: "office@rollafirst.church", image: "team/amber-eckelkamp.jpg" },
-  { first: "Brice", last: "Adams", role: "Belle Campus Pastor", email: "pastorbrice@rollafirst.church", image: "team/brice-adams.jpg" },
-  { first: "Debbie", last: "Skyles", role: "Kid's First Director", email: "debbie@rollafirst.church", image: "team/debbie-skyles.jpg" },
-];
 
 /* ---------- Building blocks ---------- */
 
@@ -144,15 +133,17 @@ export function ChurchHome() {
             <div className="px-6 pt-8 md:pl-[120px] md:pr-0 md:pt-[53px]">
               <p className={cn(mori, "text-[26px] leading-none tracking-[-0.03em]")}>Wednesday’s</p>
               <p className="mt-[8px] font-magda text-[14px] uppercase leading-none tracking-[-0.03em] opacity-60">(ADULT and Youth)</p>
-              <p className={cn(mori, "mt-[6px] text-[15px] uppercase leading-none")}>6:30PM</p>
+              <p className={cn(mori, "mt-[6px] text-[15px] uppercase leading-none")}><WednesdayTimeCaps /></p>
             </div>
             <span aria-hidden className="hidden h-[115px] w-px self-center bg-[#dcd2c5]/30 md:block" />
             <div className="px-6 pb-8 pt-6 md:pl-[86px] md:pr-0 md:pt-[53px]">
               <p className={cn(mori, "text-[26px] leading-none tracking-[-0.03em]")}>Sunday’s</p>
-              <p className={cn(mori, "mt-[8px] text-[15px] uppercase leading-none")}>9:00 AM &amp; 10:30AM</p>
+              <p className={cn(mori, "mt-[8px] text-[15px] uppercase leading-none")}><SundayTimesCaps /></p>
             </div>
           </div>
         </section></Rise>
+
+        <Announcements />
 
         {/* Mission */}
         <section id="mission" className="scroll-mt-10 pt-[61px]">
@@ -240,27 +231,7 @@ export function ChurchHome() {
 
       {/* Full-bleed, horizontally scrollable leadership strip */}
       <div className="mx-auto max-w-[1440px]">
-        <Stagger as="ul" gap={0.07} className="no-scrollbar mt-[48px] flex overflow-x-auto overflow-y-hidden md:mt-[67px]">
-          {pastors.map((p, i) => (
-            <StaggerItem as="li" index={i} key={`${p.first}-${p.last}`} className="group w-[min(340px,78vw)] shrink-0 snap-start">
-              <div className="flex flex-col items-end text-right">
-                <p className={cn(mori, "text-[26px] uppercase leading-none tracking-[-0.03em]")}>
-                  {p.first}
-                  <br />
-                  {p.last}
-                </p>
-                <p className={cn(mori, "mt-[8px] text-[16px] uppercase leading-[1.1] tracking-[-0.03em] text-[#0285ff]")}>{p.role}</p>
-                <a href={`mailto:${p.email}`} className={cn(mori, "mt-[10px] inline-block text-[16px] leading-none tracking-[-0.03em] opacity-80 transition hover:text-[#0285ff] hover:opacity-100")}>
-                  {p.email}
-                </a>
-              </div>
-              <div className="relative mt-[18px] aspect-[340/605] overflow-hidden bg-[#1a1a1a]">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={A(p.image)} alt={`${p.first} ${p.last}, ${p.role}`} width={340} height={605} loading="lazy" className="absolute inset-0 size-full object-cover transition duration-700 ease-out group-hover:scale-[1.04]" />
-              </div>
-            </StaggerItem>
-          ))}
-        </Stagger>
+        <LeadershipStrip />
       </div>
 
       {/* Closing */}

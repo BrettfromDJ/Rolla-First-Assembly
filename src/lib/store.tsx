@@ -9,6 +9,7 @@ import { buildSeedPrayers } from "./prayer";
 import { buildSeedServe } from "./serve";
 import { autoFill, buildSeedSchedule, defaultScheduleSettings } from "./schedule";
 import { uid } from "./utils";
+import { defaultSite, mergeSite, registerSite, type SiteSettings } from "./site";
 import type {
   Activity,
   AttendanceRecord,
@@ -83,12 +84,13 @@ interface State {
   events: Offering[]; // built by staff in the admin
   responses: EventResponse[]; // RSVPs and sign-ups for those events
   hiddenOfferings: string[]; // built-in events staff took off the site
+  site: SiteSettings; // what staff edit in the admin's Website tab
   seedVersion?: number;
 }
 
 const seedEvents = () => buildSeedEvents();
 
-const freshState = (): State => ({ profile: freshProfile(), visitors: buildSeedVisitors(), overlay: freshOverlay(), attendance: buildSeedAttendance(), prayers: buildSeedPrayers(), prayed: [], sermonNotes: {}, serve: buildSeedServe(), schedule: { ...buildSeedSchedule(), settings: defaultScheduleSettings }, ...seedEvents(), hiddenOfferings: [], seedVersion: SEED_VERSION });
+const freshState = (): State => ({ profile: freshProfile(), visitors: buildSeedVisitors(), overlay: freshOverlay(), attendance: buildSeedAttendance(), prayers: buildSeedPrayers(), prayed: [], sermonNotes: {}, serve: buildSeedServe(), schedule: { ...buildSeedSchedule(), settings: defaultScheduleSettings }, ...seedEvents(), hiddenOfferings: [], site: defaultSite(), seedVersion: SEED_VERSION });
 
 export type VisitorPatch = Partial<Pick<Visitor, "stage" | "assigneeId" | "status" | "memberSince">>;
 
@@ -148,6 +150,8 @@ interface Store extends State {
   deleteEvent: (id: string) => void;
   toggleHiddenOffering: (id: string) => void;
   removeResponse: (id: string) => void;
+  /* website */
+  updateSite: (patch: Partial<SiteSettings>, by: string) => void;
 }
 
 const Ctx = createContext<Store | null>(null);
@@ -258,6 +262,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
           serve: parsed.serve ?? buildSeedServe(),
           ...(parsed.events ? { events: parsed.events, responses: parsed.responses ?? [] } : seedEvents()),
           hiddenOfferings: parsed.hiddenOfferings ?? [],
+          site: mergeSite(parsed.site),
           schedule: parsed.schedule?.volunteers ? { ...parsed.schedule, settings: { ...defaultScheduleSettings, ...parsed.schedule.settings } } : { ...buildSeedSchedule(), settings: defaultScheduleSettings },
           seedVersion: SEED_VERSION,
         });
@@ -543,6 +548,10 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     setState((s) => ({ ...s, hiddenOfferings: s.hiddenOfferings.includes(id) ? s.hiddenOfferings.filter((x) => x !== id) : [...s.hiddenOfferings, id] }));
   }, []);
 
+  const updateSite = useCallback((patch: Partial<SiteSettings>, by: string) => {
+    setState((s) => ({ ...s, site: { ...s.site, ...patch, updatedAt: new Date().toISOString(), updatedBy: by } }));
+  }, []);
+
   const removeResponse = useCallback((id: string) => {
     setState((s) => ({ ...s, responses: s.responses.filter((r) => r.id !== id) }));
   }, []);
@@ -652,6 +661,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
 
   // Staff-built events join the shared offering list every page reads from.
   registerCustomOfferings(state.events, state.hiddenOfferings);
+  registerSite(state.site);
 
   const value: Store = {
     ...state,
@@ -700,9 +710,15 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     deleteEvent,
     toggleHiddenOffering,
     removeResponse,
+    updateSite,
   };
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
+}
+
+/** The editable website settings (service times, alert, announcements, staff). */
+export function useSite() {
+  return useStore().site;
 }
 
 export function useStore() {

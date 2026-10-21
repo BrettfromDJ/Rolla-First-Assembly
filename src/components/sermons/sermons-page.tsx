@@ -7,6 +7,8 @@ import { SiteHeader } from "@/components/site/header";
 import { SiteFooter } from "@/components/site/footer";
 import { RevealGroup, Rise } from "@/components/church/motion";
 import { church, churchLinks, staffById } from "@/lib/data";
+import { useSite } from "@/lib/store";
+import { sundayLine } from "@/lib/site";
 import {
   currentSeries,
   latestSermon,
@@ -275,11 +277,12 @@ function FilterSelect({ label, value, onChange, options }: { label: string; valu
 
 /** When the next livestream starts, counted down after the page loads (so the server and browser agree). */
 function LiveCard() {
+  const site = useSite();
   const [next, setNext] = useState<{ when: Date; live: boolean } | null>(null);
   useEffect(() => {
     const tick = () => {
       const now = new Date();
-      const times = church.services.map((t) => t.split(":").map(Number));
+      const times = site.sunday.map((t) => t.split(":").map(Number));
       for (let d = 0; d < 8; d++) {
         const day = new Date(now);
         day.setDate(now.getDate() + d);
@@ -295,7 +298,7 @@ function LiveCard() {
     tick();
     const id = setInterval(tick, 30_000);
     return () => clearInterval(id);
-  }, []);
+  }, [site.sunday]);
 
   const countdown = (() => {
     if (!next) return "";
@@ -312,7 +315,7 @@ function LiveCard() {
         {next?.live && <span className="size-2.5 animate-pulse rounded-full bg-black" />}
         Watch live
       </p>
-      <p className={cn(mori, "mt-3 text-[clamp(44px,4.6vw,68px)] leading-[0.9] tracking-[-0.05em]")}>Sundays {church.services.join(" & ")}</p>
+      <p className={cn(mori, "mt-3 text-[clamp(44px,4.6vw,68px)] leading-[0.9] tracking-[-0.05em]")}>Sundays {sundayLine(site).replace(/ AM$/, "")}</p>
       <p className="mt-3 min-h-[1.5em] text-[17px] text-black/75">
         {next ? (next.live ? "We're live right now." : `Next service ${next.when.toLocaleDateString("en-US", { weekday: "long" })} at ${next.when.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })}, ${countdown}.`) : " "}
       </p>
