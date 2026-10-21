@@ -459,8 +459,8 @@ function Empty({ children }: { children: React.ReactNode }) {
 /** "Member" or "Guest". Every person is one or the other. */
 export function PersonTag({ v, className }: { v: Visitor; className?: string }) {
   return v.memberSince ? (
-    <span className={cn("inline-flex shrink-0 items-center gap-1 rounded-full bg-forest-700 px-2 py-0.5 text-[11px] font-semibold text-ink", className)}>
-      <BadgeCheck className="size-3" /> Member
+    <span className={cn("inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium text-stone-500 ring-1 ring-stone-200", className)}>
+      <BadgeCheck className="size-3 text-forest-500" /> Member
     </span>
   ) : (
     <span className={cn("inline-flex shrink-0 items-center rounded-full px-2 py-0.5 text-[11px] font-medium text-stone-500 ring-1 ring-stone-200", className)}>Guest</span>
