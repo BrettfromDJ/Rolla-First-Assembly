@@ -3,7 +3,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { getOffering, registerCustomOfferings } from "./data";
 import { buildSeedEvents, slugify } from "./event-builder";
-import { buildSeedVisitors } from "./seed";
+import { buildSeedHouseholds, buildSeedVisitors } from "./seed";
 import { buildSeedAttendance } from "./attendance";
 import { buildSeedPrayers } from "./prayer";
 import { buildSeedServe } from "./serve";
@@ -32,6 +32,7 @@ import type {
   Task,
   VisitPlan,
   Visitor,
+  Household,
   VisitorOverlay,
 } from "./types";
 
@@ -69,11 +70,12 @@ const freshProfile = (): Profile => ({
 const freshOverlay = (): VisitorOverlay => ({ notes: [], tasks: [], activity: [] });
 
 /** Bump when the sample data changes, so saved demos pick up the new examples. */
-const SEED_VERSION = 5;
+const SEED_VERSION = 6;
 
 interface State {
   profile: Profile;
   visitors: Visitor[];
+  households: Household[];
   overlay: VisitorOverlay;
   attendance: AttendanceRecord[];
   prayers: PrayerRequest[];
@@ -90,9 +92,12 @@ interface State {
 
 const seedEvents = () => buildSeedEvents();
 
-const freshState = (): State => ({ profile: freshProfile(), visitors: buildSeedVisitors(), overlay: freshOverlay(), attendance: buildSeedAttendance(), prayers: buildSeedPrayers(), prayed: [], sermonNotes: {}, serve: buildSeedServe(), schedule: { ...buildSeedSchedule(), settings: defaultScheduleSettings }, ...seedEvents(), hiddenOfferings: [], site: defaultSite(), seedVersion: SEED_VERSION });
+const freshState = (): State => {
+  const visitors = buildSeedVisitors();
+  return { profile: freshProfile(), visitors, households: buildSeedHouseholds(visitors), overlay: freshOverlay(), attendance: buildSeedAttendance(), prayers: buildSeedPrayers(), prayed: [], sermonNotes: {}, serve: buildSeedServe(), schedule: { ...buildSeedSchedule(), settings: defaultScheduleSettings }, ...seedEvents(), hiddenOfferings: [], site: defaultSite(), seedVersion: SEED_VERSION };
+};
 
-export type VisitorPatch = Partial<Pick<Visitor, "stage" | "assigneeId" | "status" | "memberSince">>;
+export type VisitorPatch = Partial<Pick<Visitor, "stage" | "assigneeId" | "status" | "memberSince" | "birthday">>;
 
 interface Store extends State {
   hydrated: boolean;
@@ -150,6 +155,11 @@ interface Store extends State {
   deleteEvent: (id: string) => void;
   toggleHiddenOffering: (id: string) => void;
   removeResponse: (id: string) => void;
+  /* households */
+  saveHousehold: (h: Household) => void;
+  deleteHousehold: (id: string) => void;
+  /** Adds someone staff know about (like a spouse) who hasn't filled anything out. Returns their id. */
+  addPerson: (p: Pick<Visitor, "firstName" | "lastName" | "phone" | "email"> & { memberSince?: string | null; source?: string; stage?: Stage }) => string;
   /* website */
   updateSite: (patch: Partial<SiteSettings>, by: string) => void;
 }
@@ -222,6 +232,7 @@ function profileToVisitor(p: Profile, o: VisitorOverlay): Visitor | null {
     assigneeId: o.assigneeId ?? null,
     status: o.status ?? "Needs follow-up",
     memberSince: o.memberSince ?? null,
+    birthday: o.birthday,
     rsvps: p.rsvps,
     visitPlan: p.visitPlan,
     baptism: p.baptism,
@@ -244,6 +255,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       const raw = localStorage.getItem(KEY);
       if (raw) {
         const parsed = JSON.parse(raw) as State;
+        const fresh = parsed.seedVersion !== SEED_VERSION || !parsed.visitors?.length;
+        const visitors = fresh ? buildSeedVisitors() : parsed.visitors;
         setState({
           profile: {
             ...freshProfile(),
@@ -253,7 +266,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
             kids: parsed.profile?.kids?.parent ? parsed.profile.kids : null,
           },
           // Older saves get the latest sample visitors; the visitor's own profile is kept.
-          visitors: parsed.visitors?.length && parsed.seedVersion === SEED_VERSION ? parsed.visitors : buildSeedVisitors(),
+          visitors,
+          households: !fresh && parsed.households ? parsed.households : buildSeedHouseholds(visitors),
           overlay: { ...freshOverlay(), ...parsed.overlay },
           attendance: parsed.attendance ?? buildSeedAttendance(),
           prayers: parsed.prayers ?? buildSeedPrayers(),
@@ -548,6 +562,31 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     setState((s) => ({ ...s, hiddenOfferings: s.hiddenOfferings.includes(id) ? s.hiddenOfferings.filter((x) => x !== id) : [...s.hiddenOfferings, id] }));
   }, []);
 
+  const saveHousehold = useCallback((h: Household) => {
+    setState((s) => ({
+      ...s,
+      // Someone lives in one household at a time.
+      households: [...s.households.filter((x) => x.id !== h.id).map((x) => ({ ...x, memberIds: x.memberIds.filter((m) => !h.memberIds.includes(m)) })).filter((x) => x.memberIds.length), h],
+    }));
+  }, []);
+
+  const deleteHousehold = useCallback((id: string) => {
+    setState((s) => ({ ...s, households: s.households.filter((h) => h.id !== id) }));
+  }, []);
+
+  const addPerson = useCallback((p: Pick<Visitor, "firstName" | "lastName" | "phone" | "email"> & { memberSince?: string | null; source?: string; stage?: Stage }) => {
+    const id = uid("v");
+    const now = new Date().toISOString();
+    const v: Visitor = {
+      id, firstName: p.firstName, lastName: p.lastName, email: p.email, phone: p.phone,
+      firstVisit: now, source: p.source ?? "Added by staff", interests: [], followUps: emptyFollowUps(),
+      stage: p.stage ?? "Connected", assigneeId: null, status: "Contacted", rsvps: [], memberSince: p.memberSince ?? null,
+      notes: [], tasks: [], activity: [{ id: uid("act"), kind: "household", label: "Added by staff", at: now }],
+    };
+    setState((s) => ({ ...s, visitors: [...s.visitors, v] }));
+    return id;
+  }, []);
+
   const updateSite = useCallback((patch: Partial<SiteSettings>, by: string) => {
     setState((s) => ({ ...s, site: { ...s.site, ...patch, updatedAt: new Date().toISOString(), updatedBy: by } }));
   }, []);
@@ -581,7 +620,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   /* ---------- staff actions ---------- */
 
   const editVisitor = useCallback(
-    (id: string, fn: (v: { stage?: Stage; assigneeId?: string | null; status?: FollowStatus; memberSince?: string | null; notes: Note[]; tasks: Task[]; activity: Activity[] }) => Partial<VisitorOverlay>) => {
+    (id: string, fn: (v: { stage?: Stage; assigneeId?: string | null; status?: FollowStatus; memberSince?: string | null; birthday?: string; notes: Note[]; tasks: Task[]; activity: Activity[] }) => Partial<VisitorOverlay>) => {
       setState((s) => {
         if (id === "you") return { ...s, overlay: { ...s.overlay, ...fn(s.overlay) } };
         return { ...s, visitors: s.visitors.map((v) => (v.id === id ? { ...v, ...fn(v) } : v)) };
@@ -711,6 +750,9 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     toggleHiddenOffering,
     removeResponse,
     updateSite,
+    saveHousehold,
+    deleteHousehold,
+    addPerson,
   };
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;

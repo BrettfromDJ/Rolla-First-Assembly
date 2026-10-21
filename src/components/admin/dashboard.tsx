@@ -1,6 +1,6 @@
 "use client";
 
-import { CountUp } from "@/components/church/motion";
+import { CountUp, RevealGroup } from "@/components/church/motion";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "motion/react";
@@ -32,6 +32,7 @@ import {
   HeartPulse,
   UserRound,
   Globe,
+  Home,
 } from "lucide-react";
 import { Logo } from "@/components/ui/logo";
 import { Avatar } from "@/components/ui/avatar";
@@ -63,6 +64,7 @@ export function Dashboard() {
   const { allVisitors, hydrated } = store;
   const [view, setView] = useState<View>("all");
   const [who, setWho] = useState<Who>("all");
+  const [layout, setLayout] = useState<"people" | "households">("people");
   const [family, setFamily] = useState<KidsGroup | "kids" | "">("");
   const [tab, setTabState] = useState<Tab>("week");
   const setTab = (t: Tab) => {
@@ -79,6 +81,11 @@ export function Dashboard() {
   const [interest, setInterest] = useState<InterestId | "">("");
   const [assignee, setAssignee] = useState<string>("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  /** First names of the others in someone's household: "Kristen". */
+  const mates = (v: Visitor) => {
+    const h = store.households.find((x) => x.memberIds.includes(v.id));
+    return h ? h.memberIds.filter((id) => id !== v.id).map((id) => allVisitors.find((x) => x.id === id)?.firstName).filter(Boolean).join(" & ") : "";
+  };
 
   const selected = allVisitors.find((v) => v.id === selectedId) ?? null;
 
@@ -399,8 +406,9 @@ export function Dashboard() {
             )}
           </div>
 
-          {/* Everyone / Guests / Members */}
-          <div role="radiogroup" aria-label="Show" className="mt-6 inline-flex rounded-full bg-white p-1 ring-1 ring-stone-200/70">
+          {/* Everyone / Guests / Members, and people vs. households */}
+          <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
+          <div role="radiogroup" aria-label="Show" className="inline-flex rounded-full bg-white p-1 ring-1 ring-stone-200/70">
             {(["all", "guests", "members"] as const).map((w) => (
               <button
                 key={w}
@@ -412,6 +420,15 @@ export function Dashboard() {
                 {whoLabel[w]} <span className="tabular-nums opacity-60">{hydrated ? counts[w] : ""}</span>
               </button>
             ))}
+          </div>
+
+          <div role="radiogroup" aria-label="Layout" className="inline-flex rounded-full bg-white p-1 ring-1 ring-stone-200/70">
+            {([["people", "People", UserRound], ["households", "Households", Home]] as const).map(([id, label, Icon]) => (
+              <button key={id} role="radio" aria-checked={layout === id} onClick={() => setLayout(id)} className={cn("flex h-9 items-center gap-2 rounded-full px-4 text-sm transition", layout === id ? "bg-stone-100 font-medium text-stone-900" : "text-stone-500 hover:text-stone-900")}>
+                <Icon className="size-4" /> {label}
+              </button>
+            ))}
+          </div>
           </div>
 
           {/* Metrics */}
@@ -462,6 +479,10 @@ export function Dashboard() {
           )}
 
           <div className="mt-8 grid gap-6 2xl:grid-cols-[1fr_320px]">
+            {layout === "households" ? (
+              <HouseholdGrid people={filtered} onOpen={setSelectedId} />
+            ) : (
+            <>
             {/* Table */}
             <section className="min-w-0 rounded-2xl bg-white ring-1 ring-stone-200/70" aria-labelledby="people-title">
               <div className="flex flex-wrap items-center gap-2 border-b border-stone-100 p-4">
@@ -511,7 +532,7 @@ export function Dashboard() {
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-stone-100">
-                        {filtered.map((v) => <Row key={v.id} v={v} onOpen={() => setSelectedId(v.id)} />)}
+                        {filtered.map((v) => <Row key={v.id} v={v} mates={mates(v)} onOpen={() => setSelectedId(v.id)} />)}
                       </tbody>
                     </table>
                   </div>
@@ -533,6 +554,8 @@ export function Dashboard() {
                 </>
               )}
             </section>
+            </>
+            )}
 
             {/* My tasks */}
             <aside className="rounded-2xl bg-white p-4 ring-1 ring-stone-200/70 2xl:self-start" aria-labelledby="tasks-title">
@@ -566,7 +589,7 @@ export function Dashboard() {
         )}
       </main>
 
-      <VisitorPanel visitor={selected} onOpenChange={(o) => !o && setSelectedId(null)} />
+      <VisitorPanel visitor={selected} onOpenChange={(o) => !o && setSelectedId(null)} onOpen={setSelectedId} />
     </div>
   );
 }
@@ -621,7 +644,7 @@ function searchText(v: Visitor) {
   return `${fullName(v)} ${v.email} ${v.phone} ${kids} ${students} ${guardian}`.toLowerCase();
 }
 
-function Row({ v, onOpen }: { v: Visitor; onOpen: () => void }) {
+function Row({ v, mates, onOpen }: { v: Visitor; mates: string; onOpen: () => void }) {
   const a = v.assigneeId ? staffById[v.assigneeId] : null;
   const next = nextAction(v);
   const member = isMember(v);
@@ -641,7 +664,10 @@ function Row({ v, onOpen }: { v: Visitor; onOpen: () => void }) {
               {v.isYou && <span className="rounded-full bg-honey-soft px-1.5 py-0.5 text-[10px] font-semibold text-honey">YOU</span>}
               {member && <PersonTag v={v} />}
             </p>
-            <p className="max-w-[220px] truncate text-xs text-stone-400">{v.email || v.phone || "No contact info"}</p>
+            <p className="max-w-[260px] truncate text-xs text-stone-400">
+              {mates && <span className="text-stone-500">with {mates} · </span>}
+              {v.email || v.phone || "No contact info"}
+            </p>
           </div>
         </div>
       </td>
@@ -669,5 +695,78 @@ function Row({ v, onOpen }: { v: Visitor; onOpen: () => void }) {
         {next.due && <p className={cn("text-xs", next.overdue ? "text-clay/80" : "text-stone-400")}>{next.overdue ? "Overdue" : `Due ${formatShortDay(next.due)}`}</p>}
       </td>
     </tr>
+  );
+}
+
+/** Everyone in the current filter, grouped into their households. */
+function HouseholdGrid({ people, onOpen }: { people: Visitor[]; onOpen: (id: string) => void }) {
+  const { households, allVisitors, hydrated } = useStore();
+  if (!hydrated) return <div className="h-64 animate-pulse rounded-2xl bg-white ring-1 ring-stone-200/70" />;
+  const seen = new Set<string>();
+  const groups: { key: string; name: string; adults: Visitor[]; anniversary?: string; linked: boolean }[] = [];
+  for (const v of people) {
+    if (seen.has(v.id)) continue;
+    const h = households.find((x) => x.memberIds.includes(v.id));
+    const adults = h ? (h.memberIds.map((id) => allVisitors.find((x) => x.id === id)).filter(Boolean) as Visitor[]) : [v];
+    adults.forEach((a) => seen.add(a.id));
+    groups.push({ key: h?.id ?? v.id, name: h?.name ?? fullName(v), adults, anniversary: h?.anniversary, linked: !!h });
+  }
+  groups.sort((a, b) => a.name.localeCompare(b.name));
+  const linked = groups.filter((g) => g.linked);
+  const solo = groups.filter((g) => !g.linked).map((g) => g.adults[0]);
+  const kidsOf = (adults: Visitor[]) => [...(adults.find((a) => a.kids)?.kids?.kids.map((k) => k.nickname || k.firstName) ?? []), ...(adults.find((a) => a.students)?.students?.students.map((k) => k.firstName) ?? [])];
+
+  if (!groups.length)
+    return <p className="rounded-2xl bg-white px-6 py-16 text-center text-sm text-stone-500 ring-1 ring-stone-200/70">No one matches those filters.</p>;
+
+  return (
+    <section aria-label="Households" className="min-w-0">
+      <RevealGroup as="ul" className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+        {linked.map((g) => {
+          const kids = kidsOf(g.adults);
+          return (
+            <li key={g.key}>
+              <button onClick={() => onOpen(g.adults[0].id)} className="flex size-full flex-col rounded-[28px] bg-white p-5 text-left ring-1 ring-stone-200/70 transition hover:ring-stone-300">
+                <div className="flex items-start justify-between gap-3">
+                  <p className="font-medium text-stone-900">{g.name}</p>
+                  {g.adults.some(isMember) && <PersonTag v={g.adults.find(isMember)!} />}
+                </div>
+                <div className="mt-4 flex items-center gap-3">
+                  <span className="flex -space-x-2">
+                    {g.adults.map((a) => <Avatar key={a.id} name={fullName(a)} src={a.photo} className="size-9 ring-2 ring-white" />)}
+                  </span>
+                  <span className="min-w-0 truncate text-sm text-stone-600">{g.adults.map((a) => a.firstName).join(" & ")}</span>
+                </div>
+                <p className="mt-4 text-sm text-stone-500">
+                  {kids.length ? <><Baby className="mr-1.5 inline size-4 align-[-3px] text-stone-400" />{kids.join(", ")}</> : <span className="text-stone-400">No kids registered</span>}
+                </p>
+                {g.anniversary && (
+                  <p className="mt-auto pt-4 text-xs text-stone-400">
+                    Married {new Date(`${g.anniversary}T12:00:00`).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
+                  </p>
+                )}
+              </button>
+            </li>
+          );
+        })}
+      </RevealGroup>
+      {solo.length > 0 && (
+        <div className="mt-6 rounded-[28px] bg-white p-5 ring-1 ring-stone-200/70">
+          <p className="font-medium text-stone-900">Not linked to a household <span className="ml-1 text-sm font-normal text-stone-400">{solo.length}</span></p>
+          <p className="mt-1 text-sm text-stone-500">Open someone to link them with a spouse or family member.</p>
+          <ul className="mt-4 flex flex-wrap gap-2">
+            {solo.map((v) => (
+              <li key={v.id}>
+                <button onClick={() => onOpen(v.id)} className="flex h-10 items-center gap-2 rounded-full py-1 pl-1 pr-3.5 text-sm text-stone-700 ring-1 ring-stone-200 transition hover:text-stone-900 hover:ring-stone-300">
+                  <Avatar name={fullName(v)} src={v.photo} className={cn("size-8", v.isYou && "bg-forest-700 text-ink")} />
+                  {fullName(v)}
+                  {hasKids(v) && <Baby className="size-3.5 text-stone-400" aria-label="Has kids registered" />}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </section>
   );
 }

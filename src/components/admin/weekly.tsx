@@ -2,7 +2,7 @@
 
 import { CountUp } from "@/components/church/motion";
 import { useMemo } from "react";
-import { AlertTriangle, ArrowRight, Baby, CalendarClock, Droplets, HandHeart, Heart, ListChecks, Lock, PhoneCall, Sparkles, UserPlus, Users } from "lucide-react";
+import { AlertTriangle, ArrowRight, Baby, Cake, CalendarClock, Droplets, HandHeart, Heart, ListChecks, Lock, PhoneCall, Sparkles, UserPlus, Users } from "lucide-react";
 import { Avatar } from "@/components/ui/avatar";
 import { baptismDates, staffById } from "@/lib/data";
 import { addDays, inPersonTotal, kidsTotal, lastDow, ymd } from "@/lib/attendance";
@@ -20,7 +20,7 @@ const fmt = (n: number) => Math.round(n).toLocaleString("en-US");
 
 /** One screen for Monday morning: last Sunday, new people, prayer, baptisms, volunteers, and what needs doing this week. */
 export function WeeklyView({ go, openVisitor }: { go: (t: Tab) => void; openVisitor: (id: string) => void }) {
-  const { allVisitors, attendance, prayers, serve, schedule, hydrated } = useStore();
+  const { allVisitors, attendance, prayers, serve, schedule, households, hydrated } = useStore();
 
   const data = useMemo(() => {
     if (!hydrated) return null;
@@ -75,8 +75,40 @@ export function WeeklyView({ go, openVisitor }: { go: (t: Tab) => void; openVisi
     const newVolunteers = serve.filter((s) => s.status === "new");
     const joined = serve.filter((s) => s.status === "serving" && +new Date(s.createdAt) >= Date.now() - 30 * 864e5);
 
-    return { weeks, last, avg4, newPeople, tasks, unassigned, prayerNew, prayerCall, prayerWall, answered, nextBaptism, baptisms, sunday, coverage, cantMake, waiting, kidsComing, newVolunteers, joined };
-  }, [hydrated, allVisitors, attendance, prayers, serve, schedule]);
+    /* ---- Birthdays & anniversaries: the next 14 days ---- */
+    const midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const upcoming = (ymdStr: string) => {
+      const [y, m, dd] = ymdStr.split("-").map(Number);
+      let next = new Date(now.getFullYear(), m - 1, dd);
+      if (next < midnight) next = new Date(now.getFullYear() + 1, m - 1, dd);
+      const inDays = Math.round((+next - +midnight) / 864e5);
+      return { inDays, years: next.getFullYear() - y, next };
+    };
+    const whenLabel = (inDays: number, next: Date) => (inDays === 0 ? "Today" : inDays === 1 ? "Tomorrow" : next.toLocaleDateString("en-US", inDays < 7 ? { weekday: "long" } : { weekday: "short", month: "short", day: "numeric" }));
+    type Dated = { key: string; kind: "birthday" | "anniversary"; title: string; detail: string; inDays: number; when: string; openId: string };
+    const dates: Dated[] = [];
+    for (const v of allVisitors) {
+      const family = households.find((h) => h.memberIds.includes(v.id))?.name;
+      if (v.birthday) {
+        const u = upcoming(v.birthday);
+        if (u.inDays <= 14) dates.push({ key: `b-${v.id}`, kind: "birthday", title: fullName(v), detail: u.years % 10 === 0 ? `Turns ${u.years}` : "Birthday", inDays: u.inDays, when: whenLabel(u.inDays, u.next), openId: v.id });
+      }
+      const kids = [...(v.kids?.kids ?? [])];
+      for (const k of kids) {
+        const u = upcoming(k.birthdate);
+        if (u.inDays <= 14) dates.push({ key: `k-${v.id}-${k.firstName}`, kind: "birthday", title: `${k.nickname || k.firstName} ${k.lastName}`, detail: `Turns ${u.years} · ${family ?? `${v.firstName}'s kid`}`, inDays: u.inDays, when: whenLabel(u.inDays, u.next), openId: v.id });
+      }
+    }
+    for (const h of households) {
+      if (!h.anniversary || h.memberIds.length < 2) continue;
+      const u = upcoming(h.anniversary);
+      const names = h.memberIds.map((id) => allVisitors.find((x) => x.id === id)).filter(Boolean) as Visitor[];
+      if (u.inDays <= 14 && names.length) dates.push({ key: `a-${h.id}`, kind: "anniversary", title: `${names.map((x) => x.firstName).join(" & ")} ${names[0].lastName}`, detail: `${u.years} year${u.years === 1 ? "" : "s"} married`, inDays: u.inDays, when: whenLabel(u.inDays, u.next), openId: names[0].id });
+    }
+    dates.sort((a, b) => a.inDays - b.inDays || a.title.localeCompare(b.title));
+
+    return { dates, weeks, last, avg4, newPeople, tasks, unassigned, prayerNew, prayerCall, prayerWall, answered, nextBaptism, baptisms, sunday, coverage, cantMake, waiting, kidsComing, newVolunteers, joined };
+  }, [hydrated, allVisitors, attendance, prayers, serve, schedule, households]);
 
   if (!data) {
     return <div className="grid gap-4 lg:grid-cols-3">{[0, 1, 2, 3, 4, 5].map((i) => <div key={i} className="h-48 animate-pulse rounded-2xl bg-white ring-1 ring-stone-200/70" />)}</div>;
@@ -260,9 +292,33 @@ export function WeeklyView({ go, openVisitor }: { go: (t: Tab) => void; openVisi
           </p>
         </Card>
 
+        {/* ---------- Birthdays & anniversaries ---------- */}
+        <Card icon={Cake} title="Birthdays & anniversaries" stat={String(d.dates.length)} statLabel="in the next two weeks" onMore={() => go("people")} more="Open People">
+          {d.dates.length ? (
+            <ul className="divide-y divide-stone-100">
+              {d.dates.slice(0, 7).map((x) => (
+                <li key={x.key}>
+                  <button onClick={() => openVisitor(x.openId)} className="flex w-full items-center gap-3 py-2.5 text-left text-sm">
+                    <span className={cn("flex size-9 shrink-0 items-center justify-center rounded-xl", x.kind === "anniversary" ? "bg-clay/10 text-clay" : "bg-honey-soft text-honey")}>
+                      {x.kind === "anniversary" ? <Heart className="size-4" /> : <Cake className="size-4" />}
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate font-medium text-stone-800">{x.title}</span>
+                      <span className="block truncate text-xs text-stone-500">{x.detail}</span>
+                    </span>
+                    <span className={cn("shrink-0 text-xs", x.inDays === 0 ? "font-medium text-forest-500" : "text-stone-400")}>{x.when}</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <Empty>No birthdays or anniversaries in the next two weeks.</Empty>
+          )}
+        </Card>
+
         {/* ---------- Kids & celebrate ---------- */}
-        <Card icon={Heart} title="Celebrate" stat={String(d.answered.length + d.joined.length)} statLabel="wins this week" onMore={() => go("prayer")} more="Answered prayers">
-          <ul className="space-y-2.5 text-sm">
+        <Card icon={Heart} title="Celebrate" stat={String(d.answered.length + d.joined.length)} statLabel="wins this week" onMore={() => go("prayer")} more="Answered prayers" className="lg:col-span-2 2xl:col-span-3">
+          <ul className="grid gap-2.5 text-sm lg:grid-cols-2">
             {d.answered.slice(0, 2).map((p) => (
               <li key={p.id} className="rounded-xl bg-sage-soft/60 p-3">
                 <p className="text-xs text-sage">Answered prayer · {p.anonymous || !p.name ? "Anonymous" : p.name.split(" ")[0]}</p>
@@ -289,9 +345,9 @@ export function WeeklyView({ go, openVisitor }: { go: (t: Tab) => void; openVisi
 
 /* ---------- Pieces ---------- */
 
-function Card({ icon: Icon, title, stat, statLabel, warn, onMore, more, children }: { icon: React.ComponentType<{ className?: string }>; title: string; stat: string; statLabel: string; warn?: boolean; onMore: () => void; more: string; children: React.ReactNode }) {
+function Card({ icon: Icon, title, stat, statLabel, warn, onMore, more, className, children }: { icon: React.ComponentType<{ className?: string }>; title: string; stat: string; statLabel: string; warn?: boolean; onMore: () => void; more: string; className?: string; children: React.ReactNode }) {
   return (
-    <section className="flex flex-col rounded-2xl bg-white p-5 ring-1 ring-stone-200/70">
+    <section className={cn("flex flex-col rounded-2xl bg-white p-5 ring-1 ring-stone-200/70", className)}>
       <div className="flex items-start justify-between gap-3">
         <div>
           <h2 className="flex items-center gap-2 text-sm font-medium text-stone-500">

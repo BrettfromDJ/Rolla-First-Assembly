@@ -239,7 +239,7 @@ export interface Task {
 
 export interface Activity {
   id: string;
-  kind: "member" | "visit" | "plan" | "baptism" | "kids" | "students" | "onboarding" | "rsvp" | "contacted" | "assigned" | "note" | "task" | "stage" | "join" | "question";
+  kind: "household" | "member" | "visit" | "plan" | "baptism" | "kids" | "students" | "onboarding" | "rsvp" | "contacted" | "assigned" | "note" | "task" | "stage" | "join" | "question";
   label: string;
   at: string;
 }
@@ -266,10 +266,20 @@ export interface Visitor {
   household?: string;
   /** Set when they become a member. Everyone else is a guest. */
   memberSince?: string | null;
+  birthday?: string; // YYYY-MM-DD (adults; kids' birthdates live on their registration)
   notes: Note[];
   tasks: Task[];
   activity: Activity[];
   isYou?: boolean;
+}
+
+/** A family record: the adults who live together, plus the kids on their registrations. */
+export interface Household {
+  id: string;
+  name: string; // "The Henderson family"
+  memberIds: string[]; // visitor ids of the adults
+  anniversary?: string; // YYYY-MM-DD wedding date
+  createdAt: string;
 }
 
 /** Staff-side edits layered on top of the live prototype visitor ("you"). */
@@ -278,6 +288,7 @@ export interface VisitorOverlay {
   assigneeId?: string | null;
   status?: FollowStatus;
   memberSince?: string | null;
+  birthday?: string;
   notes: Note[];
   tasks: Task[];
   activity: Activity[];

@@ -1,11 +1,19 @@
 import { portraits } from "./images";
 import { daysAgo, daysFromNow, nextDow } from "./utils";
 import { baptismDates } from "./data";
-import type { Activity, BaptismAge, BaptismRegistration, FollowUps, KidInfo, KidsRegistration, PickupPerson, StudentsRegistration, InterestId, Note, Stage, Task, Visitor, FollowStatus, Rsvp } from "./types";
+import type { Household, Activity, BaptismAge, BaptismRegistration, FollowUps, KidInfo, KidsRegistration, PickupPerson, StudentsRegistration, InterestId, Note, Stage, Task, Visitor, FollowStatus, Rsvp } from "./types";
 
 const emptyF: FollowUps = { vibes: [], groupSize: null, faithStage: null, ageGroups: [], homeTopics: [], serveAreas: [] };
 
 let n = 0;
+
+/** A YYYY-MM-DD this many days from today, shifted by whole years. */
+function dateIn(days: number, years = 0) {
+  const d = new Date();
+  d.setDate(d.getDate() + days);
+  d.setFullYear(d.getFullYear() + years);
+  return d.toLocaleDateString("en-CA");
+}
 const id = (p: string) => `${p}_seed${++n}`;
 
 function v(input: {
@@ -21,6 +29,7 @@ function v(input: {
   status: FollowStatus;
   household?: string;
   memberDaysAgo?: number; // members only: when they joined
+  birthday?: [inDays: number, turning: number]; // so the demo always has a few coming up
   rsvps?: { offeringId: string; itemId?: string; daysAgo: number }[];
   notes?: { by: string; body: string; daysAgo: number }[];
   tasks?: { title: string; dueIn: number; who: string | null; done?: boolean }[];
@@ -136,6 +145,7 @@ function v(input: {
     status: input.status,
     household: input.household,
     memberSince: input.memberDaysAgo !== undefined ? daysAgo(input.memberDaysAgo) : null,
+    birthday: input.birthday ? dateIn(input.birthday[0], -input.birthday[1]) : undefined,
     rsvps,
     visitPlan: input.plannedSunday
       ? {
@@ -158,7 +168,7 @@ function v(input: {
 }
 
 /** Long-time families who've joined the church. */
-function member(input: { first: string; last: string; photo?: string; years: number; joinedYearsAgo: number; household?: string; interests: InterestId[]; kids?: Parameters<typeof v>[0]["kids"]; students?: Parameters<typeof v>[0]["students"]; notes?: { by: string; body: string; daysAgo: number }[] }) {
+function member(input: { first: string; last: string; photo?: string; years: number; joinedYearsAgo: number; household?: string; birthday?: [number, number]; interests: InterestId[]; kids?: Parameters<typeof v>[0]["kids"]; students?: Parameters<typeof v>[0]["students"]; notes?: { by: string; body: string; daysAgo: number }[] }) {
   return v({
     first: input.first, last: input.last, photo: input.photo,
     visitedDaysAgo: Math.round(input.years * 365), source: "Member",
@@ -166,6 +176,7 @@ function member(input: { first: string; last: string; photo?: string; years: num
     stage: "Connected", assignee: null, status: "Contacted",
     household: input.household,
     memberDaysAgo: Math.round(input.joinedYearsAgo * 365),
+    birthday: input.birthday,
     kids: input.kids, students: input.students, notes: input.notes,
     activity: [{ kind: "member", label: "Became a member", daysAgo: Math.round(input.joinedYearsAgo * 365) }],
   });
@@ -173,9 +184,9 @@ function member(input: { first: string; last: string; photo?: string; years: num
 
 export function buildSeedVisitors(): Visitor[] {
   n = 0;
-  return [
+  const list: Visitor[] = [
     v({
-      first: "Maya", last: "Chen", photo: portraits.v1, visitedDaysAgo: 2, source: "Connect card",
+      first: "Maya", last: "Chen", photo: portraits.v1, visitedDaysAgo: 2, birthday: [9, 27], source: "Connect card",
       interests: ["people", "faith"], f: { vibes: ["coffee", "small-groups"], groupSize: "small", faithStage: "exploring" },
       stage: "Event RSVP", assignee: "amber", status: "Needs follow-up",
       rsvps: [{ offeringId: "coffee-welcome", daysAgo: 1 }],
@@ -308,7 +319,7 @@ export function buildSeedVisitors(): Visitor[] {
       ],
     }),
     member({
-      first: "Mark", last: "Henderson", photo: portraits.marcus, years: 9, joinedYearsAgo: 8, household: "2 adults · 3 kids",
+      first: "Mark", last: "Henderson", photo: portraits.marcus, years: 9, joinedYearsAgo: 8, household: "2 adults · 3 kids", birthday: [41, 39],
       interests: ["serve", "people"],
       kids: { list: [["Ella", 98, "F", "2"], ["Wyatt", 70, "M", "k"], ["June", 30, "F", "p2"]], service: "9:00", daysAgo: 400, second: "Kristen", school: "Wyman Elementary", pickup: [{ name: "Linda Henderson", relationship: "Grandma", phone: "(573) 555-0166" }] },
       notes: [{ by: "micah", body: "Kristen leads the preschool room on the first Sunday of the month.", daysAgo: 60 }],
@@ -319,7 +330,7 @@ export function buildSeedVisitors(): Visitor[] {
       students: { list: [["Caleb", "11", "Rolla High School"], ["Abby", "8", "Rolla Junior High"]], daysAgo: 300 },
     }),
     member({
-      first: "Dale", last: "Montgomery", years: 26, joinedYearsAgo: 25, household: "2 adults",
+      first: "Dale", last: "Montgomery", years: 26, joinedYearsAgo: 25, household: "2 adults", birthday: [4, 80],
       interests: ["serve"],
       notes: [{ by: "lance", body: "Dale and Judy run the Wednesday meal. Ask them before scheduling anything in the fellowship hall.", daysAgo: 120 }],
     }),
@@ -328,9 +339,38 @@ export function buildSeedVisitors(): Visitor[] {
       interests: ["people", "faith"],
       kids: { list: [["Leo", 54, "M", "prek", "Gluten-free snacks only"]], service: "10:30", daysAgo: 200, second: "Brian" },
     }),
+    member({ first: "Kristen", last: "Henderson", years: 9, joinedYearsAgo: 8, birthday: [120, 37], interests: ["serve", "people"] }),
+    member({ first: "Tom", last: "Whitfield", years: 14, joinedYearsAgo: 13, birthday: [200, 46], interests: ["serve"] }),
+    member({ first: "Judy", last: "Montgomery", years: 26, joinedYearsAgo: 25, birthday: [62, 77], interests: ["serve", "people"] }),
+    member({ first: "Brian", last: "Nguyen", years: 3, joinedYearsAgo: 2, birthday: [11, 35], interests: ["people"] }),
     member({
-      first: "Ruth", last: "Abernathy", years: 41, joinedYearsAgo: 40, household: "1 adult",
+      first: "Ruth", last: "Abernathy", years: 41, joinedYearsAgo: 40, household: "1 adult", birthday: [1, 91],
       interests: ["faith"],
     }),
+  ];
+  // A couple of kids' birthdays this week and next, so the Monday list has something to show.
+  const kid = (name: string) => list.flatMap((v) => v.kids?.kids ?? []).find((k) => `${k.firstName} ${k.lastName}` === name);
+  const june = kid("June Henderson"), ella = kid("Ella Henderson");
+  if (june) june.birthdate = dateIn(3, -3);
+  if (ella) ella.birthdate = dateIn(13, -9);
+  return list;
+}
+
+/** Families for the sample people: spouses linked, with anniversaries (some coming up soon). */
+export function buildSeedHouseholds(visitors: Visitor[]): Household[] {
+  const idOf = (name: string) => visitors.find((v) => `${v.firstName} ${v.lastName}` === name)?.id;
+  const h = (last: string, names: string[], anniversary?: [number, number]): Household => ({
+    id: `hh_${last.toLowerCase()}`,
+    name: `The ${last} family`,
+    memberIds: names.map(idOf).filter(Boolean) as string[],
+    anniversary: anniversary ? dateIn(anniversary[0], -anniversary[1]) : undefined,
+    createdAt: daysAgo(300),
+  });
+  return [
+    h("Henderson", ["Mark Henderson", "Kristen Henderson"], [6, 14]),
+    h("Whitfield", ["Sarah Whitfield", "Tom Whitfield"], [150, 22]),
+    h("Montgomery", ["Dale Montgomery", "Judy Montgomery"], [12, 55]),
+    h("Nguyen", ["Tessa Nguyen", "Brian Nguyen"], [80, 6]),
+    h("Brooks", ["Hannah Brooks"]),
   ];
 }

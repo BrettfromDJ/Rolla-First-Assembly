@@ -22,6 +22,8 @@ import {
   Baby,
   BadgeCheck,
   HeartPulse,
+  Home,
+  X,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Sheet } from "@/components/ui/sheet";
@@ -43,12 +45,13 @@ import {
 } from "@/lib/data";
 import { useStore } from "@/lib/store";
 import type { Activity, Stage, Visitor } from "@/lib/types";
-import { cn, daysFromNow, formatDate, formatShortDay, formatTime, timeAgo } from "@/lib/utils";
+import { cn, uid, daysFromNow, formatDate, formatShortDay, formatTime, timeAgo } from "@/lib/utils";
 import { ACTING_AS, fullName, rsvpInfo, stageStyle, stages } from "./helpers";
 import { ageLabel, groupOf } from "./kids-roster";
 
 const actIcon: Record<Activity["kind"], React.ComponentType<{ className?: string }>> = {
   member: BadgeCheck,
+  household: Home,
   visit: Footprints,
   plan: CalendarDays,
   baptism: Droplets,
@@ -68,15 +71,15 @@ const actIcon: Record<Activity["kind"], React.ComponentType<{ className?: string
 const label = (opts: readonly { id: string; label: string }[], ids: string[]) =>
   ids.map((id) => opts.find((o) => o.id === id)?.label).filter(Boolean) as string[];
 
-export function VisitorPanel({ visitor, onOpenChange }: { visitor: Visitor | null; onOpenChange: (o: boolean) => void }) {
+export function VisitorPanel({ visitor, onOpenChange, onOpen }: { visitor: Visitor | null; onOpenChange: (o: boolean) => void; onOpen?: (id: string) => void }) {
   return (
     <Sheet open={!!visitor} onOpenChange={onOpenChange} side="right" title={visitor ? fullName(visitor) : "Visitor"} hideTitle>
-      {visitor && <PanelBody key={visitor.id} v={visitor} />}
+      {visitor && <PanelBody key={visitor.id} v={visitor} onOpen={onOpen} />}
     </Sheet>
   );
 }
 
-function PanelBody({ v }: { v: Visitor }) {
+function PanelBody({ v, onOpen }: { v: Visitor; onOpen?: (id: string) => void }) {
   const { patchVisitor, addNote, addTask, toggleTask } = useStore();
   const [note, setNote] = useState("");
   const [taskTitle, setTaskTitle] = useState("");
@@ -212,11 +215,9 @@ function PanelBody({ v }: { v: Visitor }) {
 
       {/* Body */}
       <div className="flex-1 space-y-8 overflow-y-auto px-6 py-6">
-        {(v.kids || v.students) && (
-          <Section title="Family">
-            <Family v={v} />
-          </Section>
-        )}
+        <Section title="Household">
+          <HouseholdSection v={v} onOpen={onOpen} />
+        </Section>
 
         <Section title="Interests">
           {v.interests.length ? (
@@ -467,10 +468,149 @@ export function PersonTag({ v, className }: { v: Visitor; className?: string }) 
   );
 }
 
+const shortDate = (ymd: string) => new Date(`${ymd}T12:00:00`).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+const yearsSince = (ymd: string) => {
+  const d = new Date(`${ymd}T12:00:00`), now = new Date();
+  return now.getFullYear() - d.getFullYear() - (now < new Date(now.getFullYear(), d.getMonth(), d.getDate()) ? 1 : 0);
+};
+
+/** The family record: adults linked together, their kids, and who else can pick up. */
+function HouseholdSection({ v, onOpen }: { v: Visitor; onOpen?: (id: string) => void }) {
+  const { households, allVisitors, saveHousehold, deleteHousehold, addPerson, patchVisitor } = useStore();
+  const hh = households.find((h) => h.memberIds.includes(v.id));
+  const adults = hh ? (hh.memberIds.map((id) => allVisitors.find((x) => x.id === id)).filter(Boolean) as Visitor[]) : [v];
+  const others = allVisitors.filter((x) => !adults.some((a) => a.id === x.id)).sort((a, b) => Number(b.lastName === v.lastName) - Number(a.lastName === v.lastName) || fullName(a).localeCompare(fullName(b)));
+
+  // A second guardian on a kids registration who isn't in People yet.
+  const second = adults.map((a) => a.kids?.secondGuardian).find(Boolean);
+  const secondMissing = second && !allVisitors.some((x) => x.firstName === second.firstName && x.lastName === second.lastName);
+
+  const start = (memberIds: string[]) => {
+    const h = { id: uid("hh"), name: `The ${v.lastName || v.firstName} family`, memberIds, createdAt: new Date().toISOString() };
+    saveHousehold(h);
+    return h;
+  };
+  const add = (id: string) => {
+    const other = households.find((h) => h.memberIds.includes(id));
+    if (hh) saveHousehold({ ...hh, memberIds: [...hh.memberIds, id] });
+    else if (other) saveHousehold({ ...other, memberIds: [...other.memberIds, v.id] });
+    else start([v.id, id]);
+    const name = fullName(allVisitors.find((x) => x.id === id)!);
+    patchVisitor(v.id, {}, `Linked with ${name} as a household`, "household");
+    toast(`${name.split(" ")[0]} added to the household`);
+  };
+  const remove = (id: string) => {
+    if (!hh) return;
+    const rest = hh.memberIds.filter((m) => m !== id);
+    if (rest.length) saveHousehold({ ...hh, memberIds: rest });
+    else deleteHousehold(hh.id);
+    toast("Removed from the household");
+  };
+
+  return (
+    <div className="space-y-3">
+      <div className="rounded-2xl ring-1 ring-stone-200/70">
+        <div className="flex flex-wrap items-center gap-3 border-b border-stone-100 px-4 py-3">
+          <Home className="size-4 shrink-0 text-forest-500" />
+          {hh ? (
+            <input
+              value={hh.name}
+              onChange={(e) => saveHousehold({ ...hh, name: e.target.value })}
+              aria-label="Household name"
+              className="h-8 min-w-[12rem] flex-1 rounded-lg bg-transparent px-1.5 font-medium text-stone-900 ring-1 ring-transparent hover:ring-stone-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-forest-500"
+            />
+          ) : (
+            <span className="flex-1 text-sm text-stone-500">Not linked to a household yet</span>
+          )}
+          {hh && adults.length > 1 && (
+            <label className="ml-7 flex items-center gap-2 text-xs text-stone-500 sm:ml-0">
+              Anniversary
+              <input
+                type="date"
+                value={hh.anniversary ?? ""}
+                onChange={(e) => saveHousehold({ ...hh, anniversary: e.target.value || undefined })}
+                className="h-8 rounded-lg bg-stone-50 px-2 text-xs text-stone-800 ring-1 ring-stone-200 focus:outline-none focus:ring-2 focus:ring-forest-500"
+              />
+            </label>
+          )}
+        </div>
+        <ul className="divide-y divide-stone-100">
+          {adults.map((a) => (
+            <li key={a.id} className="flex items-center gap-3 px-4 py-3">
+              <Avatar name={fullName(a)} src={a.photo} className={cn("size-9", a.isYou && "bg-forest-700 text-ink")} />
+              <div className="min-w-0 flex-1">
+                <p className="flex items-center gap-2 text-sm font-medium text-stone-900">
+                  {a.id !== v.id && onOpen ? <button onClick={() => onOpen(a.id)} className="truncate hover:text-forest-500 hover:underline">{fullName(a)}</button> : <span className="truncate">{fullName(a)}</span>}
+                  <PersonTag v={a} />
+                </p>
+                <label className="mt-0.5 flex items-center gap-1.5 text-xs text-stone-500">
+                  Birthday
+                  <input
+                    type="date"
+                    value={a.birthday ?? ""}
+                    onChange={(e) => patchVisitor(a.id, { birthday: e.target.value || undefined })}
+                    aria-label={`Birthday for ${fullName(a)}`}
+                    className="h-7 rounded-md bg-transparent px-1 text-xs text-stone-700 ring-1 ring-transparent hover:ring-stone-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-forest-500"
+                  />
+                </label>
+              </div>
+              {hh && adults.length > 1 && (
+                <button onClick={() => remove(a.id)} aria-label={`Remove ${fullName(a)} from the household`} title="Remove from household" className="flex size-8 shrink-0 items-center justify-center rounded-full text-stone-400 transition hover:bg-stone-100 hover:text-clay">
+                  <X className="size-4" />
+                </button>
+              )}
+            </li>
+          ))}
+        </ul>
+        <div className="flex flex-wrap gap-2 border-t border-stone-100 px-4 py-3">
+          <select
+            value=""
+            onChange={(e) => e.target.value && add(e.target.value)}
+            aria-label="Add someone to this household"
+            className="h-9 min-w-0 flex-1 rounded-full bg-white pl-3.5 pr-10 text-sm text-stone-600 ring-1 ring-stone-200 focus:outline-none focus:ring-2 focus:ring-forest-500"
+          >
+            <option value="">{hh ? "Add someone to this household…" : "Link with a spouse or family member…"}</option>
+            {others.map((x) => (
+              <option key={x.id} value={x.id}>
+                {fullName(x)}{households.some((h) => h.memberIds.includes(x.id)) ? " (in another household)" : ""}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      {secondMissing && second && (
+        <div className="flex flex-wrap items-center gap-3 rounded-2xl bg-sky-soft/50 px-4 py-3 text-sm">
+          <p className="min-w-0 flex-1 text-stone-700">
+            <span className="font-medium text-stone-900">{second.firstName} {second.lastName}</span> is listed as a second guardian but isn&apos;t in People yet.
+          </p>
+          <Button
+            size="sm"
+            variant="secondary"
+            onClick={() => {
+              const id = addPerson({ firstName: second.firstName, lastName: second.lastName, phone: second.phone, email: second.email ?? "", memberSince: v.memberSince, stage: v.stage, source: "Second guardian" });
+              if (hh) saveHousehold({ ...hh, memberIds: [...hh.memberIds, id] });
+              else start([v.id, id]);
+              toast(`${second.firstName} added to People`, { description: `Linked with ${v.firstName} as one household.` });
+            }}
+          >
+            <UserPlus /> Add {second.firstName}
+          </Button>
+        </div>
+      )}
+
+      <Family adults={adults} />
+    </div>
+  );
+}
+
 /** Kids and students as cards, then the grown-ups who can pick them up. */
-function Family({ v }: { v: Visitor }) {
+function Family({ adults }: { adults: Visitor[] }) {
+  const v = adults.find((a) => a.kids) ?? adults.find((a) => a.students) ?? adults[0];
+  if (!adults.some((a) => a.kids || a.students)) return null;
+  const studentsOwner = adults.find((a) => a.students);
   const kids = [
-    ...(v.kids?.kids.map((k) => ({
+    ...(adults.find((a) => a.kids)?.kids?.kids.map((k) => ({
       name: `${k.firstName} ${k.lastName}`,
       detail: [k.nickname && `Goes by ${k.nickname}`, kidGradeLabel(k.grade), ageLabel(k.birthdate), k.gender === "F" ? "Girl" : k.gender === "M" ? "Boy" : ""].filter(Boolean).join(" · "),
       room: kidsGroups.find((g) => g.id === groupOf(k))?.label ?? "Kids",
@@ -478,7 +618,7 @@ function Family({ v }: { v: Visitor }) {
       medical: k.medicalNotes,
       student: false,
     })) ?? []),
-    ...(v.students?.students.map((st) => ({
+    ...(studentsOwner?.students?.students.map((st) => ({
       name: `${st.firstName} ${st.lastName}`,
       detail: [`${st.grade}th grade`, st.phone ? `Cell ${st.phone}` : ""].filter(Boolean).join(" · "),
       room: "Students",
@@ -488,14 +628,14 @@ function Family({ v }: { v: Visitor }) {
     })) ?? []),
   ];
   const parent = v.kids?.parent ?? v.students?.parent;
-  const adults = [
+  const grownUps = [
     parent && { q: "Parent", a: `${parent.firstName} ${parent.lastName}`, sub: parent.phone },
     v.kids?.secondGuardian && { q: "Second guardian", a: `${v.kids.secondGuardian.firstName} ${v.kids.secondGuardian.lastName}`, sub: v.kids.secondGuardian.phone },
     ...(v.kids?.pickup.map((p) => ({ q: "Can pick up", a: `${p.name}${p.relationship ? ` (${p.relationship})` : ""}`, sub: p.phone })) ?? []),
     v.kids?.emergency && { q: "Emergency", a: v.kids.emergency.name, sub: v.kids.emergency.phone },
-    v.students && { q: "Texts", a: v.students.parentTexts ? "Weekly parent texts" : "No parent texts", sub: v.students.studentTexts ? "Student OK for group text" : undefined },
+    studentsOwner?.students && { q: "Texts", a: studentsOwner.students.parentTexts ? "Weekly parent texts" : "No parent texts", sub: studentsOwner.students.studentTexts ? "Student OK for group text" : undefined },
   ].filter(Boolean) as { q: string; a: string; sub?: string }[];
-  const notes = [v.kids?.notes, v.students?.notes].filter(Boolean);
+  const notes = [v.kids?.notes, studentsOwner?.students?.notes].filter(Boolean);
 
   return (
     <div className="space-y-3">
@@ -520,9 +660,9 @@ function Family({ v }: { v: Visitor }) {
           </li>
         ))}
       </ul>
-      {adults.length > 0 && (
+      {grownUps.length > 0 && (
         <dl className="divide-y divide-stone-100 rounded-2xl ring-1 ring-stone-200/70">
-          {adults.map((x, i) => (
+          {grownUps.map((x, i) => (
             <div key={i} className="flex gap-4 px-4 py-3 text-sm">
               <dt className="w-28 shrink-0 text-stone-400 sm:w-36">{x.q}</dt>
               <dd className="min-w-0">
