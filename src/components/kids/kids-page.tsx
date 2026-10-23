@@ -17,13 +17,20 @@ const mori = "font-mori font-semibold";
 const Ed = ({ children }: { children: React.ReactNode }) => <span className="font-editorial font-normal italic tracking-[-0.03em]">{children}</span>;
 
 const faqs = [
-  { q: "Is there something for kids on Wednesday nights?", a: "Yes. Rolla First Kids meets Wednesday nights at 6:30 PM for birth through 5th grade, while adults and youth have their own service. Check in at the same blue Kids Welcome desk downstairs." },
+  { q: "What's the difference between Sundays and Wednesdays?", a: "On Sunday mornings, Rolla First Kids meets during both services for birth through 5th grade, grouped by age. On Wednesday nights at 6:30, boys in kindergarten through 5th grade go to Royal Rangers and girls go to Girls Ministries, each in small groups by grade." },
   { q: "Do I have to pre-register?", a: "No. You can check in at the blue Kids Welcome desk when you arrive. Pre-registering just means we'll have name tags ready and your first check-in is even faster." },
   { q: "Where do I drop off my kids?", a: "The kids area is downstairs, right below the auditorium. Follow the blue signs from the main entrance, or ask anyone in a Rolla First shirt and they'll walk you there." },
   { q: "How do you keep my child safe?", a: "Every volunteer is background-checked and trained, and they always serve in pairs. Kids' rooms have secure entry, and only the adult with the matching security tag can pick up your child." },
   { q: "My child has allergies. What should I do?", a: "Let us know when you pre-register or at check-in. Allergies print right on your child's name tag, and leaders check them before any snack is served." },
   { q: "What if my child has a hard time separating?", a: "That's completely normal. You're welcome to stay in the room for a few minutes, or the whole time on your first Sunday. If your child needs you during the service, we'll text you right away." },
   { q: "What about middle and high school students?", a: "Students in 6th–12th grade sit with their families on Sunday mornings. On Wednesday nights at 6:30 PM they have their own night in the youth room upstairs, led by Pastor Gannon." },
+];
+
+/** Wednesday-night clubs for kindergarten through 5th grade. */
+const wednesdayGrades = ["Kindergarten & 1st grade", "2nd & 3rd grade", "4th & 5th grade"];
+const wednesdayClubs = [
+  { name: "Royal Rangers", who: "For boys", blurb: "Adventure, games, and Bible lessons that build character, with leaders who model what it looks like to follow Jesus.", groups: wednesdayGrades },
+  { name: "Girls Ministries", who: "For girls", blurb: "Friendship, fun, and Bible lessons that help girls grow in confidence and in their faith, with leaders who care.", groups: wednesdayGrades },
 ];
 
 export function KidsPage() {
@@ -63,18 +70,26 @@ export function KidsPage() {
             <div className="relative flex h-full flex-col justify-between overflow-hidden m-sheen rounded-[28px] bg-[#0285ff] p-7 text-black md:p-9">
               <Baby aria-hidden className="pointer-events-none absolute -right-6 -top-6 size-44 text-black/[0.07]" strokeWidth={1.25} />
               <div>
-                <div className="grid items-baseline gap-x-5 gap-y-1 sm:grid-cols-[auto_1fr] sm:gap-y-3">
-                  <p className="font-mori text-[15px] font-semibold uppercase tracking-[-0.03em] text-black/60">Sundays</p>
-                  <p className={cn(mori, "whitespace-nowrap text-[clamp(40px,4.4vw,64px)] leading-[0.9] tracking-[-0.05em]")}>9:00 &amp; 10:30</p>
-                  <p className="mt-3 font-mori text-[15px] font-semibold uppercase tracking-[-0.03em] text-black/60 sm:mt-0">Wednesdays</p>
-                  <p className={cn(mori, "text-[clamp(40px,4.4vw,64px)] leading-[0.9] tracking-[-0.05em]")}>6:30 PM</p>
-                </div>
-                <p className="mt-5 max-w-sm text-[17px] leading-relaxed text-black/75">
-                  Birth through 5th grade, during both Sunday services and Wednesday nights. While you worship, your kids play, learn about Jesus, and get known by name.
+                <dl className="divide-y divide-black/15">
+                  {[
+                    { day: "Sundays", time: "9:00 & 10:30", what: "Rolla First Kids · Birth through 6th grade", href: "#sundays" },
+                    { day: "Wednesdays", time: "6:30 PM", what: "Royal Rangers & Girls Ministries · K through 5th grade", href: "#wednesdays" },
+                  ].map((d) => (
+                    <div key={d.day} className="py-4 first:pt-0">
+                      <dt className="font-mori text-[15px] font-semibold uppercase tracking-[-0.03em] text-black/60">{d.day}</dt>
+                      <dd>
+                        <p className={cn(mori, "mt-1 whitespace-nowrap text-[clamp(40px,4.4vw,64px)] leading-[0.9] tracking-[-0.05em]")}>{d.time}</p>
+                        <a href={d.href} className="mt-2 inline-block text-[16px] text-black/75 underline decoration-black/25 underline-offset-4 hover:decoration-black">{d.what}</a>
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+                <p className="mt-3 max-w-sm text-[17px] leading-relaxed text-black/75">
+                  While you worship, your kids play, learn about Jesus, and get known by name.
                 </p>
                 <div className="mt-6 flex flex-wrap gap-2 text-[13px]">
                   <span className="inline-flex items-center gap-1.5 rounded-full bg-black/10 px-3 py-1.5 font-medium"><MapPin className="size-3.5" /> Downstairs, below the auditorium</span>
-                  <span className="rounded-full bg-black/10 px-3 py-1.5 font-medium">Students: Wed 6:30 PM</span>
+                  <span className="rounded-full bg-black/10 px-3 py-1.5 font-medium">Youth, 6th to 12th: Wed 6:30 PM</span>
                 </div>
               </div>
 
@@ -125,10 +140,11 @@ export function KidsPage() {
           </Rise>
         </section>
 
-        {/* ---------- Age groups ---------- */}
-        <section className="mx-auto max-w-[1440px] px-5 pt-24 md:px-[60px] md:pt-32">
+        {/* ---------- Sundays: age groups ---------- */}
+        <section id="sundays" className="mx-auto max-w-[1440px] scroll-mt-10 px-5 pt-24 md:px-[60px] md:pt-32">
           <Rise>
-            <div className="flex flex-wrap items-end justify-between gap-4">
+            <p className={cn(mori, "text-[16px] uppercase leading-[1.1] tracking-[-0.03em] text-[#0285ff]")}>Sundays · 9:00 &amp; 10:30</p>
+            <div className="mt-4 flex flex-wrap items-end justify-between gap-4">
               <h2 className={cn(mori, "text-[clamp(40px,5.2vw,72px)] leading-[0.95] tracking-[-0.05em]")}>
                 A room for <Ed>every</Ed> age
               </h2>
@@ -156,6 +172,43 @@ export function KidsPage() {
               </Rise>
             ))}
           </div>
+        </section>
+
+        {/* ---------- Wednesdays: Royal Rangers & Girls Ministries ---------- */}
+        <section id="wednesdays" className="mx-auto max-w-[1440px] scroll-mt-10 px-5 pt-24 md:px-[60px] md:pt-32">
+          <Rise>
+            <p className={cn(mori, "text-[16px] uppercase leading-[1.1] tracking-[-0.03em] text-[#0285ff]")}>Wednesdays · 6:30 PM</p>
+            <div className="mt-4 flex flex-wrap items-end justify-between gap-4">
+              <h2 className={cn(mori, "text-[clamp(40px,5.2vw,72px)] leading-[0.95] tracking-[-0.05em]")}>
+                Wednesday <Ed>nights</Ed>
+              </h2>
+              <p className="max-w-sm text-[15px] text-stone-500">Boys and girls each have their own night, in small groups by grade.</p>
+            </div>
+          </Rise>
+          <div className="mt-10 grid gap-4 lg:grid-cols-2">
+            {wednesdayClubs.map((c, i) => (
+              <Rise key={c.name} delay={i * 0.06}>
+                <div className="flex h-full flex-col rounded-[28px] border-2 border-[#dcd2c5]/80 p-7 md:p-9">
+                  <p className="font-magda text-[13px] uppercase tracking-[0.04em] opacity-60">{c.who}</p>
+                  <p className={cn(mori, "mt-2 text-[40px] leading-none tracking-[-0.05em]")}>{c.name}</p>
+                  <p className="mt-4 max-w-md text-[16px] leading-relaxed text-stone-600">{c.blurb}</p>
+                  <ul className="mt-8 divide-y divide-[#dcd2c5]/15 border-y border-[#dcd2c5]/15">
+                    {c.groups.map((g) => (
+                      <li key={g} className={cn(mori, "py-3.5 text-[20px] tracking-[-0.03em]")}>{g}</li>
+                    ))}
+                  </ul>
+                </div>
+              </Rise>
+            ))}
+          </div>
+          <Rise>
+            <p className="mt-6 text-[15px] text-stone-500">
+              In middle or high school? Youth meets Wednesdays at 6:30 too.{" "}
+              <Link href="/students" className="inline-flex items-center gap-1 font-medium text-[#0285ff] hover:underline">
+                Youth on Wednesdays <ArrowUpRight className="size-4" />
+              </Link>
+            </p>
+          </Rise>
         </section>
 
         {/* ---------- Check-in ---------- */}
