@@ -311,7 +311,7 @@ export function buildOfferings(): Offering[] {
       area: "events",
       interests: ["family"],
       image: img.kidsPlay,
-      summary: "Safe, joyful spaces for kids from birth through 5th grade, during both services.",
+      summary: "Safe, joyful spaces for kids from birth through 6th grade, during both services.",
       description: [
         "While you're in the service, your kids are learning, playing, and being known by name.",
         "Every volunteer is background-checked and trained. Your first visit includes a quick tour so you can see everything.",
@@ -331,7 +331,7 @@ export function buildOfferings(): Offering[] {
       items: [
         { id: "k-nursery", title: "Nursery", meta: "Birth – 2 years", location: "Rooms 110–112", leader: "Ms. Carla", description: "Rocking chairs, soft toys, and very patient grown-ups." },
         { id: "k-preschool", title: "Preschool", meta: "3 – 5 years", location: "Rooms 114–116", leader: "Mr. Andre", description: "Songs, crafts, and a Bible story at their level." },
-        { id: "k-elementary", title: "Elementary", meta: "K – 5th grade", location: "The Treehouse", leader: "Micah Wells", description: "Big-group worship, small-group conversation, and lots of energy." },
+        { id: "k-elementary", title: "Elementary", meta: "K – 6th grade", location: "The Treehouse", leader: "Micah Wells", description: "Big-group worship, a Bible lesson that sticks, and lots of energy." },
       ],
       matchKeys: ["babies", "elementary", "kids"],
       href: "/kids",
@@ -353,7 +353,7 @@ export function buildOfferings(): Offering[] {
       date: sun(10, 15),
       durationMin: 20,
       location: "Kids Welcome desk",
-      expect: ["A walk-through of the rooms", "Answers on safety and check-in", "Info on student programs for 6th–12th"],
+      expect: ["A walk-through of the rooms", "Answers on safety and check-in", "Info on student programs for 7th–12th"],
       hostIds: ["micah", "gannon"],
       cta: "Book a tour",
       action: "Book my tour",
@@ -385,7 +385,7 @@ export function buildOfferings(): Offering[] {
       items: [
         { id: "f-movie", title: "Family Movie Night", meta: "", location: "The Commons", leader: "Kids Team", description: "Popcorn, blankets, and a classic. PJs encouraged.", date: iso(nextDow(5, 18, 30, 0)), durationMin: 150 },
         { id: "f-pumpkin", title: "Pumpkin Patch Morning", meta: "", location: "Rolling Hills Farm", leader: "Micah Wells", description: "Hayrides, cider, and the great pumpkin hunt.", date: iso(nextDow(6, 10, 0, 1)), durationMin: 180 },
-        { id: "f-students", title: "Student Night Kickoff", meta: "", location: "Youth room (upstairs)", leader: "Gannon Breig", description: "For 6th–12th graders. Games, food, and a short talk.", date: iso(nextDow(3, 18, 30, 0)), durationMin: 120 },
+        { id: "f-students", title: "Student Night Kickoff", meta: "", location: "Youth room (upstairs)", leader: "Gannon Breig", description: "For 7th–12th graders. Games, food, and a short talk.", date: iso(nextDow(3, 18, 30, 0)), durationMin: 120 },
       ],
       matchKeys: ["parents", "middle", "high", "elementary"],
     },
@@ -606,7 +606,7 @@ export function getOffering(id: string): Offering | undefined {
 
 export const faqs = [
   { q: "What should I wear?", a: "Whatever you're comfortable in. You'll see jeans, sneakers, and the occasional Sunday best. Nobody's checking." },
-  { q: "What about my kids?", a: "Rolla First Kids runs during both Sunday services for birth through 5th grade. Wednesday nights at 6:30, kids in K to 5th grade have Royal Rangers (boys) and Girls Ministries (girls). Check-in takes about two minutes, and every leader is background-checked and trained." },
+  { q: "What about my kids?", a: "Rolla First Kids runs during both Sunday services for birth through 6th grade. Wednesday nights at 6:30, kids in K through 6th grade have Royal Rangers (boys) and Girls Ministries (girls). Check-in takes about two minutes, and every leader is background-checked and trained." },
   { q: "Will I be singled out?", a: "Never. We won't ask you to stand up, raise your hand, or introduce yourself. Visit at your own pace." },
   { q: "Do I need to give money?", a: "No. Giving is for people who call Rolla First home. Guests are our guests." },
   { q: "I'm not sure what I believe. Is that okay?", a: "Absolutely. Lots of people here are asking questions. You're welcome exactly as you are." },
@@ -647,13 +647,13 @@ export function baptismDates(count = 3, from = new Date()) {
 export const kidsGroups = [
   { id: "nursery", label: "Nursery", ages: "Birth – 2", room: "Nursery", blurb: "Rocking chairs, soft toys, and very patient grown-ups. We'll follow your routine." },
   { id: "preschool", label: "Preschool", ages: "Ages 3 – 5", room: "Preschool room", blurb: "Songs, crafts, snacks, and a Bible story told at their level." },
-  { id: "elementary", label: "Elementary", ages: "K – 5th grade", room: "Elementary room", blurb: "Big-group worship, a Bible lesson that sticks, and small groups with the same leaders each week." },
-  { id: "students", label: "Students", ages: "6th – 12th grade", room: "Youth room (upstairs)", blurb: "Wednesday nights at 6:30 PM with Pastor Gannon. Sundays, students sit with their families in the service." },
+  { id: "elementary", label: "Elementary", ages: "K – 6th grade", room: "Elementary room", blurb: "Big-group worship, a Bible lesson that sticks, and the same leaders each week." },
+  { id: "students", label: "Students", ages: "7th – 12th grade", room: "Youth room (upstairs)", blurb: "Wednesday nights at 6:30 PM with Pastor Gannon. Sundays, students sit with their families in the service." },
 ] as const;
 
 /**
  * Grade choices for pre-registration, matching Planning Center's grade list
- * (including its newer Infant / Preschool 1–3 options). Students (6th+) meet Wednesdays.
+ * (including its newer Infant / Preschool 1–3 options). Students (7th+) meet Wednesdays.
  */
 export const kidGradeOptions = [
   { id: "infant", label: "Infant", hint: "Under 1", group: "nursery" },
@@ -667,6 +667,7 @@ export const kidGradeOptions = [
   { id: "3", label: "3rd grade", hint: "", group: "elementary" },
   { id: "4", label: "4th grade", hint: "", group: "elementary" },
   { id: "5", label: "5th grade", hint: "", group: "elementary" },
+  { id: "6", label: "6th grade", hint: "", group: "elementary" },
 ] as const;
 
 /** Suggests a preschool grade from a birthdate (school-age grades depend on cutoffs, so those are left to the parent). */

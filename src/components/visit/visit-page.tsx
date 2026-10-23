@@ -211,12 +211,12 @@ export function VisitPage() {
                 <p className="text-[13px] font-medium uppercase tracking-[0.16em] text-forest-500">Rolla First Kids</p>
                 <h2 className="mt-5 font-display text-5xl leading-[1] tracking-[-0.02em] text-stone-900 md:text-6xl">Kids are the best part of Sunday</h2>
                 <p className="mt-6 max-w-md text-[17px] leading-relaxed text-stone-600">
-                  During both services, kids from birth through 5th grade have their own space to play, learn, and be known by name. Students in 6th–12th meet Wednesday nights in the youth room upstairs.
+                  During both services, kids from birth through 6th grade have their own space to play, learn, and be known by name. Students in 7th–12th meet Wednesday nights in the youth room upstairs.
                 </p>
               </Reveal>
               <Reveal delay={0.08}>
                 <div className="mt-10 grid grid-cols-3 gap-2">
-                  {[["Nursery", "0–2"], ["Preschool", "3–5"], ["Elementary", "K–5th"]].map(([a, b]) => (
+                  {[["Nursery", "0–2"], ["Preschool", "3–5"], ["Elementary", "K–6th"]].map(([a, b]) => (
                     <div key={a} className="rounded-2xl bg-white p-4">
                       <p className="font-display text-3xl text-stone-900">{b}</p>
                       <p className="mt-1 text-sm text-stone-500">{a}</p>

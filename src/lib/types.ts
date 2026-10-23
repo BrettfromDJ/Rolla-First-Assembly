@@ -94,7 +94,7 @@ export interface KidsRegistration {
   createdAt: string;
 }
 
-/** A parent signing up 6th–12th graders for Wednesday nights (mirrors Planning Center fields like Rolla First Kids). */
+/** A parent signing up 7th–12th graders for Wednesday nights (mirrors Planning Center fields like Rolla First Kids). */
 export interface StudentInfo {
   firstName: string;
   lastName: string;

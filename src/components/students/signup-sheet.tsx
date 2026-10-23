@@ -25,7 +25,7 @@ const formatPhone = (v: string) => {
   return d.length === 10 ? `(${d.slice(0, 3)}) ${d.slice(3, 6)}-${d.slice(6)}` : v.trim();
 };
 
-/** A parent signs up their 6th–12th graders for Wednesday nights. */
+/** A parent signs up their 7th–12th graders for Wednesday nights. */
 export function StudentsSheet({ open, onOpenChange }: { open: boolean; onOpenChange: (o: boolean) => void }) {
   const { profile, saveStudents } = useStore();
   const weds = useMemo(() => [0, 1, 2].map((w) => nextDow(3, 18, 30, w)), []);
@@ -136,7 +136,7 @@ export function StudentsSheet({ open, onOpenChange }: { open: boolean; onOpenCha
 
             {step === 1 && (
               <div className="space-y-6">
-                <Heading title="Who's coming?" body="Add each student in 6th through 12th grade." />
+                <Heading title="Who's coming?" body="Add each student in 7th through 12th grade." />
                 <ul className="space-y-3">
                   {students.map((s, i) => {
                     const err = (f: string) => errors[`s${i}.${f}`];

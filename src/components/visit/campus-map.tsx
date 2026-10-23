@@ -15,7 +15,7 @@ const stops = [
   { n: 3, icon: Coffee, title: "Grab a coffee in the gym", body: "Head downstairs to the gym. Coffee, tea, and pastries are always free.", x: 548, y: 486 },
   { n: 4, icon: Sprout, title: "Check in the kids", body: "Kids meet downstairs, right below the auditorium. Look for the blue Kids Welcome desk.", x: 546, y: 332 },
   { n: 5, icon: Armchair, title: "Find a seat in the auditorium", body: "Doors open 10 minutes before. Sit anywhere. Really.", x: 546, y: 290 },
-  { n: 6, icon: Users, title: "Students, head upstairs", body: "The youth room is upstairs, right above the gym. 6th–12th graders meet there on Wednesday nights.", x: 520, y: 450 },
+  { n: 6, icon: Users, title: "Students, head upstairs", body: "The youth room is upstairs, right above the gym. 7th–12th graders meet there on Wednesday nights.", x: 520, y: 450 },
 ];
 
 const C = {

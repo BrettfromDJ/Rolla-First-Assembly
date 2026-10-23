@@ -1,6 +1,6 @@
 import { nextDow } from "./utils";
 
-/** Wednesday nights for 6th–12th grade, led by Pastor Gannon in the youth room upstairs (above the Gym). */
+/** Wednesday nights for 7th–12th grade, led by Pastor Gannon in the youth room upstairs (above the Gym). */
 export const studentsInfo = {
   day: "Wednesdays",
   time: "6:30 PM",
@@ -9,12 +9,12 @@ export const studentsInfo = {
   leaderId: "gannon",
 };
 
-export const studentGrades = ["6", "7", "8", "9", "10", "11", "12"].map((g) => ({ id: g, label: `${g}th` }));
+export const studentGrades = ["7", "8", "9", "10", "11", "12"].map((g) => ({ id: g, label: `${g}th` }));
 export const gradeLabel = (g: string) => `${g}th grade`;
 export const isMiddleSchool = (g: string) => Number(g) <= 8;
 
 export const studentGroups = [
-  { id: "ms", label: "Middle School", grades: "6th – 8th grade", blurb: "Loud games, real questions, and small groups by grade with the same leaders every week." },
+  { id: "ms", label: "Middle School", grades: "7th & 8th grade", blurb: "Loud games, real questions, and small groups by grade with the same leaders every week." },
   { id: "hs", label: "High School", grades: "9th – 12th grade", blurb: "Honest conversations about faith and life, leadership opportunities, and friends who have your back." },
 ];
 
@@ -39,7 +39,7 @@ export function studentEvents(today = new Date()) {
 }
 
 export const studentsFaqs = [
-  { q: "Does my student need to sign up first?", a: "No. Anyone in 6th–12th grade can walk in any Wednesday. Signing up just helps us learn their name, get your contact info, and send you updates." },
+  { q: "Does my student need to sign up first?", a: "No. Anyone in 7th–12th grade can walk in any Wednesday. Signing up just helps us learn their name, get your contact info, and send you updates." },
   { q: "Where do I drop off and pick up?", a: "Drop off and pick up at the Gym doors. The youth room is upstairs above the Gym. Students stay inside until a parent or approved driver arrives." },
   { q: "Who are the leaders?", a: "Pastor Gannon and a team of adult volunteers. Every leader is 21 or older, background-checked, and trained, and leaders are never alone with a student." },
   { q: "What about Sunday mornings?", a: "On Sundays, students sit with their families in the 9:00 or 10:30 service. Many also serve on the Welcome, Production, or worship teams." },

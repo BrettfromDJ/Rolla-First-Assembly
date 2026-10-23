@@ -91,7 +91,7 @@ export function KidsSheet({ open, onOpenChange }: { open: boolean; onOpenChange:
       kids.forEach((k, i) => {
         if (!k.firstName.trim()) e[`k${i}.firstName`] = "Add a first name.";
         if (!k.birthdate) e[`k${i}.birthdate`] = "Add a birthdate.";
-        else if (k.birthdate > todayYmd() || k.birthdate < tooOld()) e[`k${i}.birthdate`] = "Rolla First Kids is for birth through 5th grade. Check the date.";
+        else if (k.birthdate > todayYmd() || k.birthdate < tooOld()) e[`k${i}.birthdate`] = "Rolla First Kids is for birth through 6th grade. Check the date.";
         if (!k.gender) e[`k${i}.gender`] = "Pick one.";
         if (!k.grade) e[`k${i}.grade`] = "Pick a grade.";
       });
@@ -193,7 +193,7 @@ export function KidsSheet({ open, onOpenChange }: { open: boolean; onOpenChange:
 
             {step === 1 && (
               <div className="space-y-6">
-                <Heading title="Who's coming?" body="Add each child. We use birthdate and grade to get them to the right room. Students in 6th–12th grade meet Wednesday nights instead." />
+                <Heading title="Who's coming?" body="Add each child. We use birthdate and grade to get them to the right room. Students in 7th–12th grade meet Wednesday nights instead." />
                 <ul className="space-y-3">
                   {kids.map((k, i) => {
                     const err = (f: string) => errors[`k${i}.${f}`];
