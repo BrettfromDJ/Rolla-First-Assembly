@@ -143,7 +143,7 @@ export function ChurchHome() {
           <div className="grid border border-[rgba(220,210,197,0.24)] bg-ink md:min-h-[177px] md:grid-cols-[381px_1px_1fr]">
             <div className="px-6 pt-8 md:pl-[120px] md:pr-0 md:pt-[53px]">
               <p className={cn(mori, "text-[26px] leading-none tracking-[-0.03em]")}>Wednesday’s</p>
-              <p className="mt-[8px] font-magda text-[14px] uppercase leading-none tracking-[-0.03em] opacity-60">(ADULT and Youth)</p>
+              <p className="mt-[8px] font-magda text-[14px] uppercase leading-none tracking-[-0.03em] opacity-60">(Adults, Kids &amp; Youth)</p>
               <p className={cn(mori, "mt-[6px] text-[15px] uppercase leading-none")}>6:30PM</p>
             </div>
             <span aria-hidden className="hidden h-[115px] w-px self-center bg-[#dcd2c5]/30 md:block" />

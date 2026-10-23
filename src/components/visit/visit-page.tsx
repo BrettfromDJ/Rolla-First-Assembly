@@ -106,7 +106,7 @@ export function VisitPage() {
                   <Clock className="size-4 text-forest-500" /> About 70 minutes. Both services are the same.
                 </p>
                 <p className="mt-6 border-t border-paper/10 pt-5 text-paper/80">
-                  <span className="text-paper">Wednesdays at 6:30 PM</span> · Adults &amp; youth
+                  <span className="text-paper">Wednesdays at 6:30 PM</span> · Adults, kids &amp; youth
                 </p>
               </div>
               <div className="space-y-5 border-t border-paper/10 pt-6">

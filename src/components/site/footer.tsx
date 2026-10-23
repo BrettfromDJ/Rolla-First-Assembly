@@ -41,7 +41,7 @@ export function SiteFooter() {
             <p className="font-magda text-[13px] uppercase tracking-[0.04em] opacity-60">Sundays</p>
             <p className={mori}>9:00 &amp; 10:30 AM</p>
             <p className="pt-2 font-magda text-[13px] uppercase tracking-[0.04em] opacity-60">Wednesdays</p>
-            <p className={mori}>6:30 PM · Adults &amp; youth</p>
+            <p className={mori}>6:30 PM · Adults, kids &amp; youth</p>
           </div>
           <div className="space-y-2">
             <p className="font-magda text-[13px] uppercase tracking-[0.04em] opacity-60">Find us</p>
