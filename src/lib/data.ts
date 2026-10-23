@@ -606,7 +606,7 @@ export function getOffering(id: string): Offering | undefined {
 
 export const faqs = [
   { q: "What should I wear?", a: "Whatever you're comfortable in. You'll see jeans, sneakers, and the occasional Sunday best. Nobody's checking." },
-  { q: "What about my kids?", a: "Rolla First Kids runs during both services for birth through 5th grade. Check-in takes about two minutes, and every leader is background-checked and trained." },
+  { q: "What about my kids?", a: "Rolla First Kids runs during both Sunday services and on Wednesday nights at 6:30 for birth through 5th grade. Check-in takes about two minutes, and every leader is background-checked and trained." },
   { q: "Will I be singled out?", a: "Never. We won't ask you to stand up, raise your hand, or introduce yourself. Visit at your own pace." },
   { q: "Do I need to give money?", a: "No. Giving is for people who call Rolla First home. Guests are our guests." },
   { q: "I'm not sure what I believe. Is that okay?", a: "Absolutely. Lots of people here are asking questions. You're welcome exactly as you are." },

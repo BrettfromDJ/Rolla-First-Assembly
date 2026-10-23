@@ -17,7 +17,8 @@ const mori = "font-mori font-semibold";
 const Ed = ({ children }: { children: React.ReactNode }) => <span className="font-editorial font-normal italic tracking-[-0.03em]">{children}</span>;
 
 const faqs = [
-  { q: "Do I have to pre-register?", a: "No. You can check in at the blue Kids Welcome desk on Sunday morning. Pre-registering just means we'll have name tags ready and your first check-in is even faster." },
+  { q: "Is there something for kids on Wednesday nights?", a: "Yes. Rolla First Kids meets Wednesday nights at 6:30 PM for birth through 5th grade, while adults and youth have their own service. Check in at the same blue Kids Welcome desk downstairs." },
+  { q: "Do I have to pre-register?", a: "No. You can check in at the blue Kids Welcome desk when you arrive. Pre-registering just means we'll have name tags ready and your first check-in is even faster." },
   { q: "Where do I drop off my kids?", a: "The kids area is downstairs, right below the auditorium. Follow the blue signs from the main entrance, or ask anyone in a Rolla First shirt and they'll walk you there." },
   { q: "How do you keep my child safe?", a: "Every volunteer is background-checked and trained, and they always serve in pairs. Kids' rooms have secure entry, and only the adult with the matching security tag can pick up your child." },
   { q: "My child has allergies. What should I do?", a: "Let us know when you pre-register or at check-in. Allergies print right on your child's name tag, and leaders check them before any snack is served." },
@@ -62,10 +63,14 @@ export function KidsPage() {
             <div className="relative flex h-full flex-col justify-between overflow-hidden m-sheen rounded-[28px] bg-[#0285ff] p-7 text-black md:p-9">
               <Baby aria-hidden className="pointer-events-none absolute -right-6 -top-6 size-44 text-black/[0.07]" strokeWidth={1.25} />
               <div>
-                <p className="font-mori text-[15px] font-semibold uppercase tracking-[-0.03em] text-black/60">Every Sunday</p>
-                <p className={cn(mori, "mt-3 text-[clamp(48px,5.6vw,80px)] leading-[0.9] tracking-[-0.05em]")}>9:00 &amp; 10:30</p>
-                <p className="mt-4 max-w-sm text-[17px] leading-relaxed text-black/75">
-                  Birth through 5th grade, during both services. While you worship, your kids play, learn about Jesus, and get known by name.
+                <div className="grid items-baseline gap-x-5 gap-y-1 sm:grid-cols-[auto_1fr] sm:gap-y-3">
+                  <p className="font-mori text-[15px] font-semibold uppercase tracking-[-0.03em] text-black/60">Sundays</p>
+                  <p className={cn(mori, "whitespace-nowrap text-[clamp(40px,4.4vw,64px)] leading-[0.9] tracking-[-0.05em]")}>9:00 &amp; 10:30</p>
+                  <p className="mt-3 font-mori text-[15px] font-semibold uppercase tracking-[-0.03em] text-black/60 sm:mt-0">Wednesdays</p>
+                  <p className={cn(mori, "text-[clamp(40px,4.4vw,64px)] leading-[0.9] tracking-[-0.05em]")}>6:30 PM</p>
+                </div>
+                <p className="mt-5 max-w-sm text-[17px] leading-relaxed text-black/75">
+                  Birth through 5th grade, during both Sunday services and Wednesday nights. While you worship, your kids play, learn about Jesus, and get known by name.
                 </p>
                 <div className="mt-6 flex flex-wrap gap-2 text-[13px]">
                   <span className="inline-flex items-center gap-1.5 rounded-full bg-black/10 px-3 py-1.5 font-medium"><MapPin className="size-3.5" /> Downstairs, below the auditorium</span>
