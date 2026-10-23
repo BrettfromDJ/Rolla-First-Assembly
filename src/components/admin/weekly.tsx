@@ -413,22 +413,30 @@ function Sparkline({ weeks }: { weeks: { date: string; total: number; complete: 
   const max = Math.max(...pts.map((p) => p.total)), min = Math.min(...pts.map((p) => p.total));
   const x = (i: number) => (i / (weeks.length - 1)) * W;
   const y = (v: number) => H - 4 - ((v - min) / Math.max(1, max - min)) * (H - 8);
-  const line = weeks
-    .map((w, i) => (w.complete ? `${x(i).toFixed(2)},${y(w.total).toFixed(2)}` : null))
-    .reduce<string[]>((segs, p, i) => {
-      if (!p) return segs;
-      if (i === 0 || !weeks[i - 1].complete) segs.push(`M${p}`);
-      else segs[segs.length - 1] += ` L${p}`;
-      return segs;
-    }, [])
-    .join(" ");
+  // One solid line through the complete Sundays; a dashed bridge over any Sunday with a missing count.
+  const idx = weeks.map((w, i) => (w.complete ? i : -1)).filter((i) => i >= 0);
+  const pt = (i: number) => `${x(i).toFixed(2)},${y(weeks[i].total).toFixed(2)}`;
+  let solid = "";
+  let dashed = "";
+  idx.forEach((i, k) => {
+    const prev = idx[k - 1];
+    if (prev === undefined) solid += `M${pt(i)}`;
+    else if (i - prev === 1) solid += ` L${pt(i)}`;
+    else {
+      dashed += ` M${pt(prev)} L${pt(i)}`;
+      solid += ` M${pt(i)}`;
+    }
+  });
+  // Sundays missing a count between the first and last complete ones (the dashed parts).
+  const gaps = idx.length ? idx[idx.length - 1] - idx[0] + 1 - idx.length : 0;
   const lastIdx = weeks.map((w) => w.complete).lastIndexOf(true);
   const lastPt = weeks[lastIdx];
   return (
     <div>
       <div className="relative h-24 w-full">
         <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" className="h-full w-full overflow-visible" role="img" aria-label={`Sunday attendance for the last ${weeks.length} weeks, from ${fmt(pts[0].total)} to ${fmt(pts[pts.length - 1].total)}`}>
-          <path d={line} pathLength={1} className="m-draw" fill="none" stroke="#77736c" strokeWidth={2} vectorEffect="non-scaling-stroke" strokeLinejoin="round" strokeLinecap="round" />
+          {dashed && <path d={dashed} fill="none" stroke="#77736c" strokeOpacity={0.6} strokeWidth={1.5} strokeDasharray="3 4" vectorEffect="non-scaling-stroke" strokeLinecap="round" />}
+          <path d={solid} fill="none" stroke="#77736c" strokeWidth={2} vectorEffect="non-scaling-stroke" strokeLinejoin="round" strokeLinecap="round" />
         </svg>
         <span
           className="m-fade-late absolute size-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#3987e5] ring-2 ring-white"
@@ -437,7 +445,7 @@ function Sparkline({ weeks }: { weeks: { date: string; total: number; complete: 
       </div>
       <div className="mt-2 flex justify-between text-xs text-stone-400">
         <span>{day(weeks[0].date)}</span>
-        <span>12 weeks of Sundays</span>
+        <span>{gaps ? `${gaps} Sunday${gaps === 1 ? "" : "s"} not fully counted (dashed)` : `${lastIdx - idx[0]} weeks of Sundays`}</span>
         <span>{day(lastPt.date)}</span>
       </div>
     </div>
