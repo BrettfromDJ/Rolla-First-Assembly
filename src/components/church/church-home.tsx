@@ -27,7 +27,7 @@ const pastors: { first: string; last: string; role: string; email: string; image
   { first: "Pam", last: "Bales", role: "Children's Discipleship Pastor", email: "pastorpam@rollafirst.church", image: "team/pam-bales.jpg" },
   { first: "Amber", last: "Eckelkamp", role: "Administrative Assistant", email: "office@rollafirst.church", image: "team/amber-eckelkamp.jpg" },
   { first: "Brice", last: "Adams", role: "Belle Campus Pastor", email: "pastorbrice@rollafirst.church", image: "team/brice-adams.jpg" },
-  { first: "Debbie", last: "Cartwright", role: "Rolla First Kids Director", email: "debbie@rollafirst.church", image: "team/debbie-cartwright.jpg" },
+  { first: "Debbie", last: "Cartwright", role: "After School Program Director", email: "debbie@rollafirst.church", image: "team/debbie-cartwright.jpg" },
 ];
 
 /* ---------- Building blocks ---------- */

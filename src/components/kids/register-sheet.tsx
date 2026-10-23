@@ -308,7 +308,7 @@ export function KidsSheet({ open, onOpenChange }: { open: boolean; onOpenChange:
                 <p className="flex gap-3 rounded-2xl bg-stone-100 p-4 text-[13px] leading-relaxed text-stone-600">
                   <Lock className="mt-0.5 size-4 shrink-0 text-forest-500" />
                   <span>
-                    Is there someone who should <span className="font-medium text-stone-900">not</span> pick up your child, or a custody situation we should know about? Please tell {staffById.debbie.name.split(" ")[0]} privately at {staffById.debbie.email} or at the Kids Welcome desk. We&apos;ll handle it with care.
+                    Is there someone who should <span className="font-medium text-stone-900">not</span> pick up your child, or a custody situation we should know about? Please tell Pastor {staffById.micah.name.split(" ")[0]} privately at {staffById.micah.email} or at the Kids Welcome desk. We&apos;ll handle it with care.
                   </span>
                 </p>
                 <Button size="lg" className="w-full" onClick={next}>Continue <ArrowRight /></Button>

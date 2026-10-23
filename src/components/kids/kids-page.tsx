@@ -38,7 +38,7 @@ export function KidsPage() {
   const [sheet, setSheet] = useState(false);
   const reg = hydrated ? profile.kids : null;
   const micah = staffById.micah;
-  const team = ["micah", "pam", "debbie"].map((id) => staffById[id]);
+  const team = ["micah", "pam"].map((id) => staffById[id]);
   const familyEvents = useMemo(() => (hydrated ? (getOffering("family-events")?.items ?? []) : []), [hydrated]);
   const names = reg?.kids.map((k) => k.firstName).join(" & ");
 
@@ -262,36 +262,35 @@ export function KidsPage() {
         </section>
 
         {/* ---------- Team ---------- */}
-        <section className="mx-auto max-w-[1440px] px-5 pt-24 md:px-[60px] md:pt-32">
-          <Rise>
-            <div className="flex flex-wrap items-end justify-between gap-4">
-              <h2 className={cn(mori, "text-[clamp(40px,5.2vw,72px)] leading-[0.95] tracking-[-0.05em]")}>
-                Meet the <Ed>team</Ed>
-              </h2>
-              <Link href="/events/family-team" className={cn(mori, "group inline-flex items-center gap-3 text-[16px] uppercase tracking-[-0.04em] transition hover:text-[#0285ff]")}>
-                Book a tour of the kids area
-                <span className="flex size-12 items-center justify-center rounded-full bg-[#0285ff]">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/home/arrow.svg" alt="" width={28} height={28} className="transition duration-500 group-hover:rotate-45" />
-                </span>
-              </Link>
-            </div>
+        <section className="mx-auto grid max-w-[1440px] gap-10 px-5 pt-24 md:px-[60px] md:pt-32 lg:grid-cols-3 lg:gap-4">
+          <Rise className="lg:pr-10">
+            <h2 className={cn(mori, "text-[clamp(40px,5.2vw,72px)] leading-[0.95] tracking-[-0.05em]")}>
+              Meet the <Ed>team</Ed>
+            </h2>
+            <p className="mt-5 max-w-sm text-[17px] leading-relaxed text-stone-600">
+              Pastor Micah and Pastor Pam lead Rolla First Kids, alongside a team of trained, background-checked volunteers who know your kids by name.
+            </p>
+            <Link href="/events/family-team" className={cn(mori, "group mt-8 inline-flex items-center gap-3 text-[16px] uppercase tracking-[-0.04em] transition hover:text-[#0285ff]")}>
+              Book a tour of the kids area
+              <span className="flex size-12 items-center justify-center rounded-full bg-[#0285ff]">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/home/arrow.svg" alt="" width={28} height={28} className="transition duration-500 group-hover:rotate-45" />
+              </span>
+            </Link>
           </Rise>
-          <Rise>
-            <RevealGroup as="ul" className="mt-10 grid gap-4 sm:grid-cols-3">
-              {team.map((p) => (
-                <li key={p.id}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={p.photo} alt={p.name} width={600} height={750} loading="lazy" className="aspect-[4/5] w-full rounded-[28px] object-cover object-top" />
-                  <p className={cn(mori, "mt-4 text-[22px] tracking-[-0.03em]")}>{p.name}</p>
-                  <p className="text-[15px] text-[#0285ff]">{p.role}</p>
-                  {p.email && (
-                    <a href={`mailto:${p.email}`} className="mt-1 inline-block text-[14px] text-stone-500 hover:text-[#dcd2c5]">{p.email}</a>
-                  )}
-                </li>
-              ))}
-            </RevealGroup>
-          </Rise>
+          <RevealGroup as="ul" className="grid gap-4 sm:grid-cols-2 lg:col-span-2">
+            {team.map((p) => (
+              <li key={p.id}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={p.photo} alt={p.name} width={600} height={750} loading="lazy" className="aspect-[4/5] w-full rounded-[28px] object-cover object-top" />
+                <p className={cn(mori, "mt-4 text-[22px] tracking-[-0.03em]")}>{p.name}</p>
+                <p className="text-[15px] text-[#0285ff]">{p.role}</p>
+                {p.email && (
+                  <a href={`mailto:${p.email}`} className="mt-1 inline-block text-[14px] text-stone-500 hover:text-[#dcd2c5]">{p.email}</a>
+                )}
+              </li>
+            ))}
+          </RevealGroup>
         </section>
 
         {/* ---------- Family events + next steps ---------- */}
