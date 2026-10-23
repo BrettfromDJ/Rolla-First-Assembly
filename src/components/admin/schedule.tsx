@@ -92,7 +92,7 @@ export function ScheduleView({ query }: { query: string }) {
     <div className="space-y-6">
       {/* Sunday + team pickers */}
       <div className="space-y-3">
-        <div className="no-scrollbar -mx-1 flex gap-2 overflow-x-auto overflow-y-hidden px-1 py-1">
+        <div className="no-scrollbar -mx-5 flex gap-2 overflow-x-auto overflow-y-hidden px-5 py-1 md:-mx-1 md:px-1">
           {sundays.map((d, i) => {
             const n = openSpots(assignments, d, teamId).length;
             const on = d === day;
@@ -112,7 +112,8 @@ export function ScheduleView({ query }: { query: string }) {
             );
           })}
         </div>
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
+          <div className="no-scrollbar -mx-5 flex gap-2 overflow-x-auto overflow-y-hidden px-5 py-1 md:-mx-1 md:px-1 lg:flex-1">
           {scheduledTeams.map((t) => {
             const n = openSpots(assignments, day, t.id).length;
             return (
@@ -120,18 +121,19 @@ export function ScheduleView({ query }: { query: string }) {
                 key={t.id}
                 onClick={() => setTeamId(t.id)}
                 aria-pressed={t.id === teamId}
-                className={cn("flex h-10 items-center gap-2 rounded-full px-4 text-sm ring-1 transition", t.id === teamId ? "bg-stone-900 font-medium text-ink ring-stone-900" : "bg-white text-stone-700 ring-stone-200 hover:ring-stone-300")}
+                className={cn("flex h-10 shrink-0 items-center gap-2 whitespace-nowrap rounded-full px-4 text-sm ring-1 transition", t.id === teamId ? "bg-forest-700 font-medium text-ink ring-forest-700" : "bg-white text-stone-700 ring-stone-200 hover:ring-stone-300")}
               >
                 {t.name}
                 {n > 0 && <span className={cn("rounded-full px-1.5 text-xs tabular-nums", t.id === teamId ? "bg-ink/15" : "bg-stone-100 text-stone-500")}>{n}</span>}
               </button>
             );
           })}
-          <div className="ml-auto flex gap-2">
-            <button onClick={exportCsv} className="flex h-10 items-center gap-2 rounded-full px-4 text-sm text-stone-600 ring-1 ring-stone-200 transition hover:text-stone-900 hover:ring-stone-300">
+          </div>
+          <div className="grid shrink-0 grid-cols-2 gap-2 sm:flex">
+            <button onClick={exportCsv} className="flex h-10 items-center justify-center gap-2 whitespace-nowrap rounded-full px-4 text-sm text-stone-600 ring-1 ring-stone-200 transition hover:text-stone-900 hover:ring-stone-300">
               <Download className="size-4" /> Download
             </button>
-            <button onClick={fill} disabled={!open.length} className="flex h-10 items-center gap-2 rounded-full bg-forest-700 px-4 text-sm font-medium text-ink transition hover:bg-forest-500 disabled:opacity-40">
+            <button onClick={fill} disabled={!open.length} className="flex h-10 items-center justify-center gap-2 whitespace-nowrap rounded-full bg-forest-700 px-4 text-sm font-medium text-ink transition hover:bg-forest-500 disabled:opacity-40">
               <Wand2 className="size-4" /> Fill open spots
             </button>
           </div>
@@ -146,9 +148,9 @@ export function ScheduleView({ query }: { query: string }) {
         <Stat icon={UserPlus} label="Open spots" value={String(open.length)} sub={open.length ? "Tap one to find someone" : "Fully staffed"} warn={open.length > 0} />
       </div>
 
-      <div className="grid gap-6 2xl:grid-cols-[1fr_380px]">
+      <div className="grid grid-cols-1 gap-6 2xl:grid-cols-[minmax(0,1fr)_380px]">
         {/* Roster for the day */}
-        <div className="grid min-w-0 gap-4 lg:grid-cols-2">
+        <div className="grid min-w-0 grid-cols-1 gap-4 lg:grid-cols-2">
           {services.map((service) => (
             <section key={service} className="rounded-2xl bg-white ring-1 ring-stone-200/70">
               <div className="flex items-center justify-between border-b border-stone-100 px-5 py-3.5">
