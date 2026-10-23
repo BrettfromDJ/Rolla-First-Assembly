@@ -17,7 +17,7 @@ const mori = "font-mori font-semibold";
 const Ed = ({ children }: { children: React.ReactNode }) => <span className="font-editorial font-normal italic tracking-[-0.03em]">{children}</span>;
 
 const faqs = [
-  { q: "What's the difference between Sundays and Wednesdays?", a: "On Sunday mornings, Rolla First Kids meets during both services for birth through 6th grade, grouped by age. On Wednesday nights at 6:30, boys and girls in kindergarten through 6th grade go to Royal Rangers and Girls Ministries, each in small groups by grade." },
+  { q: "What's the difference between Sundays and Wednesdays?", a: "On Sunday mornings, Rolla First Kids meets during both services for birth through 6th grade, grouped by age. On Wednesday nights at 6:30, boys and girls in kindergarten through 6th grade go to Royal Rangers and Girls Ministries, each in small groups by grade. Nursery is open both Sunday mornings and Wednesday nights." },
   { q: "Do I have to pre-register?", a: "No. You can check in at the blue Kids Welcome desk when you arrive. Pre-registering just means we'll have name tags ready and your first check-in is even faster." },
   { q: "Where do I drop off my kids?", a: "The kids area is downstairs, right below the auditorium. From the foyer, follow the large Rolla First Kids sign on the staircase wall. Its arrow points you downstairs. Anyone on the Welcome Team, or the person at the Welcome desk, is happy to walk you there." },
   { q: "How do you keep my child safe?", a: "Every volunteer is background-checked and trained, and they always serve in pairs. Kids' rooms have secure entry, and only the adult with the matching security tag can pick up your child." },
@@ -73,7 +73,7 @@ export function KidsPage() {
                 <dl className="divide-y divide-black/15">
                   {[
                     { day: "Sundays", time: "9:00 & 10:30", what: "Rolla First Kids · Birth through 6th grade", href: "#sundays" },
-                    { day: "Wednesdays", time: "6:30 PM", what: "Royal Rangers & Girls Ministries · K through 6th grade", href: "#wednesdays" },
+                    { day: "Wednesdays", time: "6:30 PM", what: "Nursery · Royal Rangers & Girls Ministries for K–6th", href: "#wednesdays" },
                   ].map((d) => (
                     <div key={d.day} className="py-4 first:pt-0">
                       <dt className="font-mori text-[15px] font-semibold uppercase tracking-[-0.03em] text-black/60">{d.day}</dt>
@@ -182,7 +182,7 @@ export function KidsPage() {
               <h2 className={cn(mori, "text-[clamp(40px,5.2vw,72px)] leading-[0.95] tracking-[-0.05em]")}>
                 Wednesday <Ed>nights</Ed>
               </h2>
-              <p className="max-w-sm text-[15px] text-stone-500">Boys and girls each have their own night, in small groups by grade.</p>
+              <p className="max-w-sm text-[15px] text-stone-500">Boys and girls in K through 6th each have their own night, in small groups by grade. Nursery is open too.</p>
             </div>
           </Rise>
           <div className="mt-10 grid gap-4 lg:grid-cols-2">
@@ -201,6 +201,12 @@ export function KidsPage() {
               </Rise>
             ))}
           </div>
+          <Rise>
+            <div className="mt-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-2 rounded-[28px] border-2 border-[#dcd2c5]/25 px-7 py-5">
+              <p className={cn(mori, "text-[20px] tracking-[-0.03em]")}>Nursery <span className="font-mori text-[15px] font-semibold text-[#0285ff]">Birth – 2</span></p>
+              <p className="text-[15px] text-stone-600">Open Wednesday nights too, so you can bring the whole family.</p>
+            </div>
+          </Rise>
           <Rise>
             <p className="mt-6 text-[15px] text-stone-500">
               In middle or high school? Youth meets Wednesdays at 6:30 too.{" "}

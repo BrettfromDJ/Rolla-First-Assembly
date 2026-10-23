@@ -606,7 +606,7 @@ export function getOffering(id: string): Offering | undefined {
 
 export const faqs = [
   { q: "What should I wear?", a: "Whatever you're comfortable in. You'll see jeans, sneakers, and the occasional Sunday best. Nobody's checking." },
-  { q: "What about my kids?", a: "Rolla First Kids runs during both Sunday services for birth through 6th grade. Wednesday nights at 6:30, kids in K through 6th grade have Royal Rangers (boys) and Girls Ministries (girls). Check-in takes about two minutes, and every leader is background-checked and trained." },
+  { q: "What about my kids?", a: "Rolla First Kids runs during both Sunday services for birth through 6th grade. Wednesday nights at 6:30, kids in K through 6th grade have Royal Rangers (boys) and Girls Ministries (girls), and the nursery is open both days. Check-in takes about two minutes, and every leader is background-checked and trained." },
   { q: "Will I be singled out?", a: "Never. We won't ask you to stand up, raise your hand, or introduce yourself. Visit at your own pace." },
   { q: "Do I need to give money?", a: "No. Giving is for people who call Rolla First home. Guests are our guests." },
   { q: "I'm not sure what I believe. Is that okay?", a: "Absolutely. Lots of people here are asking questions. You're welcome exactly as you are." },
@@ -645,7 +645,7 @@ export function baptismDates(count = 3, from = new Date()) {
 /* ---------- Rolla First Kids ---------- */
 
 export const kidsGroups = [
-  { id: "nursery", label: "Nursery", ages: "Birth – 2", room: "Nursery", blurb: "Rocking chairs, soft toys, and very patient grown-ups. We'll follow your routine." },
+  { id: "nursery", label: "Nursery", ages: "Birth – 2", room: "Nursery", blurb: "Rocking chairs, soft toys, and very patient grown-ups. We'll follow your routine. Open Wednesday nights too." },
   { id: "preschool", label: "Preschool", ages: "Ages 3 – 5", room: "Preschool room", blurb: "Songs, crafts, snacks, and a Bible story told at their level." },
   { id: "elementary", label: "Elementary", ages: "K – 6th grade", room: "Elementary room", blurb: "Big-group worship, a Bible lesson that sticks, and the same leaders each week." },
   { id: "students", label: "Students", ages: "7th – 12th grade", room: "Youth room (upstairs)", blurb: "Wednesday nights at 6:30 PM with Pastor Gannon. Sundays, students sit with their families in the service." },
