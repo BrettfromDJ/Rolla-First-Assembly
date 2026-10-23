@@ -134,7 +134,8 @@ export function ServeSheet({ teamId, onOpenChange }: { teamId: string | null; on
                 <dl className="divide-y divide-stone-200/70 overflow-hidden rounded-2xl border-2 border-stone-200 text-[15px]">
                   {[
                     ["When", t.when],
-                    ["How often", t.commitment],
+                    ...(t.commitment ? [["How often", t.commitment]] : []),
+                    ...(t.coLeaderId ? [["Leaders", `${leader.name} & ${staffById[t.coLeaderId].name}`]] : []),
                     ["Age", t.minAge ? `${t.minAge} and up${t.teensWith ? `. ${t.teensWith}` : ""}` : "Anyone"],
                   ].map(([k, v]) => (
                     <div key={k} className="flex gap-4 px-5 py-3.5">

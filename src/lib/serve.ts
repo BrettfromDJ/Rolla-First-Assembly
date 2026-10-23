@@ -1,14 +1,15 @@
 import type { ServeFrequency, ServeSignup, ServeTime } from "./types";
 import { daysAgo } from "./utils";
 
-export type ServeArea = "welcome" | "kids" | "music" | "care" | "behind";
+export type ServeArea = "welcome" | "coffee" | "kids" | "youth" | "worship" | "production";
 
 export const serveAreas: { id: ServeArea; label: string }[] = [
   { id: "welcome", label: "Welcome & guests" },
-  { id: "kids", label: "Kids & students" },
-  { id: "music", label: "Worship & production" },
-  { id: "care", label: "Prayer & care" },
-  { id: "behind", label: "Behind the scenes" },
+  { id: "coffee", label: "Coffee ministry" },
+  { id: "kids", label: "Kids" },
+  { id: "youth", label: "Youth" },
+  { id: "worship", label: "Worship" },
+  { id: "production", label: "Production" },
 ];
 
 export interface ServeTeam {
@@ -20,8 +21,9 @@ export interface ServeTeam {
   roles: string[];
   when: string;
   times: ServeTime[];
-  commitment: string;
+  commitment?: string;
   leaderId: string;
+  coLeaderId?: string; // teams led by two people
   minAge?: number;
   teensWith?: string; // how teens can help, when they can't serve alone
   backgroundCheck?: boolean;
@@ -39,9 +41,9 @@ export const serveTeams: ServeTeam[] = [
     tagline: "Be the first smile people see on Sunday.",
     does: ["Greet people at the doors and in the parking lots", "Help guests find the kids area, coffee, and a seat", "Staff the Connect Center after each service"],
     roles: ["Greeter", "Parking lot", "Usher", "Connect Center"],
-    when: "Sundays, 30 minutes before either service",
+    when: "Sundays: 8:30 to 10:15 AM for first service, 10:00 to 10:45 AM for second",
     times: ["9:00", "10:30"],
-    commitment: "One or two Sundays a month",
+    commitment: "One Sunday a month",
     leaderId: "amber",
     minAge: 13,
     serving: 34,
@@ -50,7 +52,7 @@ export const serveTeams: ServeTeam[] = [
   {
     id: "coffee",
     name: "Coffee Team",
-    area: "welcome",
+    area: "coffee",
     tagline: "Pour coffee, start conversations.",
     does: ["Brew and serve coffee in the Gym before and between services", "Keep the coffee bar stocked and tidy", "Learn names and say hello"],
     roles: ["Barista", "Setup crew"],
@@ -64,31 +66,31 @@ export const serveTeams: ServeTeam[] = [
   },
   {
     id: "kids-first",
-    name: "Kids First",
+    name: "Rolla First Kids",
     area: "kids",
     tagline: "Help kids know they're loved by God and by us.",
     does: ["Lead a small group or help in a classroom", "Rock babies and play with toddlers in the nursery", "Run check-in at the Kids Welcome desk"],
     roles: ["Nursery", "Preschool", "Elementary small group", "Check-in desk"],
     when: "Sundays during either service",
     times: ["9:00", "10:30"],
-    commitment: "Two Sundays a month (you still go to the other service)",
-    leaderId: "debbie",
+    commitment: "One Sunday a month",
+    leaderId: "micah",
+    coLeaderId: "pam",
     minAge: 18,
-    teensWith: "Students 13+ can help alongside an adult leader.",
+    teensWith: "Teens 13+ can help alongside an adult leader.",
     backgroundCheck: true,
     serving: 21,
     goal: 36,
   },
   {
     id: "students",
-    name: "Student Leaders",
-    area: "kids",
+    name: "Youth Leaders",
+    area: "youth",
     tagline: "Walk with middle and high schoolers on Wednesday nights.",
     does: ["Lead a small group of students", "Hang out, play games, and listen well", "Help with events, camps, and trips"],
     roles: ["Small group leader", "Event helper"],
-    when: "Wednesdays, 6:00 to 8:00 PM, youth room upstairs",
+    when: "Wednesday evening service, youth room upstairs",
     times: ["wed"],
-    commitment: "Most Wednesdays during the school year",
     leaderId: "gannon",
     minAge: 21,
     backgroundCheck: true,
@@ -98,12 +100,12 @@ export const serveTeams: ServeTeam[] = [
   {
     id: "worship",
     name: "Worship Team",
-    area: "music",
+    area: "worship",
     tagline: "Lead the church in singing on Sundays.",
     does: ["Sing or play with the band", "Rehearse Thursday evenings", "Learn new songs and grow as a worshiper"],
     roles: ["Vocals", "Keys", "Electric guitar", "Acoustic guitar", "Bass", "Drums"],
     when: "Sundays plus Thursday rehearsal",
-    times: ["9:00", "10:30", "weekday"],
+    times: ["9:00", "10:30"],
     commitment: "Two Sundays a month",
     leaderId: "gannon",
     minAge: 15,
@@ -114,7 +116,7 @@ export const serveTeams: ServeTeam[] = [
   {
     id: "production",
     name: "Production",
-    area: "music",
+    area: "production",
     tagline: "Run sound, lights, slides, and the livestream.",
     does: ["Run lyrics and sermon slides", "Mix sound or run lights", "Operate a livestream camera"],
     roles: ["Slides", "Audio", "Lighting", "Livestream camera"],
@@ -125,66 +127,6 @@ export const serveTeams: ServeTeam[] = [
     minAge: 13,
     serving: 11,
     goal: 18,
-  },
-  {
-    id: "prayer",
-    name: "Prayer Team",
-    area: "care",
-    tagline: "Pray with people after services and over every request.",
-    does: ["Pray with people at the front after each service", "Pray through the week's prayer requests", "Keep everything shared with you confidential"],
-    roles: ["Prayer after service", "Weekly prayer list"],
-    when: "Sundays after service, or from home during the week",
-    times: ["9:00", "10:30", "weekday"],
-    commitment: "Weekly from home, or one Sunday a month",
-    leaderId: "lance",
-    minAge: 18,
-    serving: 12,
-    goal: 15,
-  },
-  {
-    id: "care",
-    name: "Care & Meals",
-    area: "care",
-    tagline: "Show up for families when life gets hard.",
-    does: ["Bring a meal after a new baby, surgery, or loss", "Help with funeral receptions", "Visit or call people who can't make it to church"],
-    roles: ["Meals", "Funeral receptions", "Visits and calls"],
-    when: "Weekdays, as needs come up",
-    times: ["weekday"],
-    commitment: "When you're available. We'll text when there's a need.",
-    leaderId: "pam",
-    minAge: 18,
-    serving: 26,
-    goal: 30,
-  },
-  {
-    id: "baptism",
-    name: "Baptism Team",
-    area: "care",
-    tagline: "Help make baptism Sundays unforgettable.",
-    does: ["Set out shirts and towels and help people get ready", "Guide families to their saved seats", "Take photos people will treasure"],
-    roles: ["Changing rooms", "Family host", "Photographer"],
-    when: "The second Sunday of each month",
-    times: ["9:00", "10:30"],
-    commitment: "Once a month",
-    leaderId: "lance",
-    minAge: 16,
-    serving: 6,
-    goal: 8,
-  },
-  {
-    id: "facilities",
-    name: "Facilities & Grounds",
-    area: "behind",
-    tagline: "Keep our building and grounds ready for people.",
-    does: ["Join a Saturday workday a few times a year", "Help with small repairs and setup", "Mow, trim, and plant in spring and summer"],
-    roles: ["Workdays", "Handyman", "Grounds"],
-    when: "Saturdays and occasional weekdays",
-    times: ["saturday", "weekday"],
-    commitment: "A few Saturdays a year",
-    leaderId: "garrett",
-    minAge: 13,
-    serving: 15,
-    goal: 20,
   },
 ];
 
@@ -197,8 +139,6 @@ export const serveTimeOptions: { id: ServeTime; label: string }[] = [
   { id: "9:00", label: "Sunday 9:00" },
   { id: "10:30", label: "Sunday 10:30" },
   { id: "wed", label: "Wednesday night" },
-  { id: "weekday", label: "Weekdays" },
-  { id: "saturday", label: "Saturdays" },
 ];
 export const serveTimeLabel = (id: ServeTime) => serveTimeOptions.find((t) => t.id === id)?.label ?? id;
 
@@ -220,12 +160,9 @@ const seeds: Seed[] = [
   { teamId: "welcome", firstName: "Grace", lastName: "Liu", roles: ["Greeter", "Connect Center"], times: ["10:30"], frequency: "monthly", status: "serving", days: 21 },
   { teamId: "coffee", firstName: "Maya", lastName: "Chen", roles: ["Barista"], times: ["9:00"], frequency: "monthly", status: "shadowing", days: 6, shadowFirst: true },
   { teamId: "students", firstName: "Marcus", lastName: "Odum", roles: ["Small group leader"], times: ["wed"], frequency: "weekly", status: "contacted", backgroundCheck: "sent", days: 9 },
-  { teamId: "worship", firstName: "Priya", lastName: "Natarajan", roles: ["Vocals"], times: ["10:30", "weekday"], frequency: "biweekly", status: "new", days: 1, experience: "Sang in choir through college." },
+  { teamId: "worship", firstName: "Priya", lastName: "Natarajan", roles: ["Vocals"], times: ["10:30"], frequency: "biweekly", status: "new", days: 1, experience: "Sang in choir through college." },
   { teamId: "kids-first", firstName: "Eli", lastName: "Washington", roles: ["Elementary small group"], times: ["9:00"], frequency: "biweekly", status: "shadowing", backgroundCheck: "cleared", days: 12 },
   { teamId: "production", firstName: "Caleb", lastName: "Fry", roles: ["Slides", "Livestream camera"], times: ["10:30"], frequency: "biweekly", status: "new", teen: true, days: 2 },
-  { teamId: "care", firstName: "Linda", lastName: "Morgan", roles: ["Meals", "Visits and calls"], times: ["weekday"], frequency: "events", status: "serving", days: 30 },
-  { teamId: "prayer", firstName: "Olivia", lastName: "Grant", roles: ["Weekly prayer list"], times: ["weekday"], frequency: "weekly", status: "new", days: 3 },
-  { teamId: "facilities", firstName: "Ben", lastName: "Carter", roles: ["Handyman"], times: ["saturday"], frequency: "events", status: "not-now", days: 18 },
 ];
 
 export function buildSeedServe(): ServeSignup[] {

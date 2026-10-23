@@ -5,7 +5,7 @@ import type { Assignment, ScheduleSettings, ServiceTime, Volunteer } from "./typ
 export const scheduledTeams: { id: string; name: string; positions: { name: string; spots: number }[] }[] = [
   {
     id: "kids-first",
-    name: "Kids First",
+    name: "Rolla First Kids",
     positions: [
       { name: "Nursery", spots: 2 },
       { name: "Preschool", spots: 2 },

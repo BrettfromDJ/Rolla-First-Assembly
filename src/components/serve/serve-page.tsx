@@ -23,7 +23,7 @@ const faqs = [
   { q: "How much time does it take?", a: "Most teams serve once or twice a month, and you'll still go to the other service. You choose how often when you sign up, and you can change it anytime." },
   { q: "Can I try it before I commit?", a: "Yes, please do. Every team lets you shadow someone for a Sunday first. No pressure to keep going if it's not a fit." },
   { q: "Why do some teams need a background check?", a: "Anyone serving with kids or students completes a free background check and a short training. It's one of the ways we keep every child safe." },
-  { q: "Can my teenager serve?", a: "Yes. Students 13 and up can serve on Welcome, Production, and Facilities, and help in Kids First alongside an adult. We'll check with a parent first." },
+  { q: "Can my teenager serve?", a: "Yes. Teens 13 and up can serve on the Welcome Team and Production, and help in Rolla First Kids alongside an adult. We'll check with a parent first." },
   { q: "What if I sign up for the wrong team?", a: "It happens. Tell your team leader and we'll help you find a better fit. Lots of people try a couple of teams before one clicks." },
 ];
 
@@ -209,7 +209,7 @@ function Chip({ on, onClick, children }: { on: boolean; onClick: () => void; chi
 }
 
 function TeamCard({ t, joined, onOpen }: { t: ServeTeam; joined: boolean; onOpen: () => void }) {
-  const leader = staffById[t.leaderId];
+  const leaders = [staffById[t.leaderId], ...(t.coLeaderId ? [staffById[t.coLeaderId]] : [])];
   return (
     <li>
       <button onClick={onOpen} className={cn("m-lift group flex h-full w-full flex-col justify-between gap-8 rounded-[28px] border-2 p-7 text-left transition hover:border-[#0285ff]", joined ? "border-[#0285ff]" : "border-[#dcd2c5]/80")}>
@@ -226,7 +226,7 @@ function TeamCard({ t, joined, onOpen }: { t: ServeTeam; joined: boolean; onOpen
           <p className="mt-3 text-[16px] leading-relaxed text-stone-600">{t.tagline}</p>
           <ul className="mt-5 space-y-2 text-[14px] text-stone-500">
             <li className="flex gap-2.5"><Clock className="mt-0.5 size-4 shrink-0 text-[#0285ff]" />{t.when}</li>
-            <li className="flex gap-2.5"><BadgeCheck className="mt-0.5 size-4 shrink-0 text-[#0285ff]" />{t.commitment}</li>
+            {t.commitment && <li className="flex gap-2.5"><BadgeCheck className="mt-0.5 size-4 shrink-0 text-[#0285ff]" />{t.commitment}</li>}
           </ul>
           {(t.backgroundCheck || t.audition || (t.minAge ?? 18) < 18) && (
             <div className="mt-5 flex flex-wrap gap-2 text-[12px]">
@@ -238,9 +238,13 @@ function TeamCard({ t, joined, onOpen }: { t: ServeTeam; joined: boolean; onOpen
         </div>
         <div className="flex items-center justify-between gap-4">
           <span className="flex min-w-0 items-center gap-2.5 text-[14px] text-stone-500">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={leader.photo} alt="" width={32} height={32} className="size-8 shrink-0 rounded-full object-cover object-top" />
-            <span className="truncate">Led by {leader.name}</span>
+            <span className="flex shrink-0 -space-x-2">
+              {leaders.map((l) => (
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img key={l.id} src={l.photo} alt="" width={32} height={32} className="size-8 rounded-full object-cover object-top ring-2 ring-ink" />
+              ))}
+            </span>
+            <span className="truncate">Led by {leaders.map((l) => l.name).join(" & ")}</span>
           </span>
           <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-[#0285ff]">
             {/* eslint-disable-next-line @next/next/no-img-element */}

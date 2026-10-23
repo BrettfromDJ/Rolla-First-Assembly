@@ -6,7 +6,7 @@ import { buildSeedEvents, slugify } from "./event-builder";
 import { buildSeedHouseholds, buildSeedVisitors } from "./seed";
 import { buildSeedAttendance } from "./attendance";
 import { buildSeedPrayers } from "./prayer";
-import { buildSeedServe } from "./serve";
+import { buildSeedServe, teamById } from "./serve";
 import { autoFill, buildSeedSchedule, defaultScheduleSettings } from "./schedule";
 import { uid } from "./utils";
 import type {
@@ -269,7 +269,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
           prayers: parsed.prayers ?? buildSeedPrayers(),
           prayed: parsed.prayed ?? [],
           sermonNotes: parsed.sermonNotes ?? {},
-          serve: parsed.serve ?? buildSeedServe(),
+          // Sign-ups for teams that have since been taken off the Serve page are dropped.
+          serve: (parsed.serve ?? buildSeedServe()).filter((x) => teamById[x.teamId]),
           ...(parsed.events ? { events: parsed.events, responses: parsed.responses ?? [] } : seedEvents()),
           hiddenOfferings: parsed.hiddenOfferings ?? [],
           schedule: parsed.schedule?.volunteers ? { ...parsed.schedule, settings: { ...defaultScheduleSettings, ...parsed.schedule.settings } } : { ...buildSeedSchedule(), settings: defaultScheduleSettings },
