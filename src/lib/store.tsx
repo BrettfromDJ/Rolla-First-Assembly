@@ -199,7 +199,7 @@ function profileToVisitor(p: Profile, o: VisitorOverlay): Visitor | null {
   if (p.kids) {
     const names = p.kids.kids.map((k) => k.firstName).join(" & ");
     const d = new Date(p.kids.date).toLocaleDateString("en-US", { month: "short", day: "numeric" });
-    activity.push({ id: "you_kids", kind: "kids", label: `Pre-registered ${names} for Kids First (${d}, ${p.kids.service})`, at: p.kids.createdAt });
+    activity.push({ id: "you_kids", kind: "kids", label: `Pre-registered ${names} for Rolla First Kids (${d}, ${p.kids.service})`, at: p.kids.createdAt });
   }
   if (p.students) {
     const names = p.students.students.map((k) => k.firstName).join(" & ");

@@ -28,7 +28,7 @@ const serviceStart = (iso: string, service: ServiceTime) => {
   return d.toISOString();
 };
 
-/** Parent pre-registration for Kids First: collects what Planning Center Check-Ins needs to create the household. */
+/** Parent pre-registration for Rolla First Kids: collects what Planning Center Check-Ins needs to create the household. */
 export function KidsSheet({ open, onOpenChange }: { open: boolean; onOpenChange: (o: boolean) => void }) {
   const { profile, saveKids } = useStore();
   const sundays = useMemo(() => [0, 1, 2].map((w) => nextDow(0, 9, 0, w)), []);
@@ -91,7 +91,7 @@ export function KidsSheet({ open, onOpenChange }: { open: boolean; onOpenChange:
       kids.forEach((k, i) => {
         if (!k.firstName.trim()) e[`k${i}.firstName`] = "Add a first name.";
         if (!k.birthdate) e[`k${i}.birthdate`] = "Add a birthdate.";
-        else if (k.birthdate > todayYmd() || k.birthdate < tooOld()) e[`k${i}.birthdate`] = "Kids First is for birth through 5th grade. Check the date.";
+        else if (k.birthdate > todayYmd() || k.birthdate < tooOld()) e[`k${i}.birthdate`] = "Rolla First Kids is for birth through 5th grade. Check the date.";
         if (!k.gender) e[`k${i}.gender`] = "Pick one.";
         if (!k.grade) e[`k${i}.grade`] = "Pick a grade.";
       });
@@ -317,7 +317,7 @@ export function KidsSheet({ open, onOpenChange }: { open: boolean; onOpenChange:
 
             {step === 3 && (
               <div className="space-y-7">
-                <Heading title="When's your first Sunday?" body="Kids First runs during both services. Come 10 minutes early for check-in." />
+                <Heading title="When's your first Sunday?" body="Rolla First Kids runs during both services. Come 10 minutes early for check-in." />
                 <div className="no-scrollbar -mx-1 flex gap-2 overflow-x-auto overflow-y-hidden px-1 py-1">
                   {sundays.map((s, i) => {
                     const on = new Date(date).toDateString() === s.toDateString();
@@ -394,7 +394,7 @@ function Done({ kids, date, service, onDone }: { kids: KidInfo[]; date: string; 
           variant="secondary"
           size="lg"
           onClick={() => {
-            downloadIcs({ title: "Sunday at Rolla First (Kids First)", start: date, durationMin: 80, location: `${church.address}, ${church.city}`, description: "Check in at the Kids Welcome desk downstairs 10 minutes early." });
+            downloadIcs({ title: "Sunday at Rolla First Kids", start: date, durationMin: 80, location: `${church.address}, ${church.city}`, description: "Check in at the Kids Welcome desk downstairs 10 minutes early." });
             toast("Added to your calendar");
           }}
         >

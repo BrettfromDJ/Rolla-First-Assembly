@@ -36,7 +36,7 @@ export const staff: Person[] = [
   { id: "pam", name: "Pam Bales", role: "Children's Discipleship Pastor", photo: t("pam-bales.jpg"), email: "pastorpam@rollafirst.church" },
   { id: "amber", name: "Amber Eckelkamp", role: "Administrative Assistant", photo: t("amber-eckelkamp.jpg"), email: "office@rollafirst.church" },
   { id: "brice", name: "Brice Adams", role: "Belle Campus Pastor", photo: t("brice-adams.jpg"), email: "pastorbrice@rollafirst.church" },
-  { id: "debbie", name: "Debbie Skyles", role: "Kid's First Director", photo: t("debbie-skyles.jpg"), email: "debbie@rollafirst.church" },
+  { id: "debbie", name: "Debbie Skyles", role: "Rolla First Kids Director", photo: t("debbie-skyles.jpg"), email: "debbie@rollafirst.church" },
 ];
 
 export const staffById = Object.fromEntries(staff.map((s) => [s.id, s])) as Record<string, Person>;
@@ -305,7 +305,7 @@ export function buildOfferings(): Offering[] {
     /* Connect my family */
     {
       id: "kids-ministry",
-      title: "Explore Kids First",
+      title: "Explore Rolla First Kids",
       tag: "Every Sunday",
       kind: "event",
       area: "events",
@@ -606,7 +606,7 @@ export function getOffering(id: string): Offering | undefined {
 
 export const faqs = [
   { q: "What should I wear?", a: "Whatever you're comfortable in. You'll see jeans, sneakers, and the occasional Sunday best. Nobody's checking." },
-  { q: "What about my kids?", a: "Kids First runs during both services for birth through 5th grade. Check-in takes about two minutes, and every leader is background-checked and trained." },
+  { q: "What about my kids?", a: "Rolla First Kids runs during both services for birth through 5th grade. Check-in takes about two minutes, and every leader is background-checked and trained." },
   { q: "Will I be singled out?", a: "Never. We won't ask you to stand up, raise your hand, or introduce yourself. Visit at your own pace." },
   { q: "Do I need to give money?", a: "No. Giving is for people who call Rolla First home. Guests are our guests." },
   { q: "I'm not sure what I believe. Is that okay?", a: "Absolutely. Lots of people here are asking questions. You're welcome exactly as you are." },
@@ -642,7 +642,7 @@ export function baptismDates(count = 3, from = new Date()) {
   return out;
 }
 
-/* ---------- Kids First ---------- */
+/* ---------- Rolla First Kids ---------- */
 
 export const kidsGroups = [
   { id: "nursery", label: "Nursery", ages: "Birth – 2", room: "Nursery", blurb: "Rocking chairs, soft toys, and very patient grown-ups. We'll follow your routine." },

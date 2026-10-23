@@ -196,7 +196,7 @@ export function VisitPage() {
           <div className="mx-auto grid max-w-7xl gap-12 px-5 py-24 md:px-8 md:py-32 lg:grid-cols-2 lg:gap-20">
             <Reveal>
               <div className="relative">
-                <Photo src="/home/kids-worship.jpg" alt="Kids leading worship on stage with hands raised during Kids First" tone="clay" className="aspect-[4/5] rounded-[32px] sm:aspect-[3/2] lg:aspect-[4/5]" imgClassName="object-[50%_55%]" />
+                <Photo src="/home/kids-worship.jpg" alt="Kids leading worship on stage with hands raised during Rolla First Kids" tone="clay" className="aspect-[4/5] rounded-[32px] sm:aspect-[3/2] lg:aspect-[4/5]" imgClassName="object-[50%_55%]" />
                 <div className="absolute bottom-5 left-5 right-5 flex items-center gap-3 rounded-2xl bg-white/95 p-4 shadow-soft backdrop-blur sm:right-auto">
                   <Avatar name={staffById.micah.name} src={staffById.micah.photo} />
                   <div className="text-sm">
@@ -208,7 +208,7 @@ export function VisitPage() {
             </Reveal>
             <div>
               <Reveal>
-                <p className="text-[13px] font-medium uppercase tracking-[0.16em] text-forest-500">Kids First</p>
+                <p className="text-[13px] font-medium uppercase tracking-[0.16em] text-forest-500">Rolla First Kids</p>
                 <h2 className="mt-5 font-display text-5xl leading-[1] tracking-[-0.02em] text-stone-900 md:text-6xl">Kids are the best part of Sunday</h2>
                 <p className="mt-6 max-w-md text-[17px] leading-relaxed text-stone-600">
                   During both services, kids from birth through 5th grade have their own space to play, learn, and be known by name. Students in 6th–12th meet Wednesday nights in the youth room upstairs.
@@ -247,7 +247,7 @@ export function VisitPage() {
                   <span className="font-medium text-stone-900">Safety first, always.</span> Every volunteer is background-checked, trained, and serves in pairs. Kids&apos; rooms have secure entry.
                 </p>
                 <Link href="/kids" className="mt-6 inline-flex items-center gap-1.5 text-[15px] font-medium text-forest-500 hover:underline">
-                  Everything about Kids First <ArrowRight className="size-4" />
+                  Everything about Rolla First Kids <ArrowRight className="size-4" />
                 </Link>
               </Reveal>
             </div>

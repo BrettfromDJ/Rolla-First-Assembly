@@ -55,7 +55,7 @@ export interface Profile {
 }
 
 /**
- * Kids First pre-registration. Fields mirror what Planning Center People / Check-Ins
+ * Rolla First Kids pre-registration. Fields mirror what Planning Center People / Check-Ins
  * stores, so a family can later be sent there as a household with a person per member.
  */
 export interface KidInfo {
@@ -94,7 +94,7 @@ export interface KidsRegistration {
   createdAt: string;
 }
 
-/** A parent signing up 6th–12th graders for Wednesday nights (mirrors Planning Center fields like Kids First). */
+/** A parent signing up 6th–12th graders for Wednesday nights (mirrors Planning Center fields like Rolla First Kids). */
 export interface StudentInfo {
   firstName: string;
   lastName: string;

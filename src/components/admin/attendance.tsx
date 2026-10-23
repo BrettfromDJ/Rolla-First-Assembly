@@ -673,7 +673,7 @@ function AttendanceSheet({ open, onOpenChange, date: initialDate, service: initi
         <div>
           <h2 className="text-xl font-semibold tracking-[-0.01em] text-stone-900">{existing ? "Update attendance" : "Enter attendance"}</h2>
           <p className="mt-1 text-sm text-stone-500">
-            {existing ? `Last entered by ${staffById[existing.enteredBy]?.name ?? existing.enteredBy}, ${timeAgo(existing.updatedAt)}.` : "From the clicker counts and the Kids First check-in sheet."}
+            {existing ? `Last entered by ${staffById[existing.enteredBy]?.name ?? existing.enteredBy}, ${timeAgo(existing.updatedAt)}.` : "From the clicker counts and the Rolla First Kids check-in sheet."}
           </p>
         </div>
 

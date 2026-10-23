@@ -40,7 +40,7 @@ export function KidsPage() {
       <main>
         {/* ---------- Hero ---------- */}
         <section className="mx-auto max-w-[1440px] px-5 pb-10 pt-14 md:px-[60px] md:pt-[63px]">
-          <p className={cn(mori, "m-load-rise text-[16px] uppercase leading-[1.1] tracking-[-0.03em] text-[#0285ff]")}>Kids First</p>
+          <p className={cn(mori, "m-load-rise text-[16px] uppercase leading-[1.1] tracking-[-0.03em] text-[#0285ff]")}>Rolla First Kids</p>
           <h1 className={cn(mori, "m-title mt-4 max-w-[1100px] text-[clamp(52px,6.4vw,82px)] leading-[0.92] tracking-[-0.05em]")}>
             Kids are the best part of <Ed>Sunday</Ed>
           </h1>
@@ -51,7 +51,7 @@ export function KidsPage() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/home/kids-worship.jpg"
-              alt="Kids leading worship on stage with hands raised during Kids First"
+              alt="Kids leading worship on stage with hands raised during Rolla First Kids"
               width={2000}
               height={1333}
               className="aspect-[4/3] h-full w-full rounded-[28px] object-cover object-[50%_55%] lg:aspect-auto"
@@ -88,7 +88,7 @@ export function KidsPage() {
                       </button>
                       <button
                         onClick={() => {
-                          downloadIcs({ title: "Kids First at Rolla First", start: reg.date, durationMin: 85, location: `${church.address}, ${church.city}`, description: "Arrive 15 minutes early and stop by the blue Kids Welcome desk downstairs." });
+                          downloadIcs({ title: "Rolla First Kids", start: reg.date, durationMin: 85, location: `${church.address}, ${church.city}`, description: "Arrive 15 minutes early and stop by the blue Kids Welcome desk downstairs." });
                           toast("Added to your calendar");
                         }}
                         className={cn(mori, "inline-flex h-11 items-center gap-2 rounded-[80px] border-2 border-black/30 px-5 text-[14px] uppercase tracking-[-0.04em] transition hover:border-black")}
@@ -301,7 +301,7 @@ export function KidsPage() {
                 </div>
               </div>
               <p className="mt-4 max-w-xs text-[15px] text-stone-600">Anything else on your mind? Pastor Micah would love to hear from you.</p>
-              <a href={`mailto:${micah.email}?subject=${encodeURIComponent("A question about Kids First")}`} className={cn(mori, "mt-6 inline-flex h-[52px] items-center gap-2 rounded-[80px] border-[3px] border-[#0285ff] px-6 text-[15px] uppercase tracking-[-0.05em] text-[#0285ff] transition hover:bg-[#0285ff] hover:text-black")}>
+              <a href={`mailto:${micah.email}?subject=${encodeURIComponent("A question about Rolla First Kids")}`} className={cn(mori, "mt-6 inline-flex h-[52px] items-center gap-2 rounded-[80px] border-[3px] border-[#0285ff] px-6 text-[15px] uppercase tracking-[-0.05em] text-[#0285ff] transition hover:bg-[#0285ff] hover:text-black")}>
                 <Mail className="size-4" /> Email Pastor Micah
               </a>
             </Rise>

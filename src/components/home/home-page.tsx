@@ -216,7 +216,7 @@ export function HomePage() {
                 <PlanRow
                   href="/kids"
                   date={profile.kids.date}
-                  title={`Kids First · ${profile.kids.kids.map((k) => k.firstName).join(" & ")}`}
+                  title={`Rolla First Kids · ${profile.kids.kids.map((k) => k.firstName).join(" & ")}`}
                   meta={`${profile.kids.service} AM · Kids Welcome desk, downstairs`}
                   status="Pre-registered"
                 />

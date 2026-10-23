@@ -18,7 +18,7 @@ export function ageLabel(ymd: string) {
   return months < 24 ? `${Math.max(0, months)} mo` : `${Math.floor(months / 12)} yrs`;
 }
 
-/** Kids First roster as a CSV, in the shape Planning Center check-ins imports. */
+/** Rolla First Kids roster as a CSV, in the shape Planning Center check-ins imports. */
 export function downloadKidsRoster(people: Visitor[], group: KidsGroup | "") {
   const rows = people.flatMap((v) => v.kids?.kids.filter((k) => !group || groupOf(k) === group).map((k) => ({ v, k })) ?? []);
   const head = ["Child first name", "Last name", "Goes by", "Birthdate", "Age", "Gender", "Grade", "Room", "School", "Allergies / medical notes", "Parent", "Parent mobile", "Parent email", "Second guardian", "Second guardian phone", "Also allowed to pick up", "Emergency contact", "Member", "First Sunday", "Service"];

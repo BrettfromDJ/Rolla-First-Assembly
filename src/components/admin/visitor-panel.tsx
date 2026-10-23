@@ -255,7 +255,7 @@ function PanelBody({ v, onOpen }: { v: Visitor; onOpen?: (id: string) => void })
               {v.kids && (
                 <li className="flex items-center gap-3 rounded-2xl bg-stone-50 px-4 py-3 text-sm">
                   <Baby className="size-4 text-forest-500" />
-                  <span className="flex-1 text-stone-800">Kids First · first Sunday</span>
+                  <span className="flex-1 text-stone-800">Rolla First Kids · first Sunday</span>
                   <span className="text-stone-500">{formatShortDay(v.kids.date)} · {v.kids.service}</span>
                 </li>
               )}

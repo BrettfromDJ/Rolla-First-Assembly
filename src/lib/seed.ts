@@ -112,7 +112,7 @@ function v(input: {
       createdAt: daysAgo(k.daysAgo),
     };
     const d = date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
-    input.activity.push({ kind: "kids", label: `Pre-registered ${list.map((x) => x.firstName).join(" & ")} for Kids First (${d}, ${k.service})`, daysAgo: k.daysAgo, hour: 19 });
+    input.activity.push({ kind: "kids", label: `Pre-registered ${list.map((x) => x.firstName).join(" & ")} for Rolla First Kids (${d}, ${k.service})`, daysAgo: k.daysAgo, hour: 19 });
   }
   let students: StudentsRegistration | null = null;
   if (input.students) {
