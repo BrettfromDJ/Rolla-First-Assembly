@@ -36,7 +36,7 @@ export const staff: Person[] = [
   { id: "pam", name: "Pam Bales", role: "Children's Discipleship Pastor", photo: t("pam-bales.jpg"), email: "pastorpam@rollafirst.church" },
   { id: "amber", name: "Amber Eckelkamp", role: "Administrative Assistant", photo: t("amber-eckelkamp.jpg"), email: "office@rollafirst.church" },
   { id: "brice", name: "Brice Adams", role: "Belle Campus Pastor", photo: t("brice-adams.jpg"), email: "pastorbrice@rollafirst.church" },
-  { id: "debbie", name: "Debbie Skyles", role: "Rolla First Kids Director", photo: t("debbie-skyles.jpg"), email: "debbie@rollafirst.church" },
+  { id: "debbie", name: "Debbie Cartwright", role: "Rolla First Kids Director", photo: t("debbie-cartwright.jpg"), email: "debbie@rollafirst.church" },
 ];
 
 export const staffById = Object.fromEntries(staff.map((s) => [s.id, s])) as Record<string, Person>;
