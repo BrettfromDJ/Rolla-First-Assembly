@@ -4,8 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { motion } from "motion/react";
-import { ArrowRight, CalendarHeart, Footprints, MessageCircle, CalendarCheck, Clock, Music, MessageSquareQuote, Navigation, Shirt, ShieldCheck, Smile, Tag, Smartphone, Pencil, CalendarPlus } from "lucide-react";
-import { toast } from "sonner";
+import { ArrowRight, CalendarHeart, Footprints, MessageCircle, CalendarCheck, Clock, Music, MessageSquareQuote, Navigation, Shirt, ShieldCheck, Smile, Tag, Smartphone, Pencil } from "lucide-react";
 import { SiteHeader } from "@/components/site/header";
 import { SiteFooter } from "@/components/site/footer";
 import { Photo } from "@/components/ui/photo";
@@ -19,7 +18,7 @@ import { ContactSheet } from "@/components/site/contact-sheet";
 import { img } from "@/lib/images";
 import { church, staffById } from "@/lib/data";
 import { useStore } from "@/lib/store";
-import { downloadIcs, formatDay, nextDow } from "@/lib/utils";
+import { formatDay } from "@/lib/utils";
 
 const sections = [
   { id: "service", label: "Service times" },
@@ -119,15 +118,6 @@ export function VisitPage() {
                     <a href={church.mapsUrl} target="_blank" rel="noreferrer">
                       <Navigation /> Get directions
                     </a>
-                  </Button>
-                  <Button
-                    variant="outlineLight"
-                    onClick={() => {
-                      downloadIcs({ title: "Sunday at Rolla First", start: nextDow(0, 10, 30).toISOString(), durationMin: 70, location: `${church.address}, ${church.city}`, description: "Services at 9:00 and 10:30. Look for the welcome tent out front." });
-                      toast("Calendar invite downloaded", { description: "This Sunday at 10:30 AM." });
-                    }}
-                  >
-                    <CalendarPlus /> Add to calendar
                   </Button>
                 </div>
               </div>

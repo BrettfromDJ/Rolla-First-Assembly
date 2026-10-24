@@ -1,16 +1,16 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { ArrowUpRight, CalendarPlus, Droplets, Mail, Pencil, Shirt, Users, X } from "lucide-react";
+import { ArrowUpRight, Droplets, Mail, Pencil, Shirt, Users, X } from "lucide-react";
 import { toast } from "sonner";
 import { SiteHeader } from "@/components/site/header";
 import { SiteFooter } from "@/components/site/footer";
 import { RevealGroup, Rise } from "@/components/church/motion";
 import { Faq } from "@/components/visit/new-here";
 import { BaptismSheet } from "./register-sheet";
-import { baptism, baptismDates, church, staffById } from "@/lib/data";
+import { baptism, baptismDates, staffById } from "@/lib/data";
 import { useStore } from "@/lib/store";
-import { cn, downloadIcs, formatDay } from "@/lib/utils";
+import { cn, formatDay } from "@/lib/utils";
 
 const mori = "font-mori font-semibold";
 const Ed = ({ children }: { children: React.ReactNode }) => <span className="font-editorial font-normal italic tracking-[-0.03em]">{children}</span>;
@@ -85,15 +85,6 @@ export function BaptismPage() {
                     <div className="mt-5 flex flex-wrap gap-2">
                       <button onClick={() => open(reg.date)} className={cn(mori, "inline-flex h-11 items-center gap-2 rounded-[80px] bg-[#dcd2c5] px-5 text-[14px] uppercase tracking-[-0.04em] transition hover:bg-[#f5f0e9]")}>
                         <Pencil className="size-4" /> Edit
-                      </button>
-                      <button
-                        onClick={() => {
-                          downloadIcs({ title: "Baptism at Rolla First", start: reg.date, durationMin: 70, location: `${church.address}, ${church.city}`, description: "Arrive 30 minutes early. Bring a change of clothes." });
-                          toast("Baptism added to your calendar");
-                        }}
-                        className={cn(mori, "inline-flex h-11 items-center gap-2 rounded-[80px] border-2 border-black/30 px-5 text-[14px] uppercase tracking-[-0.04em] transition hover:border-black")}
-                      >
-                        <CalendarPlus className="size-4" /> Calendar
                       </button>
                       <button
                         onClick={() => {

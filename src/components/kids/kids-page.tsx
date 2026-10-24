@@ -2,16 +2,16 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { ArrowUpRight, Baby, BadgeCheck, CalendarPlus, Droplets, HeartHandshake, Mail, MapPin, Pencil, ShieldCheck, Smartphone, Tag, X } from "lucide-react";
+import { ArrowUpRight, Baby, BadgeCheck, Droplets, HeartHandshake, Mail, MapPin, Pencil, ShieldCheck, Smartphone, Tag, X } from "lucide-react";
 import { toast } from "sonner";
 import { SiteHeader } from "@/components/site/header";
 import { SiteFooter } from "@/components/site/footer";
 import { RevealGroup, Rise } from "@/components/church/motion";
 import { Faq } from "@/components/visit/new-here";
 import { KidsSheet } from "./register-sheet";
-import { church, getOffering, kidGradeLabel, kidsGroups, staffById } from "@/lib/data";
+import { getOffering, kidGradeLabel, kidsGroups, staffById } from "@/lib/data";
 import { useStore } from "@/lib/store";
-import { cn, downloadIcs, formatDay, formatTime } from "@/lib/utils";
+import { cn, formatDay, formatTime } from "@/lib/utils";
 
 const mori = "font-mori font-semibold";
 const Ed = ({ children }: { children: React.ReactNode }) => <span className="font-editorial font-normal italic tracking-[-0.03em]">{children}</span>;
@@ -105,15 +105,6 @@ export function KidsPage() {
                     <div className="mt-5 flex flex-wrap gap-2">
                       <button onClick={() => setSheet(true)} className={cn(mori, "inline-flex h-11 items-center gap-2 rounded-[80px] bg-[#dcd2c5] px-5 text-[14px] uppercase tracking-[-0.04em] transition hover:bg-[#f5f0e9]")}>
                         <Pencil className="size-4" /> Edit
-                      </button>
-                      <button
-                        onClick={() => {
-                          downloadIcs({ title: "Rolla First Kids", start: reg.date, durationMin: 85, location: `${church.address}, ${church.city}`, description: "Arrive 15 minutes early. From the foyer, follow the Rolla First Kids sign on the staircase wall down to check-in." });
-                          toast("Added to your calendar");
-                        }}
-                        className={cn(mori, "inline-flex h-11 items-center gap-2 rounded-[80px] border-2 border-black/30 px-5 text-[14px] uppercase tracking-[-0.04em] transition hover:border-black")}
-                      >
-                        <CalendarPlus className="size-4" /> Calendar
                       </button>
                       <button
                         onClick={() => {

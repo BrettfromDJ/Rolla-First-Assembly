@@ -2,16 +2,16 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { ArrowUpRight, BadgeCheck, CalendarPlus, Droplets, HandHeart, Mail, MapPin, Pencil, ShieldCheck, Users, X } from "lucide-react";
+import { ArrowUpRight, BadgeCheck, Droplets, HandHeart, Mail, MapPin, Pencil, ShieldCheck, Users, X } from "lucide-react";
 import { toast } from "sonner";
 import { SiteHeader } from "@/components/site/header";
 import { SiteFooter } from "@/components/site/footer";
 import { RevealGroup, Rise } from "@/components/church/motion";
 import { Faq } from "@/components/visit/new-here";
-import { church, churchLinks, staffById } from "@/lib/data";
+import { churchLinks, staffById } from "@/lib/data";
 import { gradeLabel, studentEvents, studentGroups, studentsFaqs, studentsInfo, wednesdayFlow } from "@/lib/students";
 import { useStore } from "@/lib/store";
-import { cn, downloadIcs, formatDay, formatTime } from "@/lib/utils";
+import { cn, formatDay, formatTime } from "@/lib/utils";
 import { StudentsSheet } from "./signup-sheet";
 
 const mori = "font-mori font-semibold";
@@ -66,15 +66,6 @@ export function StudentsPage() {
                     <div className="mt-5 flex flex-wrap gap-2">
                       <button onClick={() => setSheet(true)} className={cn(mori, "inline-flex h-11 items-center gap-2 rounded-[80px] bg-[#dcd2c5] px-5 text-[14px] uppercase tracking-[-0.04em] transition hover:bg-[#f5f0e9]")}>
                         <Pencil className="size-4" /> Edit
-                      </button>
-                      <button
-                        onClick={() => {
-                          downloadIcs({ title: "Wednesday Youth at Rolla First", start: reg.date, durationMin: 90, location: `${church.address}, ${church.city}`, description: "Drop off at the Gym doors. The youth room is upstairs. Pickup at 8:00 PM." });
-                          toast("Added to your calendar");
-                        }}
-                        className={cn(mori, "inline-flex h-11 items-center gap-2 rounded-[80px] border-2 border-black/30 px-5 text-[14px] uppercase tracking-[-0.04em] transition hover:border-black")}
-                      >
-                        <CalendarPlus className="size-4" /> Calendar
                       </button>
                       <button
                         onClick={() => {
@@ -228,15 +219,6 @@ export function StudentsPage() {
                   </div>
                   <div className="flex items-center justify-between gap-4">
                     <span className="inline-flex items-center gap-1.5 text-[14px] text-stone-500"><MapPin className="size-4" /> {e.place}</span>
-                    <button
-                      onClick={() => {
-                        downloadIcs({ title: `${e.title} (Rolla First Youth)`, start: e.date, durationMin: 120, location: e.place, description: e.body });
-                        toast("Added to your calendar", { description: e.title });
-                      }}
-                      className={cn(mori, "inline-flex h-11 shrink-0 items-center gap-2 rounded-[80px] border-2 border-[#dcd2c5]/40 px-4 text-[13px] uppercase tracking-[-0.04em] transition hover:border-[#dcd2c5]")}
-                    >
-                      <CalendarPlus className="size-4" /> Add
-                    </button>
                   </div>
                 </article>
               </li>

@@ -3,16 +3,15 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { ArrowLeft, ArrowRight, CalendarPlus, Check, Minus, Plus } from "lucide-react";
-import { toast } from "sonner";
+import { ArrowLeft, ArrowRight, Check, Minus, Plus } from "lucide-react";
 import { Sheet } from "@/components/ui/sheet";
 import { Checkbox, Field, Textarea } from "@/components/ui/field";
 import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/ui/avatar";
-import { baptism, baptismDates, church, staffById } from "@/lib/data";
+import { baptism, baptismDates, staffById } from "@/lib/data";
 import { useStore } from "@/lib/store";
 import type { BaptismAge, ServiceTime } from "@/lib/types";
-import { cn, downloadIcs, formatDay, isEmail, isPhone } from "@/lib/utils";
+import { cn, formatDay, isEmail, isPhone } from "@/lib/utils";
 
 type Step = 0 | 1 | 2 | 3;
 
@@ -259,7 +258,6 @@ function Heading({ title, body }: { title: string; body: string }) {
 
 function Confirmation({ name, who, date, service, child, onDone }: { name: string; who: string; date: string; service: ServiceTime; child: boolean; onDone: () => void }) {
   const pastor = child ? staffById.micah : staffById[baptism.hostId];
-  const where = `${church.address}, ${church.city}`;
   return (
     <div className="text-center">
       <motion.div initial={{ scale: 0.6, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ type: "spring", damping: 14, stiffness: 200, delay: 0.1 }} className="mx-auto flex size-16 items-center justify-center rounded-full bg-forest-700 text-ink">
@@ -289,16 +287,6 @@ function Confirmation({ name, who, date, service, child, onDone }: { name: strin
       </div>
 
       <div className="mt-6">
-        <Button
-          className="w-full"
-          variant="secondary"
-          onClick={() => {
-            downloadIcs({ title: child ? `${name}'s Baptism at Rolla First` : "My Baptism at Rolla First", start: date, durationMin: 70, location: where, description: "Arrive 30 minutes early. Bring a change of clothes." });
-            toast("Baptism added to your calendar");
-          }}
-        >
-          <CalendarPlus /> Add to calendar
-        </Button>
       </div>
       <Button asChild size="lg" className="mt-3 w-full" onClick={onDone}>
         <Link href="/me">Go to My Rolla First <ArrowRight /></Link>

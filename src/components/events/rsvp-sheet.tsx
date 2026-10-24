@@ -3,8 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { motion } from "motion/react";
-import { ArrowRight, CalendarPlus, Check, Minus, Pencil, Plus } from "lucide-react";
-import { toast } from "sonner";
+import { ArrowRight, Check, Minus, Pencil, Plus } from "lucide-react";
 import { Sheet } from "@/components/ui/sheet";
 import { Field, Textarea } from "@/components/ui/field";
 import { Button } from "@/components/ui/button";
@@ -12,7 +11,7 @@ import { Avatar } from "@/components/ui/avatar";
 import { headcount } from "@/lib/event-builder";
 import { useStore } from "@/lib/store";
 import type { Offering, SubItem } from "@/lib/types";
-import { downloadIcs, formatDay, formatTime, isEmail, isPhone } from "@/lib/utils";
+import { formatDay, formatTime, isEmail, isPhone } from "@/lib/utils";
 
 export function RsvpSheet({
   open,
@@ -51,7 +50,6 @@ export function RsvpSheet({
 
   const title = item?.title ?? offering.title;
   const date = item?.date ?? (item ? undefined : offering.date);
-  const duration = item?.durationMin ?? offering.durationMin;
   const location = item?.location ?? offering.location;
   const isQuestion = offering.actionKind === "question";
   // Staff-built events can take guests, ask one question, and cap how many people come.
@@ -103,22 +101,9 @@ export function RsvpSheet({
             </div>
 
             <div className="mt-6 grid gap-3 sm:grid-cols-2">
-              {date ? (
-                <Button
-                  variant="secondary"
-                  size="lg"
-                  onClick={() => {
-                    downloadIcs({ title, start: date, durationMin: duration, location, description: `${offering.summary}\n\nRolla First · ${location}` });
-                    toast("Calendar invite downloaded", { description: `${title} · ${formatDay(date)}` });
-                  }}
-                >
-                  <CalendarPlus /> Add to calendar
-                </Button>
-              ) : (
-                <Button variant="secondary" size="lg" onClick={() => onOpenChange(false)}>
-                  Keep exploring
-                </Button>
-              )}
+              <Button variant="secondary" size="lg" onClick={() => onOpenChange(false)}>
+                Keep exploring
+              </Button>
               <Button asChild size="lg">
                 <Link href="/me">
                   Go to My Rolla First <ArrowRight />

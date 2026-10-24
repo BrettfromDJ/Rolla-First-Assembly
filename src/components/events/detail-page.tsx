@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import { motion } from "motion/react";
-import { ArrowLeft, ArrowRight, CalendarDays, CalendarPlus, Check, Clock, MapPin, Repeat, Users, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, CalendarDays, Check, Clock, MapPin, Repeat, Users, X } from "lucide-react";
 import { toast } from "sonner";
 import { SiteHeader } from "@/components/site/header";
 import { SiteFooter } from "@/components/site/footer";
@@ -16,7 +16,7 @@ import { OfferingRow, toneFor } from "./offering-cards";
 import { getOfferings } from "@/lib/data";
 import { useStore } from "@/lib/store";
 import type { Offering, SubItem } from "@/lib/types";
-import { cn, downloadIcs, formatDay, formatShortDay, formatTime } from "@/lib/utils";
+import { cn, formatDay, formatShortDay, formatTime } from "@/lib/utils";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -130,11 +130,6 @@ export function DetailPage({ offering: o }: { offering: Offering }) {
                       <Check className="size-5" />
                       <span className="font-medium">{o.actionKind === "question" ? "Question sent" : o.actionKind === "join" ? "Request sent" : "You're going!"}</span>
                     </div>
-                    {o.date && (
-                      <Button variant="secondary" className="w-full" onClick={() => { downloadIcs({ title: o.title, start: o.date!, durationMin: o.durationMin, location: o.location, description: o.summary }); toast("Calendar invite downloaded"); }}>
-                        <CalendarPlus /> Add to calendar
-                      </Button>
-                    )}
                     {o.actionKind === "question" ? (
                       <Button variant="ghost" className="w-full" onClick={() => open()}>Ask another question</Button>
                     ) : (

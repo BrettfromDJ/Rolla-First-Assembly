@@ -3,17 +3,16 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { ArrowLeft, ArrowRight, CalendarPlus, Check, Plus, Trash2 } from "lucide-react";
-import { toast } from "sonner";
+import { ArrowLeft, ArrowRight, Check, Plus, Trash2 } from "lucide-react";
 import { Sheet } from "@/components/ui/sheet";
 import { Checkbox, Field, Textarea } from "@/components/ui/field";
 import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/ui/avatar";
-import { church, staffById } from "@/lib/data";
+import { staffById } from "@/lib/data";
 import { gradeLabel, studentGrades, studentsInfo } from "@/lib/students";
 import { useStore } from "@/lib/store";
 import type { Guardian, StudentInfo } from "@/lib/types";
-import { cn, downloadIcs, formatDay, isEmail, isPhone, nextDow } from "@/lib/utils";
+import { cn, formatDay, isEmail, isPhone, nextDow } from "@/lib/utils";
 
 type Step = 0 | 1 | 2 | 3;
 const STEPS = 3;
@@ -264,17 +263,7 @@ function Done({ students, date, onDone }: { students: StudentInfo[]; date: strin
           <p className="text-sm text-forest-300">Pastor Gannon will text you this week to say hi, and he&apos;ll be watching for {names.length > 1 ? "them" : names[0] || "them"} on Wednesday.</p>
         </li>
       </ul>
-      <div className="mt-6 grid gap-3 sm:grid-cols-2">
-        <Button
-          variant="secondary"
-          size="lg"
-          onClick={() => {
-            downloadIcs({ title: "Wednesday Youth at Rolla First", start: date, durationMin: 90, location: `${church.address}, ${church.city}`, description: "Drop off at the Gym doors. The youth room is upstairs. Pickup at 8:00 PM." });
-            toast("Added to your calendar");
-          }}
-        >
-          <CalendarPlus /> Add to calendar
-        </Button>
+      <div className="mt-6 grid gap-3">
         <Button asChild size="lg" onClick={onDone}>
           <Link href="/me">Go to My Rolla First <ArrowRight /></Link>
         </Button>

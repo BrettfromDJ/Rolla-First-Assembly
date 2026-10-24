@@ -3,8 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { ArrowLeft, ArrowRight, Baby, CalendarPlus, Check, Coffee, Minus, Plus } from "lucide-react";
-import { toast } from "sonner";
+import { ArrowLeft, ArrowRight, Baby, Check, Coffee, Minus, Plus } from "lucide-react";
 import { Sheet } from "@/components/ui/sheet";
 import { Field } from "@/components/ui/field";
 import { Button } from "@/components/ui/button";
@@ -12,7 +11,7 @@ import { Avatar } from "@/components/ui/avatar";
 import { church, staffById } from "@/lib/data";
 import { useStore } from "@/lib/store";
 import type { ServiceTime } from "@/lib/types";
-import { cn, downloadIcs, formatDay, isEmail, isPhone, nextDow } from "@/lib/utils";
+import { cn, formatDay, isEmail, isPhone, nextDow } from "@/lib/utils";
 
 type Step = 0 | 1 | 2 | 3;
 
@@ -222,17 +221,7 @@ function Confirmation({ name, date, service, kids, onDone }: { name: string; dat
         </div>
       </div>
 
-      <div className="mt-6 grid gap-3 sm:grid-cols-2">
-        <Button
-          variant="secondary"
-          size="lg"
-          onClick={() => {
-            downloadIcs({ title: "Sunday at Rolla First", start: date, durationMin: 70, location: `${church.address}, ${church.city}`, description: "Look for the welcome tent out front. We can't wait to meet you." });
-            toast("Calendar invite downloaded");
-          }}
-        >
-          <CalendarPlus /> Add to calendar
-        </Button>
+      <div className="mt-6 grid gap-3">
         <Button asChild size="lg" onClick={onDone}>
           <Link href="/connect">Personalize my visit <ArrowRight /></Link>
         </Button>

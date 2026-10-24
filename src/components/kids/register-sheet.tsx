@@ -3,16 +3,15 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { ArrowLeft, ArrowRight, CalendarPlus, Check, Lock, Plus, Trash2 } from "lucide-react";
-import { toast } from "sonner";
+import { ArrowLeft, ArrowRight, Check, Lock, Plus, Trash2 } from "lucide-react";
 import { Sheet } from "@/components/ui/sheet";
 import { Field, Textarea } from "@/components/ui/field";
 import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/ui/avatar";
-import { church, kidGradeLabel, kidGradeOptions, staffById, suggestGrade } from "@/lib/data";
+import { kidGradeLabel, kidGradeOptions, staffById, suggestGrade } from "@/lib/data";
 import { useStore } from "@/lib/store";
 import type { Guardian, KidInfo, PickupPerson, ServiceTime } from "@/lib/types";
-import { cn, downloadIcs, formatDay, isEmail, isPhone, nextDow } from "@/lib/utils";
+import { cn, formatDay, isEmail, isPhone, nextDow } from "@/lib/utils";
 
 type Step = 0 | 1 | 2 | 3 | 4;
 const STEPS = 4;
@@ -389,17 +388,7 @@ function Done({ kids, date, service, onDone }: { kids: KidInfo[]; date: string; 
         </li>
       </ul>
 
-      <div className="mt-6 grid gap-3 sm:grid-cols-2">
-        <Button
-          variant="secondary"
-          size="lg"
-          onClick={() => {
-            downloadIcs({ title: "Sunday at Rolla First Kids", start: date, durationMin: 80, location: `${church.address}, ${church.city}`, description: "Check in at the Kids Welcome desk downstairs 10 minutes early." });
-            toast("Added to your calendar");
-          }}
-        >
-          <CalendarPlus /> Add to calendar
-        </Button>
+      <div className="mt-6 grid gap-3">
         <Button asChild size="lg" onClick={onDone}>
           <Link href="/me">Go to My Rolla First <ArrowRight /></Link>
         </Button>
