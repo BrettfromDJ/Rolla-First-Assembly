@@ -411,3 +411,23 @@ export interface ScheduleSettings {
   dayOf: boolean; // a second text the morning of
   dayOfTime: string; // "07:30"
 }
+
+/* ---------- Church calendar (staff only) ---------- */
+
+export type CalendarCategory = "meeting" | "rehearsal" | "event" | "closure" | "other";
+
+/** Something staff put on the church calendar by hand: meetings, rehearsals, closings. */
+export interface CalendarEntry {
+  id: string;
+  title: string;
+  category: CalendarCategory;
+  date: string; // YYYY-MM-DD (first occurrence)
+  allDay: boolean;
+  start?: string; // "HH:MM"
+  end?: string; // "HH:MM"
+  repeat: "none" | "weekly";
+  location?: string;
+  notes?: string;
+  createdBy: string;
+  updatedAt: string;
+}

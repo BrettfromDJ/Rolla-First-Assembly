@@ -7,6 +7,7 @@ import { buildSeedHouseholds, buildSeedVisitors } from "./seed";
 import { buildSeedAttendance } from "./attendance";
 import { buildSeedPrayers } from "./prayer";
 import { buildSeedServe, teamById } from "./serve";
+import { buildSeedCalendar } from "./calendar";
 import { autoFill, buildSeedSchedule, defaultScheduleSettings } from "./schedule";
 import { uid } from "./utils";
 import type {
@@ -32,6 +33,7 @@ import type {
   VisitPlan,
   Visitor,
   Household,
+  CalendarEntry,
   VisitorOverlay,
 } from "./types";
 
@@ -85,6 +87,7 @@ interface State {
   events: Offering[]; // built by staff in the admin
   responses: EventResponse[]; // RSVPs and sign-ups for those events
   hiddenOfferings: string[]; // built-in events staff took off the site
+  calendar: CalendarEntry[]; // staff calendar entries (meetings, rehearsals, closings)
   seedVersion?: number;
 }
 
@@ -92,7 +95,7 @@ const seedEvents = () => buildSeedEvents();
 
 const freshState = (): State => {
   const visitors = buildSeedVisitors();
-  return { profile: freshProfile(), visitors, households: buildSeedHouseholds(visitors), overlay: freshOverlay(), attendance: buildSeedAttendance(), prayers: buildSeedPrayers(), prayed: [], sermonNotes: {}, serve: buildSeedServe(), schedule: { ...buildSeedSchedule(), settings: defaultScheduleSettings }, ...seedEvents(), hiddenOfferings: [], seedVersion: SEED_VERSION };
+  return { profile: freshProfile(), visitors, households: buildSeedHouseholds(visitors), overlay: freshOverlay(), attendance: buildSeedAttendance(), prayers: buildSeedPrayers(), prayed: [], sermonNotes: {}, serve: buildSeedServe(), schedule: { ...buildSeedSchedule(), settings: defaultScheduleSettings }, ...seedEvents(), hiddenOfferings: [], calendar: buildSeedCalendar(), seedVersion: SEED_VERSION };
 };
 
 export type VisitorPatch = Partial<Pick<Visitor, "stage" | "assigneeId" | "status" | "memberSince" | "birthday">>;
@@ -153,6 +156,9 @@ interface Store extends State {
   deleteEvent: (id: string) => void;
   toggleHiddenOffering: (id: string) => void;
   removeResponse: (id: string) => void;
+  /* calendar */
+  saveCalendarEntry: (e: Omit<CalendarEntry, "createdBy" | "updatedAt">, by: string) => void;
+  deleteCalendarEntry: (id: string) => void;
   /* households */
   saveHousehold: (h: Household) => void;
   deleteHousehold: (id: string) => void;
@@ -273,6 +279,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
           serve: (parsed.serve ?? buildSeedServe()).filter((x) => teamById[x.teamId]),
           ...(parsed.events ? { events: parsed.events, responses: parsed.responses ?? [] } : seedEvents()),
           hiddenOfferings: parsed.hiddenOfferings ?? [],
+          calendar: parsed.calendar ?? buildSeedCalendar(),
           schedule: parsed.schedule?.volunteers ? { ...parsed.schedule, settings: { ...defaultScheduleSettings, ...parsed.schedule.settings } } : { ...buildSeedSchedule(), settings: defaultScheduleSettings },
           seedVersion: SEED_VERSION,
         });
@@ -558,6 +565,18 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     setState((s) => ({ ...s, hiddenOfferings: s.hiddenOfferings.includes(id) ? s.hiddenOfferings.filter((x) => x !== id) : [...s.hiddenOfferings, id] }));
   }, []);
 
+  const saveCalendarEntry = useCallback((e: Omit<CalendarEntry, "createdBy" | "updatedAt">, by: string) => {
+    setState((s) => {
+      const prev = s.calendar.find((x) => x.id === e.id);
+      const next: CalendarEntry = { ...e, createdBy: prev?.createdBy ?? by, updatedAt: new Date().toISOString() };
+      return { ...s, calendar: prev ? s.calendar.map((x) => (x.id === e.id ? next : x)) : [...s.calendar, next] };
+    });
+  }, []);
+
+  const deleteCalendarEntry = useCallback((id: string) => {
+    setState((s) => ({ ...s, calendar: s.calendar.filter((x) => x.id !== id) }));
+  }, []);
+
   const saveHousehold = useCallback((h: Household) => {
     setState((s) => ({
       ...s,
@@ -740,6 +759,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     deleteEvent,
     toggleHiddenOffering,
     removeResponse,
+    saveCalendarEntry,
+    deleteCalendarEntry,
     saveHousehold,
     deleteHousehold,
     addPerson,

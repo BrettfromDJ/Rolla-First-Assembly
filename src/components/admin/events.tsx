@@ -441,7 +441,7 @@ function Seg({ on, onClick, children }: { on: boolean; onClick: () => void; chil
   );
 }
 
-function Input({ label, value, onChange, error, placeholder, optional, type = "text", hint, max }: { label: string; value: string; onChange: (v: string) => void; error?: string; placeholder?: string; optional?: boolean; type?: string; hint?: string; max?: number }) {
+export function Input({ label, value, onChange, error, placeholder, optional, type = "text", hint, max }: { label: string; value: string; onChange: (v: string) => void; error?: string; placeholder?: string; optional?: boolean; type?: string; hint?: string; max?: number }) {
   return (
     <label className="block space-y-2">
       <span className="flex items-baseline justify-between text-sm font-medium text-stone-800">
@@ -463,7 +463,7 @@ function Input({ label, value, onChange, error, placeholder, optional, type = "t
   );
 }
 
-function Area({ label, value, onChange, placeholder, optional }: { label: string; value: string; onChange: (v: string) => void; placeholder?: string; optional?: boolean }) {
+export function Area({ label, value, onChange, placeholder, optional }: { label: string; value: string; onChange: (v: string) => void; placeholder?: string; optional?: boolean }) {
   return (
     <label className="block space-y-2">
       <span className="flex items-baseline justify-between text-sm font-medium text-stone-800">

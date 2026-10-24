@@ -45,13 +45,14 @@ import { VolunteersView } from "./volunteers";
 import { ScheduleView } from "./schedule";
 import { WeeklyView } from "./weekly";
 import { EventsView } from "./events";
+import { CalendarView } from "./calendar";
 import { interests as interestList, interestShort, kidsGroups, staffById, welcomeTeam } from "@/lib/data";
 import { useStore } from "@/lib/store";
 import type { InterestId, Stage, Visitor } from "@/lib/types";
 import { cn, formatDate, formatShortDay, greeting, relativeDay } from "@/lib/utils";
 import { ACTING_AS, fullName, isMember, isRecent, needsAttention, nextAction, rsvpInfo, stageStyle, stages } from "./helpers";
 
-type Tab = "week" | "people" | "baptisms" | "attendance" | "prayer" | "volunteers" | "schedule" | "events";
+type Tab = "week" | "people" | "calendar" | "baptisms" | "attendance" | "prayer" | "volunteers" | "schedule" | "events";
 type View = "all" | "attention" | "mine" | "new" | "planning" | "requests" | "rsvps";
 type Who = "all" | "guests" | "members";
 
@@ -72,7 +73,7 @@ export function Dashboard() {
   useEffect(() => {
     const h = location.hash.slice(1);
     if (h === "visitors" || h === "members") setTabState("people");
-    if (h === "people" || h === "baptisms" || h === "attendance" || h === "prayer" || h === "volunteers" || h === "schedule" || h === "events") setTabState(h);
+    if (h === "people" || h === "calendar" || h === "baptisms" || h === "attendance" || h === "prayer" || h === "volunteers" || h === "schedule" || h === "events") setTabState(h);
   }, []);
   const [query, setQuery] = useState("");
   const [stage, setStage] = useState<Stage | "">("");
@@ -175,6 +176,13 @@ export function Dashboard() {
             <Sun className="size-4 text-stone-400" />
             <span className="flex-1 text-left">This week</span>
           </button>
+          <button
+            onClick={() => setTab("calendar")}
+            className={cn("-mt-3 mb-4 flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm transition", tab === "calendar" ? "bg-stone-100 font-medium text-stone-900" : "text-stone-600 hover:bg-stone-50")}
+          >
+            <CalendarDays className="size-4 text-stone-400" />
+            <span className="flex-1 text-left">Calendar</span>
+          </button>
           <p className="px-3 pb-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-stone-400">People</p>
           {([
             { label: "Everyone", icon: Users, n: counts.all, on: who === "all" && view === "all" && !family && !stage, go: {} },
@@ -276,7 +284,7 @@ export function Dashboard() {
         <header className="sticky top-0 z-20 border-b border-stone-200/70 bg-stone-50/85 backdrop-blur-xl">
           <div className="flex h-16 items-center gap-4 px-5 md:px-8">
             <div className="lg:hidden"><Logo /></div>
-            <div className={cn("relative ml-auto w-full max-w-sm", (tab === "attendance" || tab === "week") && "invisible")}>
+            <div className={cn("relative ml-auto w-full max-w-sm", (tab === "attendance" || tab === "week" || tab === "calendar") && "invisible")}>
               <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-stone-400" />
               <input
                 value={query}
@@ -298,6 +306,7 @@ export function Dashboard() {
             {([
               ["week", "This week", Sun],
               ["people", "People", Users],
+              ["calendar", "Calendar", CalendarDays],
               ["baptisms", "Baptisms", Droplets],
               ["attendance", "Attendance", BarChart3],
               ["prayer", "Prayer", HandHeart],
@@ -318,7 +327,15 @@ export function Dashboard() {
           </div>
           </div>
         </div>
-        {tab === "events" ? (
+        {tab === "calendar" ? (
+          <div key={tab} className="m-tab px-5 pt-8 md:px-8">
+            <div className="mb-6">
+              <p className="text-sm text-stone-500">Staff only</p>
+              <h1 className="mt-1 text-[28px] font-semibold tracking-[-0.02em]">Church calendar</h1>
+            </div>
+            <CalendarView />
+          </div>
+        ) : tab === "events" ? (
           <div key={tab} className="m-tab px-5 pt-8 md:px-8">
             <div className="mb-6">
               <p className="text-sm text-stone-500">Ministry</p>
