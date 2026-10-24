@@ -269,7 +269,7 @@ function Done({ students, date, onDone }: { students: StudentInfo[]; date: strin
           variant="secondary"
           size="lg"
           onClick={() => {
-            downloadIcs({ title: "Wednesday Students at Rolla First", start: date, durationMin: 90, location: `${church.address}, ${church.city}`, description: "Drop off at the Gym doors. The youth room is upstairs. Pickup at 8:00 PM." });
+            downloadIcs({ title: "Wednesday Youth at Rolla First", start: date, durationMin: 90, location: `${church.address}, ${church.city}`, description: "Drop off at the Gym doors. The youth room is upstairs. Pickup at 8:00 PM." });
             toast("Added to your calendar");
           }}
         >

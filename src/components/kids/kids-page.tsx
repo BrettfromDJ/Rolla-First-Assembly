@@ -18,7 +18,7 @@ const Ed = ({ children }: { children: React.ReactNode }) => <span className="fon
 
 const faqs = [
   { q: "What's the difference between Sundays and Wednesdays?", a: "On Sunday mornings, Rolla First Kids meets during both services for birth through 6th grade, grouped by age. On Wednesday nights at 6:30, boys and girls in kindergarten through 6th grade go to Royal Rangers and Girls Ministries, each in small groups by grade. Nursery is open both Sunday mornings and Wednesday nights." },
-  { q: "Do I have to pre-register?", a: "No. You can check in at the blue Kids Welcome desk when you arrive. Pre-registering just means we'll have name tags ready and your first check-in is even faster." },
+  { q: "Do I have to pre-register?", a: "No. You can check in downstairs when you arrive. Just follow the Rolla First Kids sign on the foyer staircase. Pre-registering just means we'll have name tags ready and your first check-in is even faster." },
   { q: "Where do I drop off my kids?", a: "The kids area is downstairs, right below the auditorium. From the foyer, follow the large Rolla First Kids sign on the staircase wall. Its arrow points you downstairs. Anyone on the Welcome Team, or the person at the Welcome desk, is happy to walk you there." },
   { q: "How do you keep my child safe?", a: "Every volunteer is background-checked and trained, and they always serve in pairs. Kids' rooms have secure entry, and only the adult with the matching security tag can pick up your child." },
   { q: "My child has allergies. What should I do?", a: "Let us know when you pre-register or at check-in. Allergies print right on your child's name tag, and leaders check them before any snack is served." },
@@ -108,7 +108,7 @@ export function KidsPage() {
                       </button>
                       <button
                         onClick={() => {
-                          downloadIcs({ title: "Rolla First Kids", start: reg.date, durationMin: 85, location: `${church.address}, ${church.city}`, description: "Arrive 15 minutes early and stop by the blue Kids Welcome desk downstairs." });
+                          downloadIcs({ title: "Rolla First Kids", start: reg.date, durationMin: 85, location: `${church.address}, ${church.city}`, description: "Arrive 15 minutes early. From the foyer, follow the Rolla First Kids sign on the staircase wall down to check-in." });
                           toast("Added to your calendar");
                         }}
                         className={cn(mori, "inline-flex h-11 items-center gap-2 rounded-[80px] border-2 border-black/30 px-5 text-[14px] uppercase tracking-[-0.04em] transition hover:border-black")}

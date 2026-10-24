@@ -8,7 +8,7 @@ import { SiteHeader } from "@/components/site/header";
 import { SiteFooter } from "@/components/site/footer";
 import { RevealGroup, Rise } from "@/components/church/motion";
 import { Faq } from "@/components/visit/new-here";
-import { church, staffById } from "@/lib/data";
+import { church, churchLinks, staffById } from "@/lib/data";
 import { gradeLabel, studentEvents, studentGroups, studentsFaqs, studentsInfo, wednesdayFlow } from "@/lib/students";
 import { useStore } from "@/lib/store";
 import { cn, downloadIcs, formatDay, formatTime } from "@/lib/utils";
@@ -31,7 +31,7 @@ export function StudentsPage() {
       <main>
         {/* ---------- Hero ---------- */}
         <section className="mx-auto max-w-[1440px] px-5 pb-10 pt-14 md:px-[60px] md:pt-[63px]">
-          <p className={cn(mori, "m-load-rise text-[16px] uppercase leading-[1.1] tracking-[-0.03em] text-[#0285ff]")}>Students · 7th–12th grade</p>
+          <p className={cn(mori, "m-load-rise text-[16px] uppercase leading-[1.1] tracking-[-0.03em] text-[#0285ff]")}>Youth · 7th–12th grade</p>
           <h1 className={cn(mori, "m-title mt-4 max-w-[1100px] text-[clamp(52px,6.4vw,82px)] leading-[0.92] tracking-[-0.05em]")}>
             Wednesdays are for <Ed>students</Ed>
           </h1>
@@ -69,7 +69,7 @@ export function StudentsPage() {
                       </button>
                       <button
                         onClick={() => {
-                          downloadIcs({ title: "Wednesday Students at Rolla First", start: reg.date, durationMin: 90, location: `${church.address}, ${church.city}`, description: "Drop off at the Gym doors. The youth room is upstairs. Pickup at 8:00 PM." });
+                          downloadIcs({ title: "Wednesday Youth at Rolla First", start: reg.date, durationMin: 90, location: `${church.address}, ${church.city}`, description: "Drop off at the Gym doors. The youth room is upstairs. Pickup at 8:00 PM." });
                           toast("Added to your calendar");
                         }}
                         className={cn(mori, "inline-flex h-11 items-center gap-2 rounded-[80px] border-2 border-black/30 px-5 text-[14px] uppercase tracking-[-0.04em] transition hover:border-black")}
@@ -153,6 +153,18 @@ export function StudentsPage() {
                       {t}
                     </li>
                   ))}
+                  <li className="flex gap-2.5">
+                    <BadgeCheck className="mt-0.5 size-4 shrink-0 text-[#0285ff]" strokeWidth={1.75} />
+                    {churchLinks.youthFacebook ? (
+                      <span>
+                        Join our{" "}
+                        <a href={churchLinks.youthFacebook} target="_blank" rel="noreferrer" className="font-medium text-[#0285ff] underline decoration-[#0285ff]/40 underline-offset-4 hover:decoration-[#0285ff]">youth Facebook page</a>{" "}
+                        for photos, updates, and what&apos;s coming up
+                      </span>
+                    ) : (
+                      "Join our youth Facebook page for photos, updates, and what's coming up"
+                    )}
+                  </li>
                 </ul>
               </div>
             </Rise>

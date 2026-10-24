@@ -228,7 +228,7 @@ export function VisitPage() {
                 <h3 className="mt-12 text-sm font-medium text-stone-900">Check-in takes about two minutes</h3>
                 <ol className="mt-5 space-y-5">
                   {[
-                    { icon: Tag, t: "Stop by the blue Kids Welcome desk", b: "We'll set up a quick profile. It's one time only." },
+                    { icon: Tag, t: "Follow the Rolla First Kids sign", b: "From the foyer, look for the large sign on the staircase wall. Its arrow points you downstairs to check-in." },
                     { icon: ShieldCheck, t: "Get matching security tags", b: "Only the adult with the matching tag can pick up your child." },
                     { icon: Smartphone, t: "We'll text you if needed", b: "Enjoy the service. If your kiddo needs you, you'll know right away." },
                   ].map((s) => (

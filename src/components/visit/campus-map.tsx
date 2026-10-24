@@ -13,9 +13,9 @@ const stops = [
   { n: 1, icon: Car, title: "Park in any lot", body: "Lots north of the building (across 17th St), south of the building, and across Oak St are all yours.", x: 448, y: 598 },
   { n: 2, icon: DoorOpen, title: "Come in the main entrance", body: "On the west side of the building, facing Oak St. The welcome team will be right inside to say hi.", x: 328, y: 308 },
   { n: 3, icon: Coffee, title: "Grab a coffee in the gym", body: "Head downstairs to the gym. Coffee, tea, and pastries are always free.", x: 548, y: 486 },
-  { n: 4, icon: Sprout, title: "Check in the kids", body: "Kids meet downstairs, right below the auditorium. Look for the blue Kids Welcome desk.", x: 546, y: 332 },
+  { n: 4, icon: Sprout, title: "Check in the kids", body: "Kids meet downstairs, right below the auditorium. Follow the large Rolla First Kids sign on the foyer staircase wall.", x: 546, y: 332 },
   { n: 5, icon: Armchair, title: "Find a seat in the auditorium", body: "Doors open 10 minutes before. Sit anywhere. Really.", x: 546, y: 290 },
-  { n: 6, icon: Users, title: "Students, head upstairs", body: "The youth room is upstairs, right above the gym. 7th–12th graders meet there on Wednesday nights.", x: 520, y: 450 },
+  { n: 6, icon: Users, title: "Youth, head upstairs", body: "The youth room is upstairs, right above the gym. 7th–12th graders meet there on Wednesday nights.", x: 520, y: 450 },
 ];
 
 const C = {

@@ -22,6 +22,8 @@ export const churchLinks = {
   facebook: "https://www.facebook.com/",
   instagram: "https://www.instagram.com/",
   youtube: "https://www.youtube.com/",
+  /** The youth ministry's Facebook page. Leave empty until the link is ready. */
+  youthFacebook: "",
 };
 
 /* ---------- People (the Rolla First team) ---------- */
@@ -326,7 +328,7 @@ export function buildOfferings(): Offering[] {
       action: "Pre-register my kids",
       actionKind: "signup",
       confirmTitle: "You're pre-registered!",
-      confirmBody: "Micah and the Kids team will have name tags ready. Look for the blue Kids Welcome desk when you arrive.",
+      confirmBody: "Micah and the Kids team will have name tags ready. From the foyer, follow the Rolla First Kids sign on the staircase wall down to check-in.",
       itemsTitle: "Age groups",
       items: [
         { id: "k-nursery", title: "Nursery", meta: "Birth – 2 years", location: "Rooms 110–112", leader: "Ms. Carla", description: "Rocking chairs, soft toys, and very patient grown-ups." },
@@ -648,7 +650,7 @@ export const kidsGroups = [
   { id: "nursery", label: "Nursery", ages: "Birth – 2", room: "Nursery", blurb: "Rocking chairs, soft toys, and very patient grown-ups. We'll follow your routine. Open Wednesday nights too." },
   { id: "preschool", label: "Preschool", ages: "Ages 3 – 5", room: "Preschool room", blurb: "Songs, crafts, snacks, and a Bible story told at their level." },
   { id: "elementary", label: "Elementary", ages: "K – 6th grade", room: "Elementary room", blurb: "Big-group worship, a Bible lesson that sticks, and the same leaders each week." },
-  { id: "students", label: "Students", ages: "7th – 12th grade", room: "Youth room (upstairs)", blurb: "Wednesday nights at 6:30 PM with Pastor Gannon. Sundays, students sit with their families in the service." },
+  { id: "students", label: "Youth", ages: "7th – 12th grade", room: "Youth room (upstairs)", blurb: "Wednesday nights at 6:30 PM with Pastor Gannon. Sundays, students sit with their families in the service." },
 ] as const;
 
 /**

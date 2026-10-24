@@ -225,7 +225,7 @@ export function HomePage() {
                 <PlanRow
                   href="/students"
                   date={profile.students.date}
-                  title={`Students · ${profile.students.students.map((s) => s.firstName).join(" & ")}`}
+                  title={`Youth · ${profile.students.students.map((s) => s.firstName).join(" & ")}`}
                   meta="Wednesday 6:30 PM · Youth room upstairs"
                   status="Signed up"
                 />
