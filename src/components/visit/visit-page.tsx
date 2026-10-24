@@ -90,7 +90,7 @@ export function VisitPage() {
         {/* ---------- Service information ---------- */}
         <section id="service" className="scroll-mt-24 px-5 md:px-8">
           <div className="mx-auto grid max-w-7xl grid-cols-1 gap-4 lg:grid-cols-12 [&>*]:min-w-0">
-            <Photo src="/home/sanctuary.jpg" alt="The Rolla First sanctuary during Sunday worship, with people standing in the pews under the wood ceiling" tone="forest" className="h-[300px] rounded-[32px] md:h-[460px] lg:col-span-7 lg:h-auto lg:min-h-[460px]" imgClassName="object-[50%_45%]" priority />
+            <Photo src="/home/sanctuary-worship.jpg" alt="The Rolla First sanctuary during Sunday worship, with the band on stage and people raising their hands under the wood ceiling" tone="forest" className="h-[300px] rounded-[32px] md:h-[460px] lg:col-span-7 lg:h-auto lg:min-h-[460px]" imgClassName="object-[50%_55%]" priority />
             <div className="flex flex-col justify-between gap-8 rounded-[32px] bg-forest-800 p-7 text-paper md:p-10 lg:col-span-5">
               <div>
                 <p className="text-sm text-paper/60">Every Sunday</p>
