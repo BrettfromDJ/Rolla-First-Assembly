@@ -44,7 +44,7 @@ export const serveTeams: ServeTeam[] = [
     when: "Sundays: 8:30 to 10:15 AM for first service, 10:00 to 10:45 AM for second",
     times: ["9:00", "10:30"],
     commitment: "One Sunday a month",
-    leaderId: "amber",
+    leaderId: "heather",
     minAge: 13,
     serving: 34,
     goal: 40,

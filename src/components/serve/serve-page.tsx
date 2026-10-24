@@ -11,6 +11,7 @@ import { staffById } from "@/lib/data";
 import { mostNeeded, serveAreas, serveTeams, serveTimeOptions, teamById, type ServeArea, type ServeTeam } from "@/lib/serve";
 import { useStore } from "@/lib/store";
 import type { ServeSignup, ServeTime } from "@/lib/types";
+import { Avatar } from "@/components/ui/avatar";
 import { cn, timeAgo } from "@/lib/utils";
 import { ServeSheet } from "./serve-sheet";
 
@@ -240,8 +241,7 @@ function TeamCard({ t, joined, onOpen }: { t: ServeTeam; joined: boolean; onOpen
           <span className="flex min-w-0 items-center gap-2.5 text-[14px] text-stone-500">
             <span className="flex shrink-0 -space-x-2">
               {leaders.map((l) => (
-                /* eslint-disable-next-line @next/next/no-img-element */
-                <img key={l.id} src={l.photo} alt="" width={32} height={32} className="size-8 rounded-full object-cover object-top ring-2 ring-ink" />
+                <Avatar key={l.id} name={l.name} src={l.photo || undefined} className="size-8 text-[11px] ring-2 ring-ink [&>img]:object-top" />
               ))}
             </span>
             <span className="truncate">Led by {leaders.map((l) => l.name).join(" & ")}</span>

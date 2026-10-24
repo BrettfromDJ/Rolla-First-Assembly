@@ -41,7 +41,12 @@ export const staff: Person[] = [
   { id: "debbie", name: "Debbie Cartwright", role: "After School Program Director", photo: t("debbie-cartwright.jpg"), email: "debbie@rollafirst.church" },
 ];
 
-export const staffById = Object.fromEntries(staff.map((s) => [s.id, s])) as Record<string, Person>;
+/** Volunteer ministry leaders: they lead a team but aren't on staff (not on the homepage or staff pickers). */
+export const ministryLeaders: Person[] = [
+  { id: "heather", name: "Heather Furse", role: "Welcome Team Leader", photo: "" },
+];
+
+export const staffById = Object.fromEntries([...staff, ...ministryLeaders].map((s) => [s.id, s])) as Record<string, Person>;
 
 /** Team members who can be assigned to follow up with visitors. */
 export const welcomeTeam = ["amber", "garrett", "lance", "gannon", "micah", "pam", "debbie", "brice"].map((id) => staffById[id]);

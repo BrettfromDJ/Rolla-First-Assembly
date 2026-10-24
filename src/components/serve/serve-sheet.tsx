@@ -161,7 +161,7 @@ export function ServeSheet({ teamId, onOpenChange }: { teamId: string | null; on
                   </div>
                 )}
                 <div className="flex items-center gap-3">
-                  <Avatar name={leader.name} src={leader.photo} />
+                  <Avatar name={leader.name} src={leader.photo || undefined} />
                   <p className="text-[14px] text-stone-500">
                     Led by <span className="text-stone-800">{leader.name}</span>, {leader.role}
                   </p>
