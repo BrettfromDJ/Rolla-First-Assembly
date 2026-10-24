@@ -58,11 +58,11 @@ export function KidsPage() {
           <Rise load delay={0.1} y={20}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/home/kids-worship.jpg"
-              alt="Kids leading worship on stage with hands raised during Rolla First Kids"
+              src="/home/kids-room.jpg"
+              alt="Kids and leaders gathered together praying in the Rolla First Kids room"
               width={2000}
               height={1333}
-              className="aspect-[4/3] h-full w-full rounded-[28px] object-cover object-[50%_55%] lg:aspect-auto"
+              className="aspect-[4/3] h-full w-full rounded-[28px] object-cover object-[50%_40%] lg:aspect-auto"
             />
           </Rise>
 
@@ -151,18 +151,7 @@ export function KidsPage() {
               <p className="max-w-sm text-[15px] text-stone-500">Same leaders every week, so your kids see familiar faces.</p>
             </div>
           </Rise>
-          <Rise>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/home/kids-room.jpg"
-              alt="Kids and leaders gathered together praying in the Rolla First Kids room"
-              width={2000}
-              height={1333}
-              loading="lazy"
-              className="mt-10 aspect-[4/3] w-full rounded-[28px] object-cover object-[50%_40%] sm:aspect-[2/1]"
-            />
-          </Rise>
-          <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {kidsGroups.map((g, i) => (
               <Rise key={g.id} delay={i * 0.06}>
                 <div className={cn("flex h-full flex-col justify-between gap-10 rounded-[28px] border-2 p-7", g.id === "students" ? "border-[#dcd2c5]/30" : "border-[#dcd2c5]/80")}>
