@@ -163,7 +163,7 @@ export function KidsPage() {
                   <div>
                     <p className="text-[15px] leading-relaxed text-stone-600">{g.blurb}</p>
                     {g.id === "students" && (
-                      <Link href="/students" className="mt-4 inline-flex items-center gap-1.5 text-[15px] font-medium text-[#0285ff] hover:underline">
+                      <Link href="/youth" className="mt-4 inline-flex items-center gap-1.5 text-[15px] font-medium text-[#0285ff] hover:underline">
                         Wednesday nights <ArrowUpRight className="size-4" />
                       </Link>
                     )}
@@ -210,7 +210,7 @@ export function KidsPage() {
           <Rise>
             <p className="mt-6 text-[15px] text-stone-500">
               In middle or high school? Youth meets Wednesdays at 6:30 too.{" "}
-              <Link href="/students" className="inline-flex items-center gap-1 font-medium text-[#0285ff] hover:underline">
+              <Link href="/youth" className="inline-flex items-center gap-1 font-medium text-[#0285ff] hover:underline">
                 Youth on Wednesdays <ArrowUpRight className="size-4" />
               </Link>
             </p>

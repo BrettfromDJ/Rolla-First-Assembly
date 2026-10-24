@@ -126,7 +126,7 @@ function v(input: {
       date: date.toISOString(),
       createdAt: daysAgo(st.daysAgo),
     };
-    input.activity.push({ kind: "students", label: `Signed up ${st.list.map((x) => x[0]).join(" & ")} for Wednesday Students`, daysAgo: st.daysAgo, hour: 21 });
+    input.activity.push({ kind: "students", label: `Signed up ${st.list.map((x) => x[0]).join(" & ")} for Wednesday Youth`, daysAgo: st.daysAgo, hour: 21 });
   }
   const activity: Activity[] = input.activity.map((a) => ({ id: id("act"), kind: a.kind, label: a.label, at: daysAgo(a.daysAgo, a.hour ?? 11) }));
   return {

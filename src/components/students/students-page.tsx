@@ -33,7 +33,7 @@ export function StudentsPage() {
         <section className="mx-auto max-w-[1440px] px-5 pb-10 pt-14 md:px-[60px] md:pt-[63px]">
           <p className={cn(mori, "m-load-rise text-[16px] uppercase leading-[1.1] tracking-[-0.03em] text-[#0285ff]")}>Youth · 7th–12th grade</p>
           <h1 className={cn(mori, "m-title mt-4 max-w-[1100px] text-[clamp(52px,6.4vw,82px)] leading-[0.92] tracking-[-0.05em]")}>
-            Wednesdays are for <Ed>students</Ed>
+            Wednesdays are for <Ed>youth</Ed>
           </h1>
         </section>
 
@@ -230,7 +230,7 @@ export function StudentsPage() {
                     <span className="inline-flex items-center gap-1.5 text-[14px] text-stone-500"><MapPin className="size-4" /> {e.place}</span>
                     <button
                       onClick={() => {
-                        downloadIcs({ title: `${e.title} (Rolla First Students)`, start: e.date, durationMin: 120, location: e.place, description: e.body });
+                        downloadIcs({ title: `${e.title} (Rolla First Youth)`, start: e.date, durationMin: 120, location: e.place, description: e.body });
                         toast("Added to your calendar", { description: e.title });
                       }}
                       className={cn(mori, "inline-flex h-11 shrink-0 items-center gap-2 rounded-[80px] border-2 border-[#dcd2c5]/40 px-4 text-[13px] uppercase tracking-[-0.04em] transition hover:border-[#dcd2c5]")}

@@ -262,7 +262,7 @@ function PanelBody({ v, onOpen }: { v: Visitor; onOpen?: (id: string) => void })
               {v.students && (
                 <li className="flex items-center gap-3 rounded-2xl bg-stone-50 px-4 py-3 text-sm">
                   <Users className="size-4 text-forest-500" />
-                  <span className="flex-1 text-stone-800">Wednesday Students · first night</span>
+                  <span className="flex-1 text-stone-800">Wednesday Youth · first night</span>
                   <span className="text-stone-500">{formatShortDay(v.students.date)} · 6:30</span>
                 </li>
               )}
@@ -621,7 +621,7 @@ function Family({ adults }: { adults: Visitor[] }) {
     ...(studentsOwner?.students?.students.map((st) => ({
       name: `${st.firstName} ${st.lastName}`,
       detail: [`${st.grade}th grade`, st.phone ? `Cell ${st.phone}` : ""].filter(Boolean).join(" · "),
-      room: "Students",
+      room: "Youth",
       school: st.school,
       medical: st.medicalNotes,
       student: true,

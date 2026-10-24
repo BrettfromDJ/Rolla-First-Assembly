@@ -210,7 +210,7 @@ function profileToVisitor(p: Profile, o: VisitorOverlay): Visitor | null {
   if (p.students) {
     const names = p.students.students.map((k) => k.firstName).join(" & ");
     const d = new Date(p.students.date).toLocaleDateString("en-US", { month: "short", day: "numeric" });
-    activity.push({ id: "you_students", kind: "students", label: `Signed up ${names} for Wednesday Students (starting ${d})`, at: p.students.createdAt });
+    activity.push({ id: "you_students", kind: "students", label: `Signed up ${names} for Wednesday Youth (starting ${d})`, at: p.students.createdAt });
   }
   if (p.path === "visited") activity.push({ id: "you_visit", kind: "visit", label: "Visited a Sunday service", at: p.createdAt });
   if (p.onboardingCompletedAt) activity.push({ id: "you_onb", kind: "onboarding", label: "Completed onboarding", at: p.onboardingCompletedAt });
