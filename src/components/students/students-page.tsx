@@ -101,6 +101,23 @@ export function StudentsPage() {
           </Rise>
         </section>
 
+        {/* ---------- Group photo ---------- */}
+        <section className="mx-auto max-w-[1440px] px-5 pt-6 md:px-[60px]">
+          <Rise>
+            <figure>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/home/students-group.jpg"
+                alt="A big group of Rolla First students and leaders smiling together in the church parking lot"
+                width={2000}
+                height={1333}
+                loading="lazy"
+                className="aspect-[4/3] w-full rounded-[28px] object-cover object-[50%_62%] sm:aspect-[2/1]"
+              />
+            </figure>
+          </Rise>
+        </section>
+
         {/* ---------- Groups ---------- */}
         <section className="mx-auto max-w-[1440px] px-5 pt-24 md:px-[60px] md:pt-32">
           <div className="grid gap-4 md:grid-cols-2">
