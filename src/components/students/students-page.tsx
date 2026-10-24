@@ -40,7 +40,7 @@ export function StudentsPage() {
         <section className="mx-auto grid max-w-[1440px] gap-6 px-5 md:px-[60px] lg:grid-cols-[1.35fr_1fr]">
           <Rise load delay={0.1} y={20}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/home/worship.jpg" alt="Pastor Gannon leading worship" className="aspect-[4/3] h-full w-full rounded-[28px] object-cover lg:aspect-auto" />
+            <img src="/home/youth-night.jpg" alt="A youth leader speaking to students on a Wednesday night in the First Youth room" className="aspect-[4/3] h-full w-full rounded-[28px] object-cover object-[62%_50%] lg:aspect-auto" />
           </Rise>
 
           <Rise load delay={0.2} y={20}>
