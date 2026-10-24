@@ -29,8 +29,8 @@ const faqs = [
 
 /** Wednesday-night clubs for kindergarten through 6th grade. */
 const wednesdayClubs = [
-  { name: "Royal Rangers", who: "For boys", blurb: "Adventure, games, and Bible lessons that build character, with leaders who model what it looks like to follow Jesus.", groups: ["Kindergarten & 1st grade", "2nd to 4th grade", "5th & 6th grade"] },
-  { name: "Girls Ministries", who: "For girls", blurb: "Friendship, fun, and Bible lessons that help girls grow in confidence and in their faith, with leaders who care.", groups: ["Kindergarten to 3rd grade", "4th to 6th grade"] },
+  { name: "Royal Rangers", who: "For boys", image: { src: "/home/royal-rangers.jpg", alt: "Royal Rangers boys and leaders raising their hands to say the pledge, with the Royal Rangers flag behind them" }, blurb: "Adventure, games, and Bible lessons that build character, with leaders who model what it looks like to follow Jesus.", groups: ["Kindergarten & 1st grade", "2nd to 4th grade", "5th & 6th grade"] },
+  { name: "Girls Ministries", who: "For girls", image: undefined as { src: string; alt: string } | undefined, blurb: "Friendship, fun, and Bible lessons that help girls grow in confidence and in their faith, with leaders who care.", groups: ["Kindergarten to 3rd grade", "4th to 6th grade"] },
 ];
 
 export function KidsPage() {
@@ -185,10 +185,14 @@ export function KidsPage() {
               <p className="max-w-sm text-[15px] text-stone-500">Boys and girls in K through 6th each have their own night, in small groups by grade. Nursery is open too.</p>
             </div>
           </Rise>
-          <div className="mt-10 grid gap-4 lg:grid-cols-2">
+          <div className="mt-10 grid items-start gap-4 lg:grid-cols-2">
             {wednesdayClubs.map((c, i) => (
               <Rise key={c.name} delay={i * 0.06}>
-                <div className="flex h-full flex-col rounded-[28px] border-2 border-[#dcd2c5]/80 p-7 md:p-9">
+                <div className="flex flex-col rounded-[28px] border-2 border-[#dcd2c5]/80 p-7 md:p-9">
+                  {c.image && (
+                    /* eslint-disable-next-line @next/next/no-img-element */
+                    <img src={c.image.src} alt={c.image.alt} width={2000} height={1333} loading="lazy" className="-mx-3 -mt-3 mb-7 aspect-[3/2] w-[calc(100%+1.5rem)] max-w-none rounded-[20px] object-cover object-[35%_50%] md:-mx-5 md:-mt-5 md:w-[calc(100%+2.5rem)]" />
+                  )}
                   <p className="font-magda text-[13px] uppercase tracking-[0.04em] opacity-60">{c.who}</p>
                   <p className={cn(mori, "mt-2 text-[40px] leading-none tracking-[-0.05em]")}>{c.name}</p>
                   <p className="mt-4 max-w-md text-[16px] leading-relaxed text-stone-600">{c.blurb}</p>
