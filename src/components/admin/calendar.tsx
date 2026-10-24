@@ -73,29 +73,31 @@ export function CalendarView() {
     <div className="space-y-5">
       {/* Controls */}
       <div className="flex flex-wrap items-center gap-3">
-        <div className="flex items-center gap-1">
-          <button onClick={() => go(-1)} aria-label="Previous month" className="flex size-10 items-center justify-center rounded-full ring-1 ring-stone-200 transition hover:ring-stone-300"><ChevronLeft className="size-4" /></button>
-          <button onClick={() => go(1)} aria-label="Next month" className="flex size-10 items-center justify-center rounded-full ring-1 ring-stone-200 transition hover:ring-stone-300"><ChevronRight className="size-4" /></button>
+        <h2 className="mr-auto text-2xl font-semibold tracking-[-0.02em]" aria-live="polite">{month.toLocaleDateString("en-US", { month: "long", year: "numeric" })}</h2>
+        <div className="flex h-10 items-center rounded-full border border-stone-200 bg-white p-1">
+          <button onClick={() => go(-1)} aria-label="Previous month" className="flex size-8 items-center justify-center rounded-full text-stone-500 transition hover:bg-stone-100 hover:text-stone-900"><ChevronLeft className="size-4" /></button>
+          <button onClick={jumpToday} className="h-8 rounded-full px-3 text-sm text-stone-700 transition hover:bg-stone-100 hover:text-stone-900">Today</button>
+          <button onClick={() => go(1)} aria-label="Next month" className="flex size-8 items-center justify-center rounded-full text-stone-500 transition hover:bg-stone-100 hover:text-stone-900"><ChevronRight className="size-4" /></button>
         </div>
-        <h2 className="min-w-[10rem] text-xl font-semibold tracking-[-0.01em]" aria-live="polite">{month.toLocaleDateString("en-US", { month: "long", year: "numeric" })}</h2>
-        <button onClick={jumpToday} className="h-10 rounded-full px-4 text-sm text-stone-600 ring-1 ring-stone-200 transition hover:text-stone-900 hover:ring-stone-300">Today</button>
-        <Button className="ml-auto" onClick={() => setEditing(blank(selected))}><Plus /> Add to calendar</Button>
+        <Button className="w-full sm:w-auto" onClick={() => setEditing(blank(selected))}><Plus /> Add to calendar</Button>
       </div>
-      <div className="no-scrollbar -mx-5 flex gap-2 overflow-x-auto px-5 md:mx-0 md:flex-wrap md:px-0">
-        {calendarLayers.map((l) => {
-          const on = layers.includes(l.id);
-          return (
-            <button
-              key={l.id}
-              onClick={() => setLayers(on ? layers.filter((x) => x !== l.id) : [...layers, l.id])}
-              aria-pressed={on}
-              className={cn("flex h-9 shrink-0 items-center gap-2 whitespace-nowrap rounded-full px-3.5 text-sm ring-1 transition", on ? "bg-white text-stone-800 ring-stone-300" : "text-stone-400 ring-stone-200/70 hover:text-stone-600")}
-            >
-              <span className={cn("size-2 rounded-full", layerTone[l.id], !on && "opacity-30")} />
-              {l.label}
-            </button>
-          );
-        })}
+      <div className="no-scrollbar -mx-5 overflow-x-auto px-5 md:mx-0 md:px-0">
+        <div role="group" aria-label="Show on the calendar" className="inline-flex gap-0.5 rounded-full border border-stone-200 bg-white p-1 sm:gap-1">
+          {calendarLayers.map((l) => {
+            const on = layers.includes(l.id);
+            return (
+              <button
+                key={l.id}
+                onClick={() => setLayers(on ? layers.filter((x) => x !== l.id) : [...layers, l.id])}
+                aria-pressed={on}
+                className={cn("flex h-8 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 text-[13px] transition sm:gap-2 sm:px-3.5 sm:text-sm", on ? "bg-stone-100 text-stone-900" : "text-stone-400 hover:text-stone-700")}
+              >
+                <span className={cn("size-2 rounded-full transition", on ? layerTone[l.id] : "bg-transparent ring-1 ring-inset ring-stone-300")} />
+                {l.id === "entry" ? <><span className="sm:hidden">Staff</span><span className="hidden sm:inline">{l.label}</span></> : l.label}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       <div className="grid grid-cols-1 gap-5 2xl:grid-cols-[minmax(0,1fr)_360px]">
