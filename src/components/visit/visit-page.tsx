@@ -140,7 +140,7 @@ export function VisitPage() {
           <div className="grid gap-4 md:grid-cols-12">
             <Reveal className="md:col-span-5">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/home/hero-main.jpg" alt="Pastor Lance leading worship" width={427} height={471} className="aspect-[427/471] w-full object-cover" />
+              <img src="/home/hero-main.jpg" alt="Pastor Lance leading worship" width={427} height={471} className="aspect-[427/471] w-full rounded-[44px] object-cover" />
             </Reveal>
             <Reveal delay={0.1} className="md:col-span-7">
               <div className="flex h-full flex-col justify-between rounded-[44px] border-4 border-[#dcd2c5] p-7 md:p-10">
