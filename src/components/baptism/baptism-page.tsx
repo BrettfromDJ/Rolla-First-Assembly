@@ -175,7 +175,7 @@ export function BaptismPage() {
                 Four simple steps. A pastor is with you for every one of them.
               </p>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/home/sanctuary.jpg" alt="The Rolla First sanctuary during Sunday worship" width={2000} height={1334} loading="lazy" className="mt-10 hidden aspect-[4/3] w-full rounded-[28px] object-cover lg:block" />
+              <img src="/home/baptism-pool.jpg" alt="A young woman smiling in the baptism pool in a Made New shirt as the pastor celebrates with her" width={1365} height={2048} loading="lazy" className="mt-10 aspect-[4/5] w-full rounded-[28px] object-cover object-[50%_40%] lg:max-w-[460px]" />
             </Rise>
             <Rise>
             <ol className="border-t border-[#dcd2c5]/15">
