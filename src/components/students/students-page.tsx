@@ -158,11 +158,11 @@ export function StudentsPage() {
                     {churchLinks.youthFacebook ? (
                       <span>
                         Join our{" "}
-                        <a href={churchLinks.youthFacebook} target="_blank" rel="noreferrer" className="font-medium text-[#0285ff] underline decoration-[#0285ff]/40 underline-offset-4 hover:decoration-[#0285ff]">youth Facebook page</a>{" "}
+                        <a href={churchLinks.youthFacebook} target="_blank" rel="noreferrer" className="font-medium text-[#0285ff] underline decoration-[#0285ff]/40 underline-offset-4 hover:decoration-[#0285ff]">youth Facebook group</a>{" "}
                         for photos, updates, and what&apos;s coming up
                       </span>
                     ) : (
-                      "Join our youth Facebook page for photos, updates, and what's coming up"
+                      "Join our youth Facebook group for photos, updates, and what's coming up"
                     )}
                   </li>
                 </ul>

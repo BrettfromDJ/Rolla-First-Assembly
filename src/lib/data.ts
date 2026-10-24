@@ -22,8 +22,8 @@ export const churchLinks = {
   facebook: "https://www.facebook.com/",
   instagram: "https://www.instagram.com/",
   youtube: "https://www.youtube.com/",
-  /** The youth ministry's Facebook page. Leave empty until the link is ready. */
-  youthFacebook: "",
+  /** The youth ministry's Facebook group. */
+  youthFacebook: "https://www.facebook.com/groups/1023539932338315/",
 };
 
 /* ---------- People (the Rolla First team) ---------- */

@@ -43,6 +43,6 @@ export const studentsFaqs = [
   { q: "Where do I drop off and pick up?", a: "Drop off and pick up at the Gym doors. The youth room is upstairs above the Gym. Students stay inside until a parent or approved driver arrives." },
   { q: "Who are the leaders?", a: "Pastor Gannon and a team of adult volunteers. Every leader is 21 or older, background-checked, and trained, and leaders are never alone with a student." },
   { q: "What about Sunday mornings?", a: "On Sundays, students sit with their families in the 9:00 or 10:30 service. Many also serve on the Welcome, Production, or worship teams." },
-  { q: "How will I know what's coming up?", a: "Check the box for parent texts when you sign up. You'll get one short update a week with events, permission slips, and anything you need to know. You can also follow our youth Facebook page for photos and reminders." },
+  { q: "How will I know what's coming up?", a: "Check the box for parent texts when you sign up. You'll get one short update a week with events, permission slips, and anything you need to know. You can also join our youth Facebook group for photos and reminders." },
   { q: "Does anything cost money?", a: "Wednesday nights are free. Some trips and camps have a cost, and we never want money to keep a student home. Ask Pastor Gannon about scholarships." },
 ];
