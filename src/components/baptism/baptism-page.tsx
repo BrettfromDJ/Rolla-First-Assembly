@@ -120,6 +120,23 @@ export function BaptismPage() {
           </Rise>
         </section>
 
+        {/* ---------- Baptism photo ---------- */}
+        <section className="mx-auto max-w-[1440px] px-5 md:px-[60px]">
+          <Rise>
+            <figure>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/home/baptism-group.jpg"
+                alt="A group of people standing in the river after being baptized, smiling in matching Made New shirts"
+                width={2000}
+                height={1463}
+                loading="lazy"
+                className="aspect-[4/3] w-full rounded-[28px] object-cover object-[50%_65%] sm:aspect-[2/1]"
+              />
+            </figure>
+          </Rise>
+        </section>
+
         {/* ---------- What baptism is ---------- */}
         <section className="mx-auto max-w-[1440px] px-5 pt-16 md:px-[60px] md:pt-24">
           <Rise>
