@@ -241,7 +241,7 @@ function TeamCard({ t, joined, onOpen }: { t: ServeTeam; joined: boolean; onOpen
           <span className="flex min-w-0 items-center gap-2.5 text-[14px] text-stone-500">
             <span className="flex shrink-0 -space-x-2">
               {leaders.map((l) => (
-                <Avatar key={l.id} name={l.name} src={l.photo || undefined} className="size-8 text-[11px] ring-2 ring-ink [&>img]:object-top" />
+                <Avatar key={l.id} name={l.name} src={l.photo || undefined} className="size-8 text-[11px] ring-2 ring-ink" />
               ))}
             </span>
             <span className="truncate">Led by {leaders.map((l) => l.name).join(" & ")}</span>

@@ -43,7 +43,7 @@ export const staff: Person[] = [
 
 /** Volunteer ministry leaders: they lead a team but aren't on staff (not on the homepage or staff pickers). */
 export const ministryLeaders: Person[] = [
-  { id: "heather", name: "Heather Furse", role: "Welcome Team Leader", photo: "" },
+  { id: "heather", name: "Heather Furse", role: "Welcome Team Leader", photo: "/home/team/heather-furse.jpg" },
 ];
 
 export const staffById = Object.fromEntries([...staff, ...ministryLeaders].map((s) => [s.id, s])) as Record<string, Person>;
