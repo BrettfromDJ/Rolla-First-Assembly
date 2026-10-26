@@ -9,7 +9,7 @@ import { SiteFooter } from "@/components/site/footer";
 import { RevealGroup, Rise } from "@/components/church/motion";
 import { Faq } from "@/components/visit/new-here";
 import { churchLinks, staffById } from "@/lib/data";
-import { gradeLabel, studentEvents, studentGroups, studentsFaqs, studentsInfo, wednesdayFlow } from "@/lib/students";
+import { gradeLabel, studentEvents, studentsFaqs, studentsInfo, wednesdayFlow } from "@/lib/students";
 import { useStore } from "@/lib/store";
 import { cn, formatDay, formatTime } from "@/lib/utils";
 import { StudentsSheet } from "./signup-sheet";
@@ -107,23 +107,6 @@ export function StudentsPage() {
               />
             </figure>
           </Rise>
-        </section>
-
-        {/* ---------- Groups ---------- */}
-        <section className="mx-auto max-w-[1440px] px-5 pt-24 md:px-[60px] md:pt-32">
-          <div className="grid gap-4 md:grid-cols-2">
-            {studentGroups.map((g, i) => (
-              <Rise key={g.id} delay={i * 0.06}>
-                <div className="flex h-full flex-col justify-between gap-10 rounded-[28px] border-2 border-[#dcd2c5]/80 p-7 md:p-9">
-                  <div>
-                    <p className="font-magda text-[13px] uppercase tracking-[0.04em] opacity-60">{g.grades}</p>
-                    <p className={cn(mori, "mt-2 text-[clamp(40px,4vw,56px)] leading-none tracking-[-0.05em]")}>{g.label}</p>
-                  </div>
-                  <p className="max-w-md text-[16px] leading-relaxed text-stone-600">{g.blurb}</p>
-                </div>
-              </Rise>
-            ))}
-          </div>
         </section>
 
         {/* ---------- What to expect ---------- */}
