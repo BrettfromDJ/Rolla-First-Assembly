@@ -52,7 +52,7 @@ export function StudentsPage() {
                 <p className="mt-4 max-w-sm text-[17px] leading-relaxed text-black/75">Games, worship, a message that&apos;s actually about real life, and small groups with friends who have your back.</p>
                 <div className="mt-6 flex flex-wrap gap-2 text-[13px]">
                   <span className="inline-flex items-center gap-1.5 rounded-full bg-black/10 px-3 py-1.5 font-medium"><MapPin className="size-3.5" /> Youth room, upstairs above the Gym</span>
-                  <span className="rounded-full bg-black/10 px-3 py-1.5 font-medium">Pickup at 8:00</span>
+                  <span className="rounded-full bg-black/10 px-3 py-1.5 font-medium">Pickup at 7:30</span>
                 </div>
               </div>
 
@@ -116,12 +116,12 @@ export function StudentsPage() {
               <h2 className={cn(mori, "text-[clamp(40px,5.2vw,72px)] leading-[0.95] tracking-[-0.05em]")}>
                 What a Wednesday <Ed>looks like</Ed>
               </h2>
-              <p className="mt-5 max-w-sm text-[17px] leading-relaxed text-stone-600">Ninety minutes, and it goes fast. First time? Come at 6:15 and a leader will show you around.</p>
+              <p className="mt-5 max-w-sm text-[17px] leading-relaxed text-stone-600">About an hour, and it goes fast. First time? Come at 6:15 and a leader will show you around.</p>
               <div className="mt-10 rounded-[28px] bg-[#dcd2c5]/[0.05] p-7">
                 <ShieldCheck className="size-6 text-[#0285ff]" strokeWidth={1.5} />
                 <h3 className={cn(mori, "mt-4 text-[22px] tracking-[-0.03em]")}>For parents</h3>
                 <ul className="mt-3 space-y-2 text-[15px] leading-relaxed text-stone-600">
-                  {["Every leader is 21+, background-checked, and trained", "Leaders are never alone with a student", "Students stay inside until you pick them up", "A short parent text each week, if you'd like one"].map((t) => (
+                  {["Every leader is background-checked and trained", "Leaders are never alone with a student", "Students stay inside until you pick them up", "A short parent text each week, if you'd like one"].map((t) => (
                     <li key={t} className="flex gap-2.5">
                       <BadgeCheck className="mt-0.5 size-4 shrink-0 text-[#0285ff]" strokeWidth={1.75} />
                       {t}

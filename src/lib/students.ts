@@ -4,7 +4,7 @@ import { nextDow } from "./utils";
 export const studentsInfo = {
   day: "Wednesdays",
   time: "6:30 PM",
-  ends: "8:00 PM",
+  ends: "7:30 PM",
   room: "Youth room, upstairs above the Gym",
   leaderId: "gannon",
 };
@@ -23,8 +23,8 @@ export const wednesdayFlow = [
   { time: "6:15", title: "Doors open", body: "Snacks, music, foosball, and hanging out. Come early." },
   { time: "6:30", title: "Games & worship", body: "A big group game, then a few songs with the student worship team." },
   { time: "7:00", title: "Message", body: "Pastor Gannon (or a guest) teaches for about 20 minutes. Real life, straight from the Bible." },
-  { time: "7:30", title: "Small groups", body: "Split up by grade and gender with the same adult leaders each week." },
-  { time: "8:00", title: "Pickup", body: "Parents pick up at the Gym doors. Students stay inside until you arrive." },
+  { time: "7:20", title: "Small groups", body: "Split up by grade and gender with the same adult leaders each week." },
+  { time: "7:30", title: "Pickup", body: "Parents pick up at the Gym doors. Students stay inside until you arrive." },
 ];
 
 /** Upcoming student events, dated relative to today so the sample never goes stale. */
@@ -41,7 +41,7 @@ export function studentEvents(today = new Date()) {
 export const studentsFaqs = [
   { q: "Does my student need to sign up first?", a: "No. Anyone in 7th–12th grade can walk in any Wednesday. Signing up just helps us learn their name, get your contact info, and send you updates." },
   { q: "Where do I drop off and pick up?", a: "Drop off and pick up at the Gym doors. The youth room is upstairs above the Gym. Students stay inside until a parent or approved driver arrives." },
-  { q: "Who are the leaders?", a: "Pastor Gannon and a team of adult volunteers. Every leader is 21 or older, background-checked, and trained, and leaders are never alone with a student." },
+  { q: "Who are the leaders?", a: "Pastor Gannon and a team of adult volunteers. Every leader is background-checked and trained, and leaders are never alone with a student." },
   { q: "What about Sunday mornings?", a: "On Sundays, students sit with their families in the 9:00 or 10:30 service. Many also serve on the Welcome, Production, or worship teams." },
   { q: "How will I know what's coming up?", a: "Check the box for parent texts when you sign up. You'll get one short update a week with events, permission slips, and anything you need to know. You can also join our youth Facebook group for photos and reminders." },
   { q: "Does anything cost money?", a: "Wednesday nights are free. Some trips and camps have a cost, and we never want money to keep a student home. Ask Pastor Gannon about scholarships." },
