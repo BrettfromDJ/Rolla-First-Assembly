@@ -237,9 +237,9 @@ function SermonCard({ s }: { s: Sermon }) {
   const p = staffById[s.speakerId];
   return (
     <li>
-      <Link href={`/sermons/${s.id}`} className="m-lift group block rounded-[20px]">
-        <div className="relative overflow-hidden rounded-[20px]">
-          <SeriesArt series={seriesById[s.seriesId]} label={false} className="transition duration-700 group-hover:scale-[1.03]" />
+      <Link href={`/sermons/${s.id}`} className="group block rounded-[20px] focus-visible:outline-none">
+        <div className="relative overflow-hidden rounded-[20px] ring-0 ring-[#0285ff] ring-offset-4 ring-offset-ink transition-shadow group-focus-visible:ring-2">
+          <SeriesArt series={seriesById[s.seriesId]} label={false} className="transition duration-700 group-hover:scale-[1.04]" />
           <span className="absolute bottom-3 right-3 rounded-full bg-black/60 px-2.5 py-1 text-[12px] tabular-nums text-[#dcd2c5] backdrop-blur">{s.minutes} min</span>
         </div>
         <p className="mt-4 font-magda text-[12px] uppercase tracking-[0.04em] opacity-60">{sermonDate(s.date)}</p>
